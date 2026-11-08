@@ -165,7 +165,7 @@ button{font:inherit;color:inherit}
 .person.is-empty .person-ph{background:radial-gradient(circle at 30% 30%,rgba(167,17,12,.12) 0 2px,transparent 3px) 0 0/22px 22px,var(--blush)}
 .person.is-empty .person-ph::after{content:"Foto";font-size:14px;color:var(--muted)}
 .person h3{margin-top:16px;font-size:20px;line-height:1.2;font-weight:600;letter-spacing:-.01em}
-.person.is-empty h3,.person.is-empty .person-role,.person.is-empty .person-area{color:#9A8E8C}
+.person.is-empty h3,.person.is-empty .person-role,.person.is-empty .person-area{color:#766A68}
 .person-role{margin-top:4px;color:var(--muted);font-size:16px}
 .person-area{margin-top:2px;font-size:15px;font-weight:600;color:var(--red)}
 .person-contact{margin-top:10px;display:flex;flex-direction:column;gap:2px;font-size:15.5px}
