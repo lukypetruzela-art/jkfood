@@ -61,7 +61,7 @@ button{font:inherit;color:inherit}
 .brand svg{height:44px;width:auto;transition:height .3s var(--ease)}
 .top.scrolled .brand svg{height:36px}
 .nav{display:flex;align-items:center;gap:6px}
-.nav a.link{padding:10px 14px;text-decoration:none;font-size:16px;font-weight:500;border-radius:999px;transition:color .2s,background-color .2s}
+.nav a.link{padding:10px 14px;white-space:nowrap;text-decoration:none;font-size:16px;font-weight:500;border-radius:999px;transition:color .2s,background-color .2s}
 .nav a.link:hover{color:var(--red);background:var(--blush)}
 .nav .btn{min-height:46px;padding:0 20px;font-size:16px;margin-left:10px}
 .burger{display:none;width:48px;height:48px;border:0;background:none;border-radius:999px;cursor:pointer;position:relative}
@@ -446,6 +446,19 @@ form.q[hidden],.q-done[hidden]{display:none}
   .grp-head{gap:14px}
 }
 
+/* menu: pod 1180 px se schová pod tlačítko (8 položek se jinak nevejde do řádku) */
+@media (max-width:1180px){
+  .nav{position:fixed;inset:0;top:0;background:#fff;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(96px + env(safe-area-inset-top,0px)) var(--gut) 40px;transform:translateY(-100%);visibility:hidden;transition:transform .45s var(--ease),visibility 0s .45s;z-index:-1}
+  .nav.open{transform:none;visibility:visible;transition:transform .45s var(--ease)}
+  .nav a.link{font-size:30px;font-weight:600;padding:14px 0;border-bottom:1px solid var(--line);border-radius:0;letter-spacing:-.02em}
+  .nav a.link:hover{background:none}
+  .nav .btn{margin:28px 0 0;justify-content:center;min-height:56px;font-size:18px}
+  .burger{display:block}
+}
+@media (max-width:1180px) and (max-height:760px){
+  .nav a.link{font-size:24px;padding:11px 0}
+  .nav .btn{margin-top:20px}
+}
 /* ---------- responsive ---------- */
 @media (max-width:1080px){
   .steps{grid-template-columns:repeat(2,1fr);row-gap:56px}
@@ -453,12 +466,6 @@ form.q[hidden],.q-done[hidden]{display:none}
   .foot-grid{grid-template-columns:1fr 1fr}
 }
 @media (max-width:900px){
-  .nav{position:fixed;inset:0;top:0;background:#fff;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;padding:calc(96px + env(safe-area-inset-top,0px)) var(--gut) 40px;transform:translateY(-100%);visibility:hidden;transition:transform .45s var(--ease),visibility 0s .45s;z-index:-1}
-  .nav.open{transform:none;visibility:visible;transition:transform .45s var(--ease)}
-  .nav a.link{font-size:30px;font-weight:600;padding:14px 0;border-bottom:1px solid var(--line);border-radius:0;letter-spacing:-.02em}
-  .nav a.link:hover{background:none}
-  .nav .btn{margin:28px 0 0;justify-content:center;min-height:56px;font-size:18px}
-  .burger{display:block}
   .hero-grid,.seg-grid,.story-grid,.contact-grid,.shop .wrap{grid-template-columns:1fr}
   .assort-grid{grid-template-columns:1fr}
   .gallery{justify-self:center;max-width:560px}

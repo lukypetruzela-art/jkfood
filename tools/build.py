@@ -452,7 +452,7 @@ def build_team(v):
                    [("btn-white", "index.html#kontakt", "Napsat poptávku"), ("btn-ghost", "kariera.html", "Chcete k&nbsp;nám? Kariéra")])
     simple_page("nas-tym.html", "Náš tým | J.K.FOOD Větřkovice", desc,
                 [("Úvod", ""), ("O nás", "index.html#pribeh"), ("Náš tým", "nas-tym.html")],
-                "Náš tým", data["intro"], "".join(groups), cta, graph, nav_current="index.html#pribeh")
+                "Náš tým", data["intro"], "".join(groups), cta, graph, nav_current="nas-tym.html")
     return [("nas-tym.html", "0.6")]
 
 
@@ -486,7 +486,7 @@ def build_career(v):
     graph = [{"@type": "WebPage", "@id": f"{SITE}/kariera.html#stranka", "url": f"{SITE}/kariera.html", "name": "Kariéra",
               "description": desc, "inLanguage": "cs", "about": {"@id": f"{SITE}/#firma"}}]
     simple_page("kariera.html", "Kariéra – volné pozice | J.K.FOOD Větřkovice", desc,
-                [("Úvod", ""), ("Kariéra", "kariera.html")], "Kariéra", data["intro"], body, cta, graph)
+                [("Úvod", ""), ("Kariéra", "kariera.html")], "Kariéra", data["intro"], body, cta, graph, nav_current="kariera.html")
     return [("kariera.html", "0.6")]
 
 
