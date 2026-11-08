@@ -22,6 +22,13 @@ const MIN_FILL_SECONDS = 3;      // rychlejší vyplnění = robot
 const RATE_WINDOW = 600;         // 10 minut
 
 $wantsJson = stripos($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json') !== false;
+// jazyk formuláře (anglická verze webu posílá lang=en)
+$lang = (($_POST['lang'] ?? '') === 'en') ? 'en' : 'cs';
+/** Text podle jazyka formuláře. */
+function t(string $cs, string $en): string
+{
+    return $GLOBALS['lang'] === 'en' ? $en : $cs;
+}
 
 /** Ukončí požadavek: JSON pro JavaScript, přesměrování pro formulář bez JavaScriptu. */
 function respond(int $status, array $body, bool $json): void
@@ -33,7 +40,8 @@ function respond(int $status, array $body, bool $json): void
         echo json_encode($body, JSON_UNESCAPED_UNICODE);
     } else {
         $state = $body['ok'] ? 'odeslano' : 'chyba';
-        header('Location: ../index.html?formular=' . $state . '#kontakt', true, 303);
+        $page = $GLOBALS['lang'] === 'en' ? '../en/index.html' : '../index.html';
+        header('Location: ' . $page . '?formular=' . $state . '#kontakt', true, 303);
     }
     exit;
 }
@@ -56,20 +64,20 @@ function text(string $s, int $max): string
 // ---------- základní kontroly ----------
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Allow: POST');
-    respond(405, ['ok' => false, 'message' => 'Použijte formulář na webu.'], true);
+    respond(405, ['ok' => false, 'message' => t('Použijte formulář na webu.', 'Please use the form on the website.')], true);
 }
 
 $configFile = __DIR__ . '/config.php';
 if (!is_file($configFile)) {
     error_log('[poptavka] chybí api/config.php');
-    respond(500, ['ok' => false, 'message' => 'Formulář zatím není nastavený.'], $wantsJson);
+    respond(500, ['ok' => false, 'message' => t('Formulář zatím není nastavený.', 'The form is not set up yet.')], $wantsJson);
 }
 $cfg = require $configFile;
 
 // odesílat smí jen web firmy (prohlížeč posílá Origin u každého POST požadavku)
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if ($origin !== '' && !in_array(rtrim($origin, '/'), $cfg['allowed_origins'], true)) {
-    respond(403, ['ok' => false, 'message' => 'Nepovolený původ požadavku.'], $wantsJson);
+    respond(403, ['ok' => false, 'message' => t('Nepovolený původ požadavku.', 'Request origin not allowed.')], $wantsJson);
 }
 
 // ---------- data ----------
@@ -100,7 +108,7 @@ $hits = array_filter(
     static fn($ts) => is_int($ts) && $ts > time() - RATE_WINDOW
 );
 if (count($hits) >= (int) $cfg['rate_limit']) {
-    respond(429, ['ok' => false, 'message' => 'Odeslali jste několik poptávek za sebou. Zkuste to prosím za pár minut, nebo nám zavolejte.'], $wantsJson);
+    respond(429, ['ok' => false, 'message' => t('Odeslali jste několik poptávek za sebou. Zkuste to prosím za pár minut, nebo nám zavolejte.', 'You have sent several enquiries in a row. Please try again in a few minutes or give us a call.')], $wantsJson);
 }
 
 // ---------- kontrola polí ----------
@@ -114,22 +122,22 @@ $message = text($get('message'), 5000);
 
 $errors = [];
 if ($name === '') {
-    $errors['name'] = 'Vyplňte prosím jméno.';
+    $errors['name'] = t('Vyplňte prosím jméno.', 'Please enter your name.');
 }
 if ($email === '' || !PHPMailer::validateAddress($email)) {
-    $errors['email'] = 'Zadejte prosím platný e-mail.';
+    $errors['email'] = t('Zadejte prosím platný e-mail.', 'Please enter a valid e-mail address.');
 }
 if ($tel !== '' && !preg_match('/^[+0-9 ()\/-]{6,40}$/', $tel)) {
-    $errors['tel'] = 'Telefon může obsahovat jen čísla, mezery a znak +.';
+    $errors['tel'] = t('Telefon může obsahovat jen čísla, mezery a znak +.', 'The phone number may contain only digits, spaces and +.');
 }
 if ($message === '') {
-    $errors['message'] = 'Napište nám prosím, o co máte zájem.';
+    $errors['message'] = t('Napište nám prosím, o co máte zájem.', 'Please tell us what you are interested in.');
 }
 if (!in_array($type, TYPES, true)) {
     $type = 'Něco jiného';
 }
 if ($errors) {
-    respond(422, ['ok' => false, 'message' => 'Zkontrolujte prosím označená pole.', 'errors' => $errors], $wantsJson);
+    respond(422, ['ok' => false, 'message' => t('Zkontrolujte prosím označená pole.', 'Please check the highlighted fields.'), 'errors' => $errors], $wantsJson);
 }
 
 // ---------- e-mail ----------
@@ -161,7 +169,7 @@ function mailer(array $cfg): PHPMailer
 }
 
 $h = static fn(string $s): string => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
-$subject = 'Poptávka: ' . ($product !== '' ? $product : $type) . ' – ' . ($company !== '' ? $company : $name);
+$subject = ($lang === 'en' ? '[EN] ' : '') . 'Poptávka: ' . ($product !== '' ? $product : $type) . ' – ' . ($company !== '' ? $company : $name);
 
 $rows = [
     'Jméno'      => $name,
@@ -170,6 +178,7 @@ $rows = [
     'Telefon'    => $tel,
     'Zájem o'    => $type,
     'Výrobek'    => $product,
+    'Jazyk'      => $lang === 'en' ? 'angličtina (odpovězte anglicky)' : '',
 ];
 $plain = "Nová poptávka z webu kostera.cz\n\n";
 $html  = '<div style="font-family:Arial,sans-serif;font-size:15px;color:#1F1A19">'
@@ -201,7 +210,7 @@ try {
     $m->send();
 } catch (MailException $e) {
     error_log('[poptavka] odeslání selhalo: ' . $e->getMessage());
-    respond(502, ['ok' => false, 'message' => 'Poptávku se nepodařilo odeslat. Zkuste to prosím znovu, nebo nám napište na kostera@kostera.cz.'], $wantsJson);
+    respond(502, ['ok' => false, 'message' => t('Poptávku se nepodařilo odeslat. Zkuste to prosím znovu, nebo nám napište na kostera@kostera.cz.', 'Your enquiry could not be sent. Please try again or write to us at kostera@kostera.cz.')], $wantsJson);
 }
 
 // započítat do limitu až úspěšné odeslání
@@ -214,14 +223,24 @@ if (!empty($cfg['send_confirmation'])) {
         $c = mailer($cfg);
         $c->addAddress($email, $name);
         $c->addReplyTo($cfg['to'][0], 'J.K.FOOD');
-        $c->Subject = 'Vaše poptávka dorazila – J.K.FOOD';
         $c->isHTML(true);
-        $c->Body = '<div style="font-family:Arial,sans-serif;font-size:15px;color:#1F1A19">'
-                 . '<p>Dobrý den,</p><p>děkujeme za Vaši poptávku. Dorazila v pořádku a ozveme se Vám co nejdříve, obvykle do jednoho pracovního dne.</p>'
-                 . '<p>Pokud spěcháte, volejte <a href="tel:+420556310205">+420 556 310 205</a>.</p>'
-                 . '<p>S pozdravem<br><b>Jaroslav Kostera, J.K.FOOD s.r.o.</b><br>Větřkovice 243, 747 43 Větřkovice</p></div>';
-        $c->AltBody = "Dobrý den,\n\nděkujeme za Vaši poptávku. Dorazila v pořádku a ozveme se Vám co nejdříve, obvykle do jednoho pracovního dne.\n"
-                    . "Pokud spěcháte, volejte +420 556 310 205.\n\nS pozdravem\nJaroslav Kostera, J.K.FOOD s.r.o.\nVětřkovice 243, 747 43 Větřkovice";
+        if ($lang === 'en') {
+            $c->Subject = 'We have received your enquiry – J.K.FOOD';
+            $c->Body = '<div style="font-family:Arial,sans-serif;font-size:15px;color:#1F1A19">'
+                     . '<p>Hello,</p><p>thank you for your enquiry. It has arrived safely and we will get back to you as soon as possible, usually within one working day.</p>'
+                     . '<p>If it is urgent, please call <a href="tel:+420556310205">+420 556 310 205</a>.</p>'
+                     . '<p>Kind regards<br><b>Jaroslav Kostera, J.K.FOOD s.r.o.</b><br>Větřkovice 243, 747 43 Větřkovice, Czech Republic</p></div>';
+            $c->AltBody = "Hello,\n\nthank you for your enquiry. It has arrived safely and we will get back to you as soon as possible, usually within one working day.\n"
+                        . "If it is urgent, please call +420 556 310 205.\n\nKind regards\nJaroslav Kostera, J.K.FOOD s.r.o.\nVětřkovice 243, 747 43 Větřkovice, Czech Republic";
+        } else {
+            $c->Subject = 'Vaše poptávka dorazila – J.K.FOOD';
+            $c->Body = '<div style="font-family:Arial,sans-serif;font-size:15px;color:#1F1A19">'
+                     . '<p>Dobrý den,</p><p>děkujeme za Vaši poptávku. Dorazila v pořádku a ozveme se Vám co nejdříve, obvykle do jednoho pracovního dne.</p>'
+                     . '<p>Pokud spěcháte, volejte <a href="tel:+420556310205">+420 556 310 205</a>.</p>'
+                     . '<p>S pozdravem<br><b>Jaroslav Kostera, J.K.FOOD s.r.o.</b><br>Větřkovice 243, 747 43 Větřkovice</p></div>';
+            $c->AltBody = "Dobrý den,\n\nděkujeme za Vaši poptávku. Dorazila v pořádku a ozveme se Vám co nejdříve, obvykle do jednoho pracovního dne.\n"
+                        . "Pokud spěcháte, volejte +420 556 310 205.\n\nS pozdravem\nJaroslav Kostera, J.K.FOOD s.r.o.\nVětřkovice 243, 747 43 Větřkovice";
+        }
         $c->send();
     } catch (MailException $e) {
         error_log('[poptavka] potvrzení zákazníkovi selhalo: ' . $e->getMessage());   // poptávka už odešla, zákazníka tím nestrašíme

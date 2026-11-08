@@ -102,16 +102,21 @@ def ld(obj):
     return '<script type="application/ld+json">' + json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "</script>"
 
 
-def head_common(title, desc, path, image=f"{SITE}/assets/icons/og-image.jpg"):
+def head_common(title, desc, path, image=f"{SITE}/assets/icons/og-image.jpg", lang="cs", alternates=None):
     url = f"{SITE}/{path}" if path else f"{SITE}/"
-    return "\n".join([
+    alt = []
+    if alternates:   # {"cs": cesta, "en": cesta}
+        for hl, ap in alternates.items():
+            alt.append(f'<link rel="alternate" hreflang="{hl}" href="{SITE}/{ap}">')
+        alt.append(f'<link rel="alternate" hreflang="x-default" href="{SITE}/{alternates["cs"]}">')
+    return "\n".join(alt + [
         f'<link rel="canonical" href="{url}">',
         '<link rel="icon" href="favicon.ico" sizes="48x48">',
         '<link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">',
         '<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">',
         '<link rel="manifest" href="site.webmanifest">',
         '<meta property="og:type" content="website">',
-        '<meta property="og:locale" content="cs_CZ">',
+        f'<meta property="og:locale" content="{"en_GB" if lang == "en" else "cs_CZ"}">',
         f'<meta property="og:site_name" content="{ORG["name"]}">',
         f'<meta property="og:title" content="{esc(title)}">',
         f'<meta property="og:description" content="{esc(desc)}">',
@@ -237,7 +242,8 @@ def build_catalog(items, v):
                            "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": p["n"]}
                                                for i, p in enumerate(shown)]},
         }]
-        head = head_common(title, desc, file) + "\n" + ld({"@context": "https://schema.org", "@graph": graph})
+        alts = {"cs": file, "en": "en/products.html"} if active is None else None
+        head = head_common(title, desc, file, alternates=alts) + "\n" + ld({"@context": "https://schema.org", "@graph": graph})
         page = (tpl.replace("{{TITLE}}", esc(title)).replace("{{DESCRIPTION}}", esc(desc)).replace("{{HEAD}}", head)
                 .replace("{{V}}", v).replace("{{CRUMBS}}", crumbs_html).replace("{{H1}}", esc(h1))
                 .replace("{{INTRO}}", nbsp(esc(intro))).replace("{{PLACEHOLDER}}", esc(placeholder))
@@ -295,7 +301,7 @@ def build_index(v):
     meta = "\n".join([
         f"<title>{esc(title)}</title>",
         f'<meta name="description" content="{esc(desc)}">',
-        head_common(title, desc, ""),
+        head_common(title, desc, "", alternates={"cs": "", "en": "en/"}),
         ld({"@context": "https://schema.org", "@graph": graph}),
     ])
     s = re.sub(r"<!-- META:START -->.*?<!-- META:END -->", lambda m: f"<!-- META:START -->\n{meta}\n<!-- META:END -->", s, flags=re.S)
@@ -319,7 +325,7 @@ def build_index(v):
         p404.write_text(t, encoding="utf-8")
 
 
-def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_current=None):
+def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_current=None, en_file=None):
     """Podstránka se stejnou hlavičkou a patičkou jako index.html (Náš tým, Kariéra)."""
     idx = (ROOT / "index.html").read_text(encoding="utf-8")
     head_start = idx[: idx.index("<!-- META:START -->")]
@@ -332,11 +338,12 @@ def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_curr
         x = re.sub(r'href="#(?!logo|mark|obsah")([\w-]+)"', r'href="index.html#\1"', x)
         return x.replace('<a class="brand" href="#"', '<a class="brand" href="index.html"')
     header, footer = relink(header), relink(footer)
+    header = header.replace('<a class="link lang" href="en/index.html"', f'<a class="link lang" href="en/{en_file or "index.html"}"')
     if nav_current:
         header = header.replace(f'<a class="link" href="{nav_current}">', f'<a class="link" href="{nav_current}" aria-current="page">')
 
     meta = "\n".join([f"<title>{esc(title)}</title>", f'<meta name="description" content="{esc(desc)}">',
-                      head_common(title, desc, file),
+                      head_common(title, desc, file, alternates={"cs": file, "en": f"en/{en_file}"} if en_file else None),
                       ld({"@context": "https://schema.org", "@graph": [org_ld(), breadcrumbs_ld(crumbs)] + graph})])
     crumbs_html = '<nav class="crumbs" aria-label="Drobečková navigace">' + '<span aria-hidden="true">/</span>'.join(
         (f'<a href="{u or "index.html"}">{esc(n)}</a>' if i < len(crumbs) - 1 else f'<span aria-current="page">{esc(n)}</span>')
@@ -453,7 +460,7 @@ def build_team(v):
                    [("btn-white", "index.html#kontakt", "Napsat poptávku"), ("btn-ghost", "kariera.html", "Chcete k&nbsp;nám? Kariéra")])
     simple_page("nas-tym.html", "Náš tým | J.K.FOOD Větřkovice", desc,
                 [("Úvod", ""), ("O nás", "index.html#pribeh"), ("Náš tým", "nas-tym.html")],
-                "Náš tým", data["intro"], "".join(groups), cta, graph, nav_current="nas-tym.html")
+                "Náš tým", data["intro"], "".join(groups), cta, graph, nav_current="nas-tym.html", en_file="team.html")
     return [("nas-tym.html", "0.6")]
 
 
@@ -491,11 +498,164 @@ def build_career(v):
     return [("kariera.html", "0.6")]
 
 
+# ---------------------------------------------------------------- anglická verze (en/)
+def build_en():
+    """Anglická verze vzniká z hotových českých stránek: překlad (tools/i18n_en.py),
+    úprava cest pro složku en/ a nová metadata. Nepřeložené dvojice ohlásí."""
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    import i18n_en as T
+    (ROOT / "en").mkdir(exist_ok=True)
+    cat_by_slug = {c["file"]: c for c in CATS}
+    missing = []
+
+    def tr(html, pairs, label):
+        # Kariéra je jen česky: v anglickém menu ji neukazujeme (zůstává v patičce)
+        html = re.sub(r'\s*<a class="link" href="kariera\.html"[^>]*>Kariéra</a>', "", html)
+        for cz, en in pairs:
+            if cz not in html:
+                missing.append(f"{label}: {cz[:70]}")
+            html = html.replace(cz, en)
+        return html
+
+    def names(html):
+        for (en, _), c in zip(T.CATS_EN, CATS):
+            html = html.replace(f">{esc(c['name'])}<", f">{esc(en)}<")
+        for cz, en in T.SUBS_EN.items():
+            html = html.replace(f"<h3>{esc(cz)}</h3>", f"<h3>{esc(en)}</h3>").replace(f'data-s="{esc(cz)}"', f'data-s="{esc(en)}"')
+        return html
+
+    def paths(html):
+        def fix(m):
+            attr, u = m.group(1), m.group(2)
+            if re.match(r"(https?:|//|#|mailto:|tel:|data:|/|\.\./)", u):
+                return m.group(0)
+            base, _, frag = u.partition("#")
+            if base == "index.html" or base.startswith("index.html?"):
+                new = u
+            elif base == "nas-tym.html":
+                new = "team.html" + (f"#{frag}" if frag else "")
+            elif base == "sortiment.html":
+                new = "products.html"
+            elif base in cat_by_slug:
+                new = f"products.html#sk-{cat_by_slug[base]['id']}"
+            elif base.startswith("en/"):
+                new = base[3:]
+            else:
+                new = "../" + u
+            return f'{attr}="{new}"'
+        return re.sub(r'\b(href|src|action)="([^"]*)"', fix, html)
+
+    def meta(html, title, desc, path_en, path_cs, graph):
+        html = re.sub(r"<title>.*?</title>\n?", "", html, flags=re.S)
+        html = re.sub(r'<meta name="description"[^>]*>\n?', "", html)
+        html = re.sub(r'<link rel="(?:canonical|alternate|icon|apple-touch-icon|manifest)"[^>]*>\n?', "", html)
+        html = re.sub(r'<meta (?:property="og:[^"]*"|name="twitter:[^"]*")[^>]*>\n?', "", html)
+        html = re.sub(r'<script type="application/ld\+json">.*?</script>\n?', "", html, flags=re.S)
+        html = re.sub(r"<!-- META:START -->\s*<!-- META:END -->\n?", "", html)
+        head = "\n".join([f"<title>{esc(title)}</title>", f'<meta name="description" content="{esc(desc)}">',
+                          head_common(title, desc, f"en/{path_en}", lang="en", alternates={"cs": path_cs, "en": f"en/{path_en}"}),
+                          ld({"@context": "https://schema.org", "@graph": graph})])
+        return html.replace("</head>", head + "\n</head>", 1)
+
+    def lang_link(html, cz_target):
+        return re.sub(r'<a class="link lang" href="[^"]*"[^>]*>EN</a>',
+                      f'<a class="link lang" href="../{cz_target}" hreflang="cs" lang="cs" aria-label="Česká verze">CZ</a>', html)
+
+    org = dict(org_ld(), description="A Czech family company from Větřkovice. Since 1996 we have produced spices, seasoning blends, "
+               "dried vegetables and dehydrated foods for food manufacturers, canteens and catering.")
+
+    # --- úvodní stránka
+    html = (ROOT / "index.html").read_text(encoding="utf-8")
+    html = names(tr(html, T.COMMON + T.INDEX, "index"))
+    html = meta(html, "J.K.FOOD – Czech producer of spices and seasoning blends",
+                "Family company from Větřkovice, Czech Republic. Since 1996 we have produced spices, seasoning blends, dried vegetables "
+                "and dehydrated foods for food manufacturers and catering.", "", "",
+                [org, {"@type": "WebSite", "@id": f"{SITE}/en/#web", "url": f"{SITE}/en/", "name": "J.K.FOOD", "inLanguage": "en",
+                       "publisher": {"@id": f"{SITE}/#firma"}}])
+    (ROOT / "en" / "index.html").write_text(lang_link(paths(html), ""), encoding="utf-8")
+
+    # --- katalog (jedna stránka se všemi skupinami)
+    html = (ROOT / "sortiment.html").read_text(encoding="utf-8")
+    html = tr(html, T.COMMON + T.CATALOG, "products")
+    html = names(html)
+    html = html.replace('<h1 class="h2 cat-title" id="cat-title">Sortiment</h1>', '<h1 class="h2 cat-title" id="cat-title">Products</h1>')
+    html = re.sub(r'<p class="intro">Přes 490 výrobků.*?</p>',
+                  '<p class="intro">Over 490 products in eight groups. Product names are given in Czech – just send us an enquiry '
+                  'and we will reply in English.</p>', html, flags=re.S)
+    html = re.sub(r'(<nav class="crumbs"[^>]*>)<a href="index.html">Úvod</a>(.*?)<span aria-current="page">Sortiment</span>',
+                  r'\1<a href="index.html">Home</a>\2<span aria-current="page">Products</span>', html)
+    html = re.sub(r"(\d+) výrob(?:ek|ky|ků)", lambda m: f"{m.group(1)} product{'s' if m.group(1) != '1' else ''}", html)
+    html = html.replace("Celkem ", "").replace('<p class="cat-count" id="count">', '<p class="cat-count" id="count">Total: ')
+    html = re.sub(r"const legacy = \{.*?\};", "const legacy = {};", html)
+    html = re.sub(r'<a class="chip(?: all)?" href="sortiment.html" aria-current="page">All</a>', '<a class="chip all" href="#obsah" aria-current="page">All</a>', html)
+    graph = [org, breadcrumbs_ld([("Home", "en/"), ("Products", "en/products.html")]),
+             {"@type": "CollectionPage", "url": f"{SITE}/en/products.html", "name": "Products", "inLanguage": "en",
+              "description": "J.K.FOOD product range – spices, seasoning blends, dried vegetables, meat industry blends, stocks, soups and more."}]
+    html = meta(html, "Products – spices, seasoning blends and dehydrated foods | J.K.FOOD",
+                "Over 490 products from J.K.FOOD, Czech Republic: single spices, seasoning blends, dried vegetables, blends for the "
+                "meat industry, dried mushrooms, stocks, soups and potato products.", "products.html", "sortiment.html", graph)
+    (ROOT / "en" / "products.html").write_text(lang_link(paths(html), "sortiment.html"), encoding="utf-8")
+
+    # --- tým
+    html = (ROOT / "nas-tym.html").read_text(encoding="utf-8")
+    html = tr(html, T.COMMON + [
+        ('<h1 class="h2 cat-title" id="page-title">Náš tým</h1>', '<h1 class="h2 cat-title" id="page-title">Our team</h1>'),
+        ('<a href="index.html">Úvod</a>', '<a href="index.html">Home</a>'),
+        ('<span aria-current="page">Náš tým</span>', '<span aria-current="page">Our team</span>'),
+        ('aria-label="Drobečková navigace"', 'aria-label="Breadcrumbs"'),
+        (">Ozvěte se nám</h2>", ">Get in touch</h2>"),
+        ("<p>Rádi s&nbsp;vámi probereme nabídku, vzorky i&nbsp;směs připravenou přesně pro vaši výrobu.</p>",
+         "<p>We are happy to discuss an offer, samples or a blend made precisely for your production – in English, too.</p>"),
+        (">Napsat poptávku</a>", ">Send an enquiry</a>"),
+        (">Chcete k&nbsp;nám? Kariéra</a>", ">Careers (in Czech)</a>"),
+    ], "team")
+    html = names(html)
+    html = re.sub(r'<p class="intro">.*?</p>', f'<p class="intro">{esc(T.TEAM["intro"])}</p>', html, count=1, flags=re.S)
+    for cz, en in T.TEAM["groups"].items():
+        html = html.replace(f">{esc(cz)}</h2>", f">{esc(en)}</h2>")
+    for cz, en in T.TEAM["popis"].items():
+        html = html.replace(f"<p>{nbsp(esc(cz))}</p>", f"<p>{esc(en)}</p>")
+    for cz, en in sorted(T.TEAM["roles"].items(), key=lambda kv: -len(kv[0])):
+        html = html.replace(f'<p class="person-role">{esc(cz)}</p>', f'<p class="person-role">{esc(en)}</p>')
+        html = html.replace(f'<p class="person-area">{esc(cz)}</p>', f'<p class="person-area">{esc(en)}</p>')
+        html = html.replace(f"<h3>{esc(cz)}</h3>", f"<h3>{esc(en)}</h3>")
+    html = meta(html, "Our team | J.K.FOOD, Czech Republic",
+                "Meet the people of J.K.FOOD – management, sales representatives, production and development of seasoning blends in Větřkovice.",
+                "team.html", "nas-tym.html", [org, breadcrumbs_ld([("Home", "en/"), ("Our team", "en/team.html")])])
+    (ROOT / "en" / "team.html").write_text(lang_link(paths(html), "nas-tym.html"), encoding="utf-8")
+
+    # --- kontrola: nepřeložené dvojice a zbytky češtiny
+    if missing:
+        raise SystemExit("Nepřeložené texty (upravte tools/i18n_en.py):\n  " + "\n  ".join(missing))
+    allowed = {"Větřkovice", "Galčanová", "Kostera", "Větřkovic", "Česká verze", "Má chuť", "pepř, guláš"}
+    leftovers = []
+    for f in ["index.html", "products.html", "team.html"]:
+        h = (ROOT / "en" / f).read_text(encoding="utf-8")
+        h = re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S) if f == "products.html" else h
+        h = re.sub(r'<ul class="items">.*?</ul>', " ", h, flags=re.S)     # názvy výrobků zůstávají česky
+        h = re.sub(r'<script type="application/ld\+json">.*?</script>', " ", h, flags=re.S)
+        for t in re.findall(r">([^<>]*[ěščřžůťďňĚŠČŘŽŮŤĎŇ][^<>]*)<|(?:aria-label|placeholder|alt|title)=\"([^\"]*[ěščřžůťďňĚŠČŘŽŮŤĎŇ][^\"]*)\"", h):
+            t = (t[0] or t[1]).strip()
+            if t and not any(a in t for a in allowed) and not re.fullmatch(r"[\w.@+ -]*kostera\.cz", t):
+                leftovers.append(f"{f}: {t[:80]}")
+    if leftovers:
+        print("⚠ zbytky češtiny v anglické verzi:\n  " + "\n  ".join(sorted(set(leftovers))))
+    return [("en/", "0.8"), ("en/products.html", "0.7"), ("en/team.html", "0.5")]
+
 def build_sitemap(pages):
     urls = [("", "1.0")] + pages
-    xml = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    pairs = {"": "en/", "sortiment.html": "en/products.html", "nas-tym.html": "en/team.html"}
+    pairs.update({v: k for k, v in list(pairs.items())})
+    xml = ['<?xml version="1.0" encoding="UTF-8"?>',
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
     for path, prio in urls:
-        xml.append(f"  <url><loc>{SITE}/{path}</loc><lastmod>{TODAY}</lastmod><priority>{prio}</priority></url>")
+        alt = ""
+        if path in pairs:
+            cs, en = (path, pairs[path]) if not path.startswith("en/") else (pairs[path], path)
+            alt = (f'<xhtml:link rel="alternate" hreflang="cs" href="{SITE}/{cs}"/>'
+                   f'<xhtml:link rel="alternate" hreflang="en" href="{SITE}/{en}"/>')
+        xml.append(f"  <url><loc>{SITE}/{path}</loc><lastmod>{TODAY}</lastmod><priority>{prio}</priority>{alt}</url>")
     xml.append("</urlset>")
     (ROOT / "sitemap.xml").write_text("\n".join(xml) + "\n", encoding="utf-8")
 
@@ -507,6 +667,7 @@ def main():
     build_index(v)
     pages += build_team(v)
     pages += build_career(v)
+    pages += build_en()
     build_sitemap(pages)
     print(f"hotovo: {len(items)} výrobků, {len(pages)} stránek (sortiment, tým, kariéra), verze stylů {v}")
 

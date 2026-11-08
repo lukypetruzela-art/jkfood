@@ -13,7 +13,9 @@
   web, drobečková navigace, seznamy výrobků.
 - **Sociální sítě**: náhledový obrázek a texty pro Facebook, WhatsApp, LinkedIn (`assets/icons/og-image.jpg`).
 - **Ikony** pro prohlížeče, iPhone a Android, `site.webmanifest`.
-- `robots.txt`, `sitemap.xml`, stránka `404.html`.
+- `robots.txt`, `sitemap.xml` (včetně propojení jazykových verzí), stránka `404.html`.
+- **Anglická verze** (`en/`): úvod, katalog a tým s propojením jazyků pro Google (`hreflang`).
+  Texty jsou v `tools/i18n_en.py` – když se změní český text, `python3 tools/build.py` ohlásí, co je potřeba přeložit.
 - **Rychlost**: Lighthouse 97–100, komprese a dlouhé ukládání do mezipaměti.
 
 ## Při spuštění webu (jednorázově, cca 1 hodina)

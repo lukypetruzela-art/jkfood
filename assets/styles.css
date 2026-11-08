@@ -64,6 +64,10 @@ button{font:inherit;color:inherit}
 .nav a.link{padding:10px 14px;white-space:nowrap;text-decoration:none;font-size:16px;font-weight:500;border-radius:999px;transition:color .2s,background-color .2s}
 .nav a.link:hover{color:var(--red);background:var(--blush)}
 .nav .btn{min-height:46px;padding:0 20px;font-size:16px;margin-left:10px}
+.nav a.lang{font-size:14px;font-weight:600;letter-spacing:.04em;border:1.5px solid var(--line);padding:7px 11px;margin-left:6px}
+.nav a.lang:hover{border-color:var(--red)}
+.lang-note{font-size:.55em;font-weight:500;color:var(--muted);letter-spacing:0}
+:lang(en) .item::after{content:"Enquire →";content:"Enquire →" / ""}
 .burger{display:none;width:48px;height:48px;border:0;background:none;border-radius:999px;cursor:pointer;position:relative}
 .burger span{position:absolute;left:13px;right:13px;height:2px;background:var(--ink);transition:transform .3s var(--ease),opacity .2s}
 .burger span:nth-child(1){top:18px}.burger span:nth-child(2){top:24px}.burger span:nth-child(3){top:30px}
@@ -472,13 +476,14 @@ form.q[hidden],.q-done[hidden]{display:none}
 @media (max-width:1180px){
   .nav{position:fixed;inset:0;top:0;background:#fff;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(96px + env(safe-area-inset-top,0px)) var(--gut) 40px;transform:translateY(-100%);visibility:hidden;transition:transform .45s var(--ease),visibility 0s .45s;z-index:-1}
   .nav.open{transform:none;visibility:visible;transition:transform .45s var(--ease)}
-  .nav a.link{font-size:30px;font-weight:600;padding:14px 0;border-bottom:1px solid var(--line);border-radius:0;letter-spacing:-.02em}
+  .nav a.link:not(.lang){font-size:30px;font-weight:600;padding:14px 0;border-bottom:1px solid var(--line);border-radius:0;letter-spacing:-.02em}
   .nav a.link:hover{background:none}
+  .nav a.lang{align-self:flex-start;margin:20px 0 0;border:1.5px solid var(--line);border-radius:999px;font-size:15px;padding:8px 16px}
   .nav .btn{margin:28px 0 0;justify-content:center;min-height:56px;font-size:18px}
   .burger{display:block}
 }
 @media (max-width:1180px) and (max-height:760px){
-  .nav a.link{font-size:24px;padding:11px 0}
+  .nav a.link:not(.lang){font-size:24px;padding:11px 0}
   .nav .btn{margin-top:20px}
 }
 /* ---------- responsive ---------- */
