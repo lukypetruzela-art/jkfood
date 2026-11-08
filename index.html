@@ -533,11 +533,15 @@
         const l = document.createElement('link'); l.rel = 'preconnect'; l.href = h; document.head.appendChild(l);
       });
     };
+    // YouTube vyžaduje adresu webu (Referer/origin) – u souboru otevřeného z disku (file://) přehrávač
+    // hlásí chybu 153, proto se tam video otevře rovnou na YouTube
+    const local = !/^https?:$/.test(location.protocol);
     const load = (muted, focus) => {
       if (frame) return;
+      if (local) { if (!muted) window.open(poster.href, '_blank', 'noopener'); return; }
       frame = document.createElement('iframe');
       frame.src = 'https://www.youtube-nocookie.com/embed/' + box.dataset.id +
-        '?autoplay=1&rel=0&playsinline=1&enablejsapi=1' +
+        '?autoplay=1&rel=0&playsinline=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin) +
         (muted ? '&mute=1&loop=1&playlist=' + box.dataset.id : '');   // smyčka u jednoho videa potřebuje playlist=ID
       frame.title = 'Video J.K.FOOD – Seznamte se s námi (YouTube)';
       frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
