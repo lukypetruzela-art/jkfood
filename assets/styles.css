@@ -284,7 +284,7 @@ form.q[hidden],.q-done[hidden]{display:none}
 .crumbs a{text-decoration:none}
 .crumbs a:hover{color:var(--red)}
 .cat-head-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:clamp(28px,5vw,88px);align-items:end}
-.cat-title{font-size:clamp(48px,7vw,104px);max-width:none}
+.cat-title{font-size:clamp(40px,5.2vw,76px);max-width:none;text-wrap:balance}
 .search{position:relative}
 .search svg{position:absolute;left:22px;top:50%;width:22px;height:22px;transform:translateY(-50%);color:var(--muted);pointer-events:none}
 .search input{width:100%;font:inherit;font-size:18px;color:var(--ink);background:var(--blush);border:1.5px solid transparent;border-radius:var(--drop);min-height:64px;padding:0 56px 0 58px;transition:border-color .2s,background-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none}
@@ -301,7 +301,8 @@ form.q[hidden],.q-done[hidden]{display:none}
 .chip.all{padding:0 18px}
 .chip canvas{flex:none}
 .chip:hover{border-color:var(--ink)}
-.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip{text-decoration:none}
+.chip[aria-pressed="true"],.chip[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:#fff}
 
 .cat-list{padding:28px 0 clamp(88px,10vw,140px)}
 .cat-count{font-size:15px;color:var(--muted);margin-bottom:8px}
@@ -309,6 +310,8 @@ form.q[hidden],.q-done[hidden]{display:none}
 .grp-head{display:flex;align-items:center;gap:18px;padding-bottom:20px;border-bottom:1px solid var(--ink);margin-bottom:8px}
 .grp-ic{flex:none;width:72px;height:72px;border-radius:var(--drop);background:var(--blush);display:flex;align-items:center;justify-content:center}
 .grp-head h2{font-size:clamp(28px,3vw,42px);line-height:1.05;letter-spacing:-.02em;font-weight:600}
+.grp-head h2 a{text-decoration:none}
+.grp-head h2 a:hover{color:var(--red)}
 .grp-head .n{margin-left:auto;font-size:15px;color:var(--muted);white-space:nowrap}
 .sub{padding-top:28px}
 .sub h3{font-size:15px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:12px}

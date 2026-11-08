@@ -1,5 +1,5 @@
 /* Sortiment J.K.FOOD – převzato z původního webu kostera.cz (490 výrobků).
-   Po úpravě spusťte: python3 tools/build_sortiment.py (vygeneruje výpis do sortiment.html).
+   Po úpravě spusťte: python3 tools/build.py (vygeneruje stránky sortimentu, sitemap a metadata).
    n = název, g = skupina (index do JK.CATS), s = podskupina */
 window.SORTIMENT = [
 {"n": "Anýz", "g": 0, "s": "Koření jednodruhové"},
@@ -177,7 +177,7 @@ window.SORTIMENT = [
 {"n": "Kopr - stonky", "g": 2, "s": "Sušená zelenina"},
 {"n": "Kořenová směs", "g": 2, "s": "Sušená zelenina"},
 {"n": "Kořenová zelenina", "g": 2, "s": "Sušená zelenina"},
-{"n": "Košťálová zeleninaKošťáloviny tvoří výživově", "g": 2, "s": "Sušená zelenina"},
+{"n": "Košťálová zelenina", "g": 2, "s": "Sušená zelenina"},
 {"n": "Křen - granule", "g": 2, "s": "Sušená zelenina"},
 {"n": "Křen - pudr", "g": 2, "s": "Sušená zelenina"},
 {"n": "Květák", "g": 2, "s": "Sušená zelenina"},
@@ -185,7 +185,7 @@ window.SORTIMENT = [
 {"n": "Květák - pudr", "g": 2, "s": "Sušená zelenina"},
 {"n": "Libeček", "g": 2, "s": "Sušená zelenina"},
 {"n": "Luštěniny a jiná zelenina", "g": 2, "s": "Sušená zelenina"},
-{"n": "Naťová zeleninaNaťová zelenina se používá jako", "g": 2, "s": "Sušená zelenina"},
+{"n": "Naťová zelenina", "g": 2, "s": "Sušená zelenina"},
 {"n": "Paprika flok červený - granule", "g": 2, "s": "Sušená zelenina"},
 {"n": "Paprika flok červený - gr. ostrý", "g": 2, "s": "Sušená zelenina"},
 {"n": "Paprika flok červený 9mm", "g": 2, "s": "Sušená zelenina"},
@@ -416,7 +416,7 @@ window.SORTIMENT = [
 {"n": "Hřib pravý", "g": 4, "s": "Sušené houby"},
 {"n": "Jidášovo ucho", "g": 4, "s": "Sušené houby"},
 {"n": "Lesní směs", "g": 4, "s": "Sušené houby"},
-{"n": "LLiška obecná", "g": 4, "s": "Sušené houby"},
+{"n": "Liška obecná", "g": 4, "s": "Sušené houby"},
 {"n": "Shi-ta-ke", "g": 4, "s": "Sušené houby"},
 {"n": "Směs hřibovitých hub", "g": 4, "s": "Sušené houby"},
 {"n": "Žampiony plátky", "g": 4, "s": "Sušené houby"},

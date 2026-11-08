@@ -1,0 +1,85 @@
+# =====================================================================
+#  kostera.cz – nastavení serveru (Apache)
+#  1) jedna kanonická adresa: https://www.kostera.cz
+#  2) přesměrování adres ze starého webu (aby se neztratily pozice ve vyhledávačích)
+#  3) komprese a ukládání do mezipaměti (rychlost)
+#  4) bezpečnostní hlavičky
+# =====================================================================
+
+Options -Indexes
+AddDefaultCharset UTF-8
+ErrorDocument 404 /404.html
+
+<IfModule mod_mime.c>
+    AddType application/manifest+json .webmanifest
+    AddType font/woff2 .woff2
+    AddType image/svg+xml .svg
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # --- 1) HTTPS a www (jedna adresa pro vyhledávače) ---
+    RewriteCond %{HTTPS} !=on [OR]
+    RewriteCond %{HTTP_HOST} !^www\. [NC]
+    RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
+    RewriteRule ^ https://www.%1%{REQUEST_URI} [R=301,L,NE]
+
+    # index.html → /
+    RewriteCond %{THE_REQUEST} \s/index\.html[\s?] [NC]
+    RewriteRule ^index\.html$ / [R=301,L]
+
+    # --- 2) adresy ze starého webu (kategorie i všechny výrobky v nich) ---
+    RewriteRule ^nabidka/koreni-jednodruhove_c2(/.*)?$                 /sortiment-koreni-jednodruhove.html [R=301,L,NC]
+    RewriteRule ^nabidka/korenici-smesi_c3(/.*)?$                      /sortiment-korenici-smesi.html [R=301,L,NC]
+    RewriteRule ^nabidka/susena-zelenina_c4(/.*)?$                     /sortiment-susena-zelenina.html [R=301,L,NC]
+    RewriteRule ^nabidka/(susene-houby_c5|suche-plody_c6)(/.*)?$       /sortiment-susene-houby-a-plody.html [R=301,L,NC]
+    RewriteRule ^nabidka/(bujony-polevky_c7|omacky-stavy_c8|marinady_c11)(/.*)?$  /sortiment-bujony-polevky-omacky.html [R=301,L,NC]
+    RewriteRule ^nabidka/bramborove-vyrobky_c12(/.*)?$                 /sortiment-bramborove-vyrobky.html [R=301,L,NC]
+    RewriteRule ^nabidka/(skroby_c14|testoviny_c33|sladky-program_c9|cesnekova-pasta_c10|ostatni_c13)(/.*)?$  /sortiment-skroby-testoviny.html [R=301,L,NC]
+    RewriteRule ^nabidka/smesi-pro-masny-prumysl_c15(/.*)?$            /sortiment-smesi-pro-masny-prumysl.html [R=301,L,NC]
+    RewriteRule ^nabidka(/.*)?$                                        /sortiment.html [R=301,L,NC]
+
+    # ostatní stránky starého webu → odpovídající části nového
+    RewriteRule ^o-nas/?$        /#pribeh [R=301,L,NE,NC]
+    RewriteRule ^kontakty/?$     /#kontakt [R=301,L,NE,NC]
+    RewriteRule ^spoluprace/?$   /#firmy [R=301,L,NE,NC]
+    RewriteRule ^novinky(/.*)?$  / [R=301,L,NC]
+    RewriteRule ^kariera/?$      / [R=301,L,NC]
+    RewriteRule ^ke-stazeni/?$   / [R=301,L,NC]
+
+    # stará stránkování úvodní stránky (/?p=2 …)
+    RewriteCond %{QUERY_STRING} ^p=\d+$
+    RewriteRule ^$ /? [R=301,L]
+</IfModule>
+
+# --- 3) komprese ---
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json application/manifest+json application/xml image/svg+xml
+</IfModule>
+
+# --- 3) mezipaměť: styly a skripty mají ve odkazu verzi (?v=…), písma a ikony se nemění ---
+<IfModule mod_headers.c>
+    <FilesMatch "\.(woff2|png|jpg|jpeg|webp|svg|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=31536000"
+    </FilesMatch>
+    <FilesMatch "\.(html|xml|txt|webmanifest)$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+
+    # --- 4) bezpečnost ---
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header always set Strict-Transport-Security "max-age=31536000"
+</IfModule>
+
+# interní složky nejsou pro prohlížeč
+<IfModule mod_alias.c>
+    RedirectMatch 404 ^/tools(/.*)?$
+    RedirectMatch 404 ^/\.git(/.*)?$
+</IfModule>
