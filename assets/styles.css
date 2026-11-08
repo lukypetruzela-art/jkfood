@@ -125,6 +125,29 @@ button{font:inherit;color:inherit}
 .g-dots button::before{content:"";width:10px;height:10px;border-radius:var(--drop);background:#D9CFCE;transition:background-color .3s,width .4s var(--ease)}
 .g-dots button[aria-current="true"]::before{background:var(--red);width:26px}
 
+/* video */
+.video{padding:0 0 clamp(24px,3vw,40px)}
+.video-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;border-top:1px solid var(--ink);padding-top:20px;margin-bottom:22px}
+.video-head h2{font-size:clamp(24px,2.4vw,32px);line-height:1.1;letter-spacing:-.02em;font-weight:600}
+.video-yt{font-size:16px;font-weight:500;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px;white-space:nowrap}
+.video-yt:hover{color:var(--red)}
+.yt{position:relative;aspect-ratio:16/9;border-radius:40px 40px 40px 0;overflow:hidden;background:var(--red-deep);isolation:isolate}
+.yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yt-poster{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-decoration:none;color:#fff;
+  background:radial-gradient(120% 90% at 30% 20%,var(--red) 0%,var(--red-deep) 70%)}
+.yt-mark{position:absolute;right:-6%;bottom:-18%;width:min(56%,560px);color:#fff;opacity:.08;pointer-events:none;transition:transform .8s var(--ease)}
+.yt-btn{display:flex;align-items:center;justify-content:center;width:clamp(72px,8vw,104px);height:clamp(72px,8vw,104px);border-radius:var(--drop);background:#fff;color:var(--red);box-shadow:0 12px 40px rgba(60,5,3,.35);transition:transform .35s var(--ease)}
+.yt-btn svg{width:42%;height:42%;fill:currentColor;margin-left:6%}
+.yt-label{font-family:var(--font-head);font-size:clamp(20px,2vw,26px);font-weight:600;letter-spacing:-.01em}
+.yt-note{position:absolute;left:clamp(20px,3vw,40px);bottom:clamp(16px,2.4vw,28px);font-size:13.5px;color:rgba(255,255,255,.7)}
+.yt-poster:hover .yt-btn,.yt-poster:focus-visible .yt-btn{transform:scale(1.08)}
+.yt-poster:hover .yt-mark{transform:scale(1.04) rotate(-2deg)}
+.yt-poster:focus-visible{outline:3px solid #fff;outline-offset:-8px}
+@media (max-width:560px){
+  .yt{border-radius:24px 24px 24px 0}
+  .yt-note{display:none}
+}
+
 /* sortiment */
 .assort{padding:clamp(24px,4vw,56px) 0 clamp(88px,11vw,160px)}
 .assort-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(40px,6vw,104px);align-items:center}
