@@ -1,10 +1,10 @@
 /* Sdílené styly webu J.K.FOOD (index.html, sortiment.html) */
-/* Bricolage Grotesque (SIL OFL 1.1, viz fonts/OFL.txt) – hostováno lokálně,
-   oříznuto na latinku + češtinu a osy wght 400–700, wdth 85–100, opsz 16–96 */
-@font-face{font-family:"Bricolage Grotesque";src:url(fonts/bricolage-latin.woff2) format("woff2");font-weight:400 700;font-stretch:85% 100%;font-display:swap;
-  unicode-range:U+0020-007E,U+00A0-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2013-2014,U+2018-201E,U+2022,U+2026,U+2039-203A,U+20AC,U+2122,U+2190-2193,U+2197,U+2212}
-@font-face{font-family:"Bricolage Grotesque";src:url(fonts/bricolage-latin-ext.woff2) format("woff2");font-weight:400 700;font-stretch:85% 100%;font-display:swap;
-  unicode-range:U+0100-017F,U+02C7,U+02D8-02DD}
+/* Písma jako na e-shopu chut.kostera.cz: DM Sans (nadpisy) + Inter (text).
+   Obě SIL OFL 1.1 (viz fonts/OFL-*.txt), hostováno lokálně, oříznuto na latinku + češtinu a tloušťky 400–700. */
+@font-face{font-family:"DM Sans";src:url(fonts/dmsans-latin.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0020-007E,U+00A0-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2013-2014,U+2018-201E,U+2022,U+2026,U+2039-203A,U+20AC,U+2122,U+2190-2193,U+2197,U+2212}
+@font-face{font-family:"DM Sans";src:url(fonts/dmsans-latin-ext.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0100-017F,U+02C7,U+02D8-02DD}
+@font-face{font-family:"Inter";src:url(fonts/inter-latin.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0020-007E,U+00A0-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2013-2014,U+2018-201E,U+2022,U+2026,U+2039-203A,U+20AC,U+2122,U+2190-2193,U+2197,U+2212}
+@font-face{font-family:"Inter";src:url(fonts/inter-latin-ext.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0100-017F,U+02C7,U+02D8-02DD}
 :root{
   --red:#A7110C;
   --red-deep:#7C0B08;
@@ -15,7 +15,8 @@
   --blush:#FBF4F3;
   --paper:#FFFFFF;
   --drop:999px 999px 999px 0;
-  --font:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-head:"DM Sans","Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --wrap:1320px;
   --gut:clamp(20px,4vw,56px);
   --ease:cubic-bezier(.2,.7,.1,1);
@@ -23,10 +24,12 @@
 }
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:96px;-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:18px;line-height:1.55;font-variation-settings:"opsz" 16;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:18px;line-height:1.55;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 img,svg,canvas{display:block;max-width:100%}
 a{color:inherit}
 h1,h2,h3,p,ol,ul,dl,dd,figure,blockquote{margin:0}
+/* nadpisové písmo (DM Sans) – stejně jako e-shop */
+h1,h2,h3,.facts dd,.tab,.quote,.timeline .y,.direct a,.rail-link,.steps .n,.cat-empty-title{font-family:var(--font-head)}
 ul,ol{padding:0;list-style:none}
 button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:4px}
@@ -72,7 +75,7 @@ button{font:inherit;color:inherit}
 .hero{padding:clamp(24px,3.5vw,48px) 0 clamp(56px,7vw,96px)}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);column-gap:clamp(32px,5vw,88px);row-gap:40px;align-items:center}
 .hero-text{min-width:0}
-.hero h1{font-size:clamp(40px,5.9vw,92px);line-height:.96;letter-spacing:-.025em;font-weight:650;font-variation-settings:"opsz" 96,"wdth" 90;max-width:12.5ch;text-wrap:balance}
+.hero h1{font-size:clamp(40px,5.9vw,92px);line-height:.96;letter-spacing:-.02em;font-weight:600;max-width:12.5ch;text-wrap:balance}
 .hero h1 .since{display:block;color:var(--red)}
 .hero .lead{margin-top:24px;font-size:clamp(18px,1.4vw,20px);color:var(--muted);max-width:46ch}
 .hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
@@ -91,7 +94,7 @@ button{font:inherit;color:inherit}
 
 /* category legend */
 .rail{border-top:1px solid var(--ink)}
-.rail-link{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0;text-decoration:none;font-size:clamp(26px,2.6vw,36px);font-weight:620;letter-spacing:-.025em;font-variation-settings:"opsz" 72;transition:color .2s}
+.rail-link{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0;text-decoration:none;font-size:clamp(26px,2.6vw,36px);font-weight:600;letter-spacing:-.02em;transition:color .2s}
 .rail-link .arr{flex:none;display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:var(--drop);background:var(--red);color:#fff;font-size:24px;transition:transform .35s var(--ease),background-color .25s}
 .rail-link:hover{color:var(--red)}
 .rail-link:hover .arr{transform:translateX(6px);background:var(--red-hover)}
@@ -138,19 +141,19 @@ button{font:inherit;color:inherit}
 .facts{display:flex;flex-wrap:wrap;gap:16px 56px;margin-top:40px}
 .facts div{display:flex;flex-direction:column}
 .facts dt{order:2;font-size:15px;color:var(--muted)}
-.facts dd{order:1;font-size:clamp(28px,2.6vw,38px);font-weight:620;letter-spacing:-.025em;font-variation-settings:"opsz" 72;color:var(--red)}
+.facts dd{order:1;font-size:clamp(28px,2.6vw,38px);font-weight:600;letter-spacing:-.02em;color:var(--red)}
 
 /* ---------- sections ---------- */
 section.block{padding:clamp(88px,11vw,160px) 0}
 section.block.flush{padding-top:0}
-.h2{font-size:clamp(36px,4.6vw,68px);line-height:1;letter-spacing:-.03em;font-weight:620;font-variation-settings:"opsz" 96,"wdth" 85;max-width:16ch}
+.h2{font-size:clamp(36px,4.6vw,68px);line-height:1;letter-spacing:-.02em;font-weight:600;max-width:16ch}
 .intro{margin-top:22px;font-size:20px;color:var(--muted);max-width:52ch}
 
 /* segments / tabs */
 .seg{background:var(--blush)}
 .seg-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(40px,6vw,104px);margin-top:56px;align-items:start}
 .tabs{display:flex;flex-direction:column;border-top:1px solid #E6D4D2}
-.tab{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid #E6D4D2;padding:22px 4px;font-size:clamp(22px,2.2vw,30px);font-weight:560;letter-spacing:-.02em;font-variation-settings:"opsz" 48;cursor:pointer;color:var(--muted);transition:color .25s}
+.tab{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid #E6D4D2;padding:22px 4px;font-size:clamp(22px,2.2vw,30px);font-weight:560;letter-spacing:-.02em;cursor:pointer;color:var(--muted);transition:color .25s}
 .tab .dot{width:14px;height:14px;border-radius:var(--drop);border:1.5px solid currentColor;flex:none;transition:background-color .25s,transform .35s var(--ease)}
 .tab:hover{color:var(--ink)}
 .tab[aria-selected="true"]{color:var(--red)}
@@ -159,7 +162,7 @@ section.block.flush{padding-top:0}
 .panel[hidden]{display:none}
 .panel.in{animation:panelIn .5s var(--ease)}
 @keyframes panelIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.panel h3{font-size:clamp(28px,2.8vw,40px);line-height:1.08;letter-spacing:-.025em;font-weight:620;font-variation-settings:"opsz" 72;max-width:18ch}
+.panel h3{font-size:clamp(28px,2.8vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:600;max-width:18ch}
 .panel p{margin-top:18px;font-size:19px;color:var(--muted);max-width:44ch}
 .panel ul{margin-top:28px;display:grid;gap:12px}
 .panel li{display:flex;gap:12px;align-items:baseline}
@@ -179,7 +182,7 @@ section.block.flush{padding-top:0}
 
 /* story */
 .story-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(48px,7vw,120px);align-items:start}
-.quote{font-size:clamp(28px,3.1vw,46px);line-height:1.16;letter-spacing:-.022em;font-weight:440;font-variation-settings:"opsz" 72}
+.quote{font-size:clamp(28px,3.1vw,46px);line-height:1.18;letter-spacing:-.02em;font-weight:400}
 .quote-by{margin-top:28px;display:flex;align-items:center;gap:16px}
 .quote-by .mk{width:52px;height:52px;color:var(--red);flex:none}
 .quote-by b{display:block;font-weight:600}
@@ -193,7 +196,7 @@ section.block.flush{padding-top:0}
 .timeline li:last-child{padding-bottom:0}
 .timeline li::before{content:"";position:absolute;left:-8px;top:8px;width:14px;height:14px;border-radius:var(--drop);background:#fff;border:1.5px solid var(--red)}
 .timeline li:last-child::before{background:var(--red)}
-.timeline .y{font-size:30px;font-weight:620;letter-spacing:-.02em;font-variation-settings:"opsz" 48;line-height:1.1}
+.timeline .y{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
 .timeline p{margin-top:6px;color:var(--muted);max-width:36ch}
 
 /* eshop band */
@@ -235,7 +238,7 @@ form.q[hidden],.q-done[hidden]{display:none}
 .q-note a{font-weight:600}
 .q-done{background:var(--blush);border-radius:40px 40px 40px 0;padding:clamp(32px,4vw,56px);outline:none}
 .q-done-mk{width:56px;height:56px;color:var(--red);margin-bottom:22px}
-.q-done h3{font-size:clamp(26px,2.6vw,36px);line-height:1.1;letter-spacing:-.02em;font-weight:620;font-variation-settings:"opsz" 72}
+.q-done h3{font-size:clamp(26px,2.6vw,36px);line-height:1.1;letter-spacing:-.02em;font-weight:600}
 .q-done p{margin:14px 0 28px;color:var(--muted);max-width:44ch}
 
 /* footer */
@@ -282,7 +285,7 @@ form.q[hidden],.q-done[hidden]{display:none}
 .grp{padding-top:clamp(40px,5vw,64px)}
 .grp-head{display:flex;align-items:center;gap:18px;padding-bottom:20px;border-bottom:1px solid var(--ink);margin-bottom:8px}
 .grp-ic{flex:none;width:72px;height:72px;border-radius:var(--drop);background:var(--blush);display:flex;align-items:center;justify-content:center}
-.grp-head h2{font-size:clamp(28px,3vw,42px);line-height:1.05;letter-spacing:-.025em;font-weight:620;font-variation-settings:"opsz" 72}
+.grp-head h2{font-size:clamp(28px,3vw,42px);line-height:1.05;letter-spacing:-.02em;font-weight:600}
 .grp-head .n{margin-left:auto;font-size:15px;color:var(--muted);white-space:nowrap}
 .sub{padding-top:28px}
 .sub h3{font-size:15px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:12px}
