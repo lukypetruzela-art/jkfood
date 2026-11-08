@@ -126,6 +126,19 @@
           <h2 class="h2" id="sort-title">Over 490 products in nine groups</h2>
           <div class="rail">
             <a class="rail-link" href="products.html">Full product range <span class="arr" aria-hidden="true">→</span></a>
+            <ul class="cats" id="cats">
+<!-- LEGEND:START -->
+<li><a href="products.html#sk-testoviny" data-cat="0"><canvas class="sw-ic" data-ic="0" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Pasta</span></a></li>
+<li><a href="products.html#sk-koreni" data-cat="1"><canvas class="sw-ic" data-ic="1" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Single spices</span></a></li>
+<li><a href="products.html#sk-smesi" data-cat="2"><canvas class="sw-ic" data-ic="2" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Seasoning blends</span></a></li>
+<li><a href="products.html#sk-zelenina" data-cat="3"><canvas class="sw-ic" data-ic="3" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Dried vegetables</span></a></li>
+<li><a href="products.html#sk-maso" data-cat="4"><canvas class="sw-ic" data-ic="4" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Blends for the meat industry</span></a></li>
+<li><a href="products.html#sk-houby" data-cat="5"><canvas class="sw-ic" data-ic="5" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Dried mushrooms, fruit and nuts</span></a></li>
+<li><a href="products.html#sk-polevky" data-cat="6"><canvas class="sw-ic" data-ic="6" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Stocks, soups and sauces</span></a></li>
+<li><a href="products.html#sk-brambory" data-cat="7"><canvas class="sw-ic" data-ic="7" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Potato products</span></a></li>
+<li><a href="products.html#sk-skroby" data-cat="8"><canvas class="sw-ic" data-ic="8" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Starches and more</span></a></li>
+<!-- LEGEND:END -->
+            </ul>
           </div>
         </div>
         <figure class="jar" id="jar">
@@ -343,6 +356,17 @@
   ];
   const ESHOP = 'https://eshop.kostera.cz/';
 
+
+  /* ---------- category rail + footer ---------- */
+  // odkazy na skupiny jsou přímo v HTML (kvůli vyhledávačům), tady se jen vykreslí ikonky
+  const catsEl = document.getElementById('cats');
+  catsEl.querySelectorAll('canvas[data-ic]').forEach(cv => {
+    const px = cv.width, d = Math.min(2, devicePixelRatio || 1);
+    cv.style.width = cv.style.height = px + 'px';
+    cv.width = cv.height = Math.round(px * d);
+    const x = cv.getContext('2d'); x.scale(d, d); x.translate(px / 2, px / 2);
+    window.JK.drawProduct(x, +cv.dataset.ic, px * .42, 'mix');
+  });
 
   /* ---------- tabs ---------- */
   const tabsEl = document.getElementById('tabs');
@@ -896,6 +920,11 @@
     kick();
   });
   cv.addEventListener('pointerleave', () => { if (mouse) { mouse = null; kick(); } });
+  const setActive = i => { active = i; reduce ? reducedUpdate() : (done ? kick() : null); };
+  catsEl.addEventListener('pointerover', e => { const a = e.target.closest('[data-cat]'); if (a) setActive(+a.dataset.cat); });
+  catsEl.addEventListener('pointerleave', () => setActive(-1));
+  catsEl.addEventListener('focusin', e => { const a = e.target.closest('[data-cat]'); if (a) setActive(+a.dataset.cat); });
+  catsEl.addEventListener('focusout', () => setActive(-1));
 
 })();
 </script>

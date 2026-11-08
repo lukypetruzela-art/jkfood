@@ -129,6 +129,19 @@
           <h2 class="h2" id="sort-title">Přes 490 výrobků v&nbsp;devíti skupinách</h2>
           <div class="rail">
             <a class="rail-link" href="sortiment.html">Celý sortiment <span class="arr" aria-hidden="true">→</span></a>
+            <ul class="cats" id="cats">
+<!-- LEGEND:START -->
+<li><a href="sortiment-testoviny.html" data-cat="0"><canvas class="sw-ic" data-ic="0" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Těstoviny</span></a></li>
+<li><a href="sortiment-koreni-jednodruhove.html" data-cat="1"><canvas class="sw-ic" data-ic="1" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Koření jednodruhové</span></a></li>
+<li><a href="sortiment-korenici-smesi.html" data-cat="2"><canvas class="sw-ic" data-ic="2" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Kořenicí směsi</span></a></li>
+<li><a href="sortiment-susena-zelenina.html" data-cat="3"><canvas class="sw-ic" data-ic="3" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Sušená zelenina</span></a></li>
+<li><a href="sortiment-smesi-pro-masny-prumysl.html" data-cat="4"><canvas class="sw-ic" data-ic="4" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Směsi pro masný průmysl</span></a></li>
+<li><a href="sortiment-susene-houby-a-plody.html" data-cat="5"><canvas class="sw-ic" data-ic="5" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Sušené houby a plody</span></a></li>
+<li><a href="sortiment-bujony-polevky-omacky.html" data-cat="6"><canvas class="sw-ic" data-ic="6" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Bujóny, polévky, omáčky</span></a></li>
+<li><a href="sortiment-bramborove-vyrobky.html" data-cat="7"><canvas class="sw-ic" data-ic="7" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Bramborové výrobky</span></a></li>
+<li><a href="sortiment-skroby-a-dalsi.html" data-cat="8"><canvas class="sw-ic" data-ic="8" width="28" height="28" aria-hidden="true"></canvas><span class="nm">Škroby a další</span></a></li>
+<!-- LEGEND:END -->
+            </ul>
           </div>
         </div>
         <figure class="jar" id="jar">
@@ -345,6 +358,17 @@
   ];
   const ESHOP = 'https://eshop.kostera.cz/';
 
+
+  /* ---------- category rail + footer ---------- */
+  // odkazy na skupiny jsou přímo v HTML (kvůli vyhledávačům), tady se jen vykreslí ikonky
+  const catsEl = document.getElementById('cats');
+  catsEl.querySelectorAll('canvas[data-ic]').forEach(cv => {
+    const px = cv.width, d = Math.min(2, devicePixelRatio || 1);
+    cv.style.width = cv.style.height = px + 'px';
+    cv.width = cv.height = Math.round(px * d);
+    const x = cv.getContext('2d'); x.scale(d, d); x.translate(px / 2, px / 2);
+    window.JK.drawProduct(x, +cv.dataset.ic, px * .42, 'mix');
+  });
 
   /* ---------- tabs ---------- */
   const tabsEl = document.getElementById('tabs');
@@ -898,6 +922,11 @@
     kick();
   });
   cv.addEventListener('pointerleave', () => { if (mouse) { mouse = null; kick(); } });
+  const setActive = i => { active = i; reduce ? reducedUpdate() : (done ? kick() : null); };
+  catsEl.addEventListener('pointerover', e => { const a = e.target.closest('[data-cat]'); if (a) setActive(+a.dataset.cat); });
+  catsEl.addEventListener('pointerleave', () => setActive(-1));
+  catsEl.addEventListener('focusin', e => { const a = e.target.closest('[data-cat]'); if (a) setActive(+a.dataset.cat); });
+  catsEl.addEventListener('focusout', () => setActive(-1));
 
 })();
 </script>
