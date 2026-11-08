@@ -383,6 +383,7 @@ def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_curr
     burger.setAttribute('aria-label', open ? 'Zavřít menu' : 'Otevřít menu'); document.body.style.overflow = open ? 'hidden' : '';
   }};
   burger.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+  matchMedia('(min-width: 1181px)').addEventListener('change', e => {{ if (e.matches) setMenu(false); }});
   nav.addEventListener('click', e => {{ if (e.target.closest('a')) setMenu(false); }});
   addEventListener('keydown', e => {{ if (e.key === 'Escape' && nav.classList.contains('open')) {{ setMenu(false); burger.focus(); }} }});
   const onScroll = () => top.classList.toggle('scrolled', scrollY > 8);

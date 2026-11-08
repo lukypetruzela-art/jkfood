@@ -63,16 +63,18 @@ button{font:inherit;color:inherit}
 .nav{display:flex;align-items:center;gap:6px}
 .nav a.link{padding:10px 14px;white-space:nowrap;text-decoration:none;font-size:16px;font-weight:500;border-radius:999px;transition:color .2s,background-color .2s}
 .nav a.link:hover{color:var(--red);background:var(--blush)}
+.nav a.link{transition:color .2s,background-color .25s var(--ease)}
 .nav .btn{min-height:46px;padding:0 20px;font-size:16px;margin-left:10px}
 .nav a.lang{font-size:14px;font-weight:600;letter-spacing:.04em;border:1.5px solid var(--line);padding:7px 11px;margin-left:6px}
 .nav a.lang:hover{border-color:var(--red)}
 .lang-note{font-size:.55em;font-weight:500;color:var(--muted);letter-spacing:0}
 :lang(en) .item::after{content:"Enquire →";content:"Enquire →" / ""}
 .burger{display:none;width:48px;height:48px;border:0;background:none;border-radius:999px;cursor:pointer;position:relative}
-.burger span{position:absolute;left:13px;right:13px;height:2px;background:var(--ink);transition:transform .3s var(--ease),opacity .2s}
+.burger span{position:absolute;left:13px;right:13px;height:2px;border-radius:2px;background:var(--ink);transition:transform .4s var(--ease),opacity .25s var(--ease)}
+.burger:hover span:nth-child(2){transform:scaleX(.6);transform-origin:right}
 .burger span:nth-child(1){top:18px}.burger span:nth-child(2){top:24px}.burger span:nth-child(3){top:30px}
 .burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
-.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0;transform:scaleX(0)}
 .burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
 /* ---------- hero ---------- */
@@ -228,6 +230,8 @@ button{font:inherit;color:inherit}
 .job details[open] .job-toggle::before,.job details[open] .job-toggle::after{background:#fff}
 .job details[open] .job-toggle::after{transform:rotate(0)}
 .job-body{padding:0 clamp(20px,2.4vw,32px) 28px}
+.job details[open] .job-body{animation:jobIn .45s var(--ease)}
+@keyframes jobIn{from{opacity:0;transform:translateY(-6px)}}
 .job-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px 40px;border-top:1px solid var(--line);padding-top:24px}
 .job h4{font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin:0 0 10px}
 .job-cols ul{display:grid;gap:8px}
@@ -474,8 +478,17 @@ form.q[hidden],.q-done[hidden]{display:none}
 
 /* menu: pod 1180 px se schová pod tlačítko (8 položek se jinak nevejde do řádku) */
 @media (max-width:1180px){
-  .nav{position:fixed;inset:0;top:0;background:#fff;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(96px + env(safe-area-inset-top,0px)) var(--gut) 40px;transform:translateY(-100%);visibility:hidden;transition:transform .45s var(--ease),visibility 0s .45s;z-index:-1}
-  .nav.open{transform:none;visibility:visible;transition:transform .45s var(--ease)}
+  /* minimalistické otevření: panel se jemně objeví a položky postupně „vyplavou“ odspodu */
+  .nav{position:fixed;inset:0;top:0;background:#fff;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;overflow-y:auto;overscroll-behavior:contain;padding:calc(96px + env(safe-area-inset-top,0px)) var(--gut) 40px;opacity:0;visibility:hidden;clip-path:inset(0 0 100% 0);transition:clip-path .5s var(--ease),opacity .3s var(--ease),visibility 0s .5s;z-index:-1}
+  .nav.open{opacity:1;visibility:visible;clip-path:inset(0 0 0 0);transition:clip-path .42s var(--ease),opacity .2s var(--ease)}
+  .nav > *{opacity:0;transform:translateY(14px);transition:opacity .2s var(--ease),transform .2s var(--ease)}
+  .nav.open > *{opacity:1;transform:none;transition:opacity .45s var(--ease),transform .55s var(--ease);transition-delay:calc(.16s + var(--i,0) * .04s)}
+  .nav > :nth-child(2){--i:1}.nav > :nth-child(3){--i:2}.nav > :nth-child(4){--i:3}.nav > :nth-child(5){--i:4}
+  .nav > :nth-child(6){--i:5}.nav > :nth-child(7){--i:6}.nav > :nth-child(8){--i:7}.nav > :nth-child(9){--i:8}.nav > :nth-child(10){--i:9}
+  .nav a.link:not(.lang){position:relative}
+  .nav a.link:not(.lang)::after{content:"→";position:absolute;right:0;top:50%;transform:translate(-8px,-50%);opacity:0;color:var(--red);font-size:.8em;transition:opacity .2s,transform .3s var(--ease)}
+  .nav a.link:not(.lang):hover::after,.nav a.link:not(.lang):focus-visible::after,.nav a.link[aria-current="page"]::after{opacity:1;transform:translate(0,-50%)}
+  .nav a.link[aria-current="page"]{color:var(--red)}
   .nav a.link:not(.lang){font-size:30px;font-weight:600;padding:14px 0;border-bottom:1px solid var(--line);border-radius:0;letter-spacing:-.02em}
   .nav a.link:hover{background:none}
   .nav a.lang{align-self:flex-start;margin:20px 0 0;border:1.5px solid var(--line);border-radius:999px;font-size:15px;padding:8px 16px}
@@ -511,6 +524,7 @@ form.q[hidden],.q-done[hidden]{display:none}
   .facts{gap:16px 32px}
 }
 @media (prefers-reduced-motion:reduce){
+  .nav,.nav > *{clip-path:none!important;transform:none!important}
   *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   .reveal{opacity:1;transform:none}
   .lift{animation:none}

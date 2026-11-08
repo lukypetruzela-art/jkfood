@@ -13,7 +13,7 @@
 <link rel="preload" href="/assets/fonts/dmsans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/styles.css?v=aaba887a">
+<link rel="stylesheet" href="/assets/styles.css?v=bfbb2e8c">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -79,6 +79,7 @@
     nav.classList.toggle('open', open); burger.setAttribute('aria-expanded', open);
     document.body.style.overflow = open ? 'hidden' : '';
   });
+  matchMedia('(min-width: 1181px)').addEventListener('change', e => { if (e.matches) { nav.classList.remove('open'); burger.setAttribute('aria-expanded', false); document.body.style.overflow = ''; } });
 })();
 </script>
 </body>

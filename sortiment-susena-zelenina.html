@@ -28,7 +28,7 @@
 <link rel="preload" href="assets/fonts/dmsans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/styles.css?v=aaba887a">
+<link rel="stylesheet" href="assets/styles.css?v=bfbb2e8c">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -218,7 +218,7 @@
   </div>
 </footer>
 
-<script src="assets/products.js?v=aaba887a" defer></script>
+<script src="assets/products.js?v=bfbb2e8c" defer></script>
 <script>
 addEventListener('DOMContentLoaded', () => {
   const { drawProduct } = window.JK;
@@ -234,6 +234,7 @@ addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = open ? 'hidden' : '';
   }
   burger.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+  matchMedia('(min-width: 1181px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
   nav.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
   addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { setMenu(false); burger.focus(); } });
   let ticking = false;

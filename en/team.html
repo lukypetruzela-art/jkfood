@@ -9,7 +9,7 @@
 <link rel="preload" href="../assets/fonts/dmsans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/styles.css?v=aaba887a">
+<link rel="stylesheet" href="../assets/styles.css?v=bfbb2e8c">
 <title>Our team | J.K.FOOD, Czech Republic</title>
 <meta name="description" content="Meet the people of J.K.FOOD – management, sales representatives, production and development of seasoning blends in Větřkovice.">
 <link rel="alternate" hreflang="cs" href="https://www.kostera.cz/nas-tym.html">
@@ -111,6 +111,7 @@
     burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); document.body.style.overflow = open ? 'hidden' : '';
   };
   burger.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+  matchMedia('(min-width: 1181px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
   nav.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
   addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { setMenu(false); burger.focus(); } });
   const onScroll = () => top.classList.toggle('scrolled', scrollY > 8);

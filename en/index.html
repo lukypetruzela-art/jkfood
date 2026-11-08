@@ -9,7 +9,7 @@
 <link rel="preload" href="../assets/fonts/dmsans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/styles.css?v=aaba887a">
+<link rel="stylesheet" href="../assets/styles.css?v=bfbb2e8c">
 <title>J.K.FOOD – Czech producer of spices and seasoning blends</title>
 <meta name="description" content="Family company from Větřkovice, Czech Republic. Since 1996 we have produced spices, seasoning blends, dried vegetables and dehydrated foods for food manufacturers and catering.">
 <link rel="alternate" hreflang="cs" href="https://www.kostera.cz/">
@@ -330,7 +330,7 @@
   </div>
 </footer>
 
-<script src="../assets/products.js?v=aaba887a"></script>
+<script src="../assets/products.js?v=bfbb2e8c"></script>
 <script>
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -419,6 +419,7 @@
     document.body.style.overflow = open ? 'hidden' : '';
   }
   burger.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+  matchMedia('(min-width: 1181px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
   nav.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
   addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { setMenu(false); burger.focus(); } });
 
@@ -693,6 +694,7 @@
     show(0); restart();
   })();
 
+  const initGrains = () => {
   /* ---------- grains: pixla s víčkem ----------
      1) vykreslí se spodek pixly (bez víčka)
      2) nasype se koření (zrnka padají a skládají se odspodu)
@@ -925,6 +927,10 @@
   catsEl.addEventListener('pointerleave', () => setActive(-1));
   catsEl.addEventListener('focusin', e => { const a = e.target.closest('[data-cat]'); if (a) setActive(+a.dataset.cat); });
   catsEl.addEventListener('focusout', () => setActive(-1));
+  };
+  // výpočet rozmístění kousků je náročnější – spustí se, až je prohlížeč po načtení volný
+  if ('requestIdleCallback' in window) requestIdleCallback(initGrains, { timeout: 1500 });
+  else setTimeout(initGrains, 200);
 
 })();
 </script>
