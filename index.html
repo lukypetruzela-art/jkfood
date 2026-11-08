@@ -30,7 +30,7 @@
 <link rel="preload" href="assets/fonts/dmsans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/styles.css?v=ed91b377">
+<link rel="stylesheet" href="assets/styles.css?v=0b7fd111">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -162,6 +162,15 @@
         <div class="tabs" role="tablist" aria-label="Odběratelé" id="tabs"></div>
         <div id="panels"></div>
       </div>
+      <div class="coop" aria-labelledby="coop-title">
+        <h3 id="coop-title">Čtyři způsoby, jak s&nbsp;námi spolupracovat</h3>
+        <ol class="coop-list">
+          <li><span class="coop-n" aria-hidden="true">1</span><h4>Obchodní zástupce ve vašem kraji</h4><p>Naši zástupci působí ve všech regionech Česka a&nbsp;zásobují školy, školky, nemocnice, domovy pro seniory i&nbsp;restaurace. Zboží dovezeme vlastní dopravou do 5&nbsp;pracovních dnů.</p><a href="nas-tym.html#tym-2">Najít zástupce <span aria-hidden="true">→</span></a></li>
+          <li><span class="coop-n" aria-hidden="true">2</span><h4>Specialisté pro potravinářský průmysl</h4><p>Vývoj směsí, aplikace koření a&nbsp;dehydratovaných surovin do výroby a&nbsp;veškerá technická i&nbsp;administrativní podpora.</p><a href="#na-miru">Výroba na míru <span aria-hidden="true">→</span></a></li>
+          <li><span class="coop-n" aria-hidden="true">3</span><h4>E-shop pro domácnosti</h4><p>Koření, směsi, sušené houby a&nbsp;další výrobky v&nbsp;menších baleních objednáte pohodlně online.</p><a href="https://eshop.kostera.cz/" target="_blank" rel="noopener">Do e-shopu <span aria-hidden="true">↗</span></a></li>
+          <li><span class="coop-n" aria-hidden="true">4</span><h4>Osobní odběr ve Větřkovicích</h4><p>Preferujete osobní kontakt? Navštivte nás – probereme vaše potřeby a&nbsp;připravíme zboží k&nbsp;okamžitému odběru.</p><a href="https://mapy.cz/?q=V%C4%9Bt%C5%99kovice%20243%2C%20747%2043" target="_blank" rel="noopener">Jak k&nbsp;nám <span aria-hidden="true">↗</span></a></li>
+        </ol>
+      </div>
     </div>
   </section>
 
@@ -256,6 +265,11 @@
             <a href="tel:+420556310205">+420 556 310 205</a>
           </div>
           <address class="addr">Jaroslav Kostera, J.K.FOOD s.r.o.<br>Větřkovice 243, 747 43 Větřkovice</address>
+          <ul class="people">
+            <li><b>Jana Galčanová</b><span>obchodní ředitel – nabídky a&nbsp;spolupráce</span><a href="tel:+420777340321">+420 777 340 321</a><a href="mailto:jana.galcanova@kostera.cz">jana.galcanova@kostera.cz</a></li>
+            <li><b>Bc. Jakub Kostera</b><span>vedoucí výroby – směsi na míru, technologie</span><a href="tel:+420777340382">+420 777 340 382</a><a href="mailto:jakub@kostera.cz">jakub@kostera.cz</a></li>
+            <li><b>Jaroslav Kostera</b><span>majitel</span><a href="tel:+420777340304">+420 777 340 304</a><a href="mailto:jaroslav@kostera.cz">jaroslav@kostera.cz</a></li>
+          </ul>
         </div>
         <div class="q-wrap">
         <form class="q" id="form" action="api/poptavka.php" method="post" novalidate>
@@ -307,13 +321,13 @@
       <div><h3>Kontakt</h3><ul><li><a href="mailto:kostera@kostera.cz">kostera@kostera.cz</a></li><li><a href="tel:+420556310205">+420 556 310 205</a></li><li><a href="https://eshop.kostera.cz/" target="_blank" rel="noopener">E-shop ↗</a></li></ul></div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Jaroslav Kostera, J.K.FOOD s.r.o., IČ 27780384</span>
+      <span class="foot-legal">© 2026 Jaroslav Kostera, J.K.FOOD s.r.o. · Větřkovice 243, 747 43 Větřkovice · IČ 27780384 · DIČ CZ27780384 · zapsaná v&nbsp;obchodním rejstříku u&nbsp;Krajského soudu v&nbsp;Ostravě, sp.&nbsp;zn. C&nbsp;51605</span>
       <span><a href="#">Ochrana osobních údajů</a> &nbsp; <a href="#">Cookies</a></span>
     </div>
   </div>
 </footer>
 
-<script src="assets/products.js?v=ed91b377"></script>
+<script src="assets/products.js?v=0b7fd111"></script>
 <script>
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;

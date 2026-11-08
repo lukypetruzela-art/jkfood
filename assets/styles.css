@@ -125,6 +125,28 @@ button{font:inherit;color:inherit}
 .g-dots button::before{content:"";width:10px;height:10px;border-radius:var(--drop);background:#D9CFCE;transition:background-color .3s,width .4s var(--ease)}
 .g-dots button[aria-current="true"]::before{background:var(--red);width:26px}
 
+/* způsoby spolupráce */
+.coop{margin-top:clamp(56px,7vw,96px)}
+.coop h3{font-size:clamp(24px,2.4vw,32px);line-height:1.15;font-weight:600;letter-spacing:-.02em;padding-bottom:18px;border-bottom:1px solid #E6D4D2;margin-bottom:24px}
+.coop-list{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.coop-list li{background:#fff;border-radius:32px 32px 32px 0;padding:clamp(22px,2.2vw,30px);display:flex;flex-direction:column}
+.coop-n{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:var(--drop);border:1.5px solid var(--red);color:var(--red);font-weight:600;font-family:var(--font-head)}
+.coop-list h4{margin:18px 0 0;font-family:var(--font-head);font-size:19px;line-height:1.25;font-weight:600;letter-spacing:-.01em}
+.coop-list p{margin-top:10px;color:var(--muted);font-size:16px;flex:1}
+.coop-list a{margin-top:18px;font-weight:600;text-decoration:none;color:var(--red);width:fit-content}
+.coop-list a:hover{text-decoration:underline;text-underline-offset:4px}
+@media (max-width:1080px){.coop-list{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.coop-list{grid-template-columns:1fr}}
+
+/* klíčové kontakty */
+.people{margin-top:32px;display:grid;gap:18px;border-top:1px solid var(--line);padding-top:24px}
+.people li{display:flex;flex-direction:column;gap:1px}
+.people b{font-weight:600}
+.people span{color:var(--muted);font-size:15.5px}
+.people a{width:fit-content;text-decoration:none;font-size:16px}
+.people a:hover{color:var(--red);text-decoration:underline;text-underline-offset:3px}
+.foot-legal{max-width:80ch;line-height:1.5}
+
 /* video */
 .video{padding:0 0 clamp(24px,3vw,40px)}
 .video-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;border-top:1px solid var(--ink);padding-top:20px;margin-bottom:22px}

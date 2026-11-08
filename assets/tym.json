@@ -5,30 +5,81 @@
     {
       "nazev": "Vedení firmy",
       "lide": [
-        { "jmeno": "Jaroslav Kostera", "pozice": "zakladatel a majitel", "foto": "", "telefon": "", "email": "" },
-        { "jmeno": "[Jméno a příjmení]", "pozice": "[pozice, např. obchodní ředitel]", "foto": "", "telefon": "", "email": "" }
+        {
+          "jmeno": "Jaroslav Kostera",
+          "pozice": "majitel",
+          "foto": "",
+          "telefon": "+420 777 340 304",
+          "email": "jaroslav@kostera.cz"
+        },
+        {
+          "jmeno": "Jana Galčanová",
+          "pozice": "obchodní ředitel",
+          "foto": "",
+          "telefon": "+420 777 340 321",
+          "email": "jana.galcanova@kostera.cz"
+        }
       ]
     },
     {
       "nazev": "Obchodní zástupci",
       "popis": "Ozvěte se zástupci pro váš kraj – připraví nabídku, přiveze vzorky a domluví pravidelné dodávky.",
       "lide": [
-        { "jmeno": "[Jméno a příjmení]", "pozice": "obchodní zástupce", "oblast": "[kraj]", "foto": "", "telefon": "", "email": "" },
-        { "jmeno": "[Jméno a příjmení]", "pozice": "obchodní zástupce", "oblast": "[kraj]", "foto": "", "telefon": "", "email": "" },
-        { "jmeno": "[Jméno a příjmení]", "pozice": "obchodní zástupce", "oblast": "[kraj]", "foto": "", "telefon": "", "email": "" }
+        {
+          "jmeno": "[Jméno a příjmení]",
+          "pozice": "obchodní zástupce",
+          "oblast": "[kraj]",
+          "foto": "",
+          "telefon": "",
+          "email": ""
+        },
+        {
+          "jmeno": "[Jméno a příjmení]",
+          "pozice": "obchodní zástupce",
+          "oblast": "[kraj]",
+          "foto": "",
+          "telefon": "",
+          "email": ""
+        },
+        {
+          "jmeno": "[Jméno a příjmení]",
+          "pozice": "obchodní zástupce",
+          "oblast": "[kraj]",
+          "foto": "",
+          "telefon": "",
+          "email": ""
+        }
       ]
     },
     {
       "nazev": "Výroba a vývoj",
       "lide": [
-        { "jmeno": "[Jméno a příjmení]", "pozice": "[vedoucí výroby]", "foto": "", "telefon": "", "email": "" },
-        { "jmeno": "[Jméno a příjmení]", "pozice": "[technolog, vývoj směsí na míru]", "foto": "", "telefon": "", "email": "" }
+        {
+          "jmeno": "Bc. Jakub Kostera",
+          "pozice": "vedoucí výroby",
+          "foto": "",
+          "telefon": "+420 777 340 382",
+          "email": "jakub@kostera.cz"
+        },
+        {
+          "jmeno": "[Jméno a příjmení]",
+          "pozice": "[technolog, vývoj směsí na míru]",
+          "foto": "",
+          "telefon": "",
+          "email": ""
+        }
       ]
     },
     {
       "nazev": "Kancelář a expedice",
       "lide": [
-        { "jmeno": "[Jméno a příjmení]", "pozice": "[objednávky a fakturace]", "foto": "", "telefon": "", "email": "" }
+        {
+          "jmeno": "[Jméno a příjmení]",
+          "pozice": "[objednávky a fakturace]",
+          "foto": "",
+          "telefon": "",
+          "email": ""
+        }
       ]
     }
   ]

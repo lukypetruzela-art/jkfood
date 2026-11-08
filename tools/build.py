@@ -415,7 +415,8 @@ def build_team(v):
         if p.get("foto"):
             img = f'<img src="img/tym/{esc(p["foto"])}" alt="{esc(name)}" width="800" height="1000" loading="lazy" decoding="async">'
         else:
-            ini = "".join(w[0] for w in name.split()[:2]).upper() if not ph else ""
+            words = [w for w in name.split() if not w.endswith(".")]   # bez titulů (Bc., Ing. …)
+            ini = "".join(w[0] for w in words[:2]).upper() if not ph else ""
             img = f'<span class="person-ini" aria-hidden="true">{esc(ini)}</span>'
         bits = [f'<li class="person{" is-empty" if ph else ""}">', f'<div class="person-ph">{img}</div>',
                 f"<h3>{esc(name)}</h3>", f'<p class="person-role">{esc(role)}</p>']
