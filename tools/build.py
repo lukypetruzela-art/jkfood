@@ -129,6 +129,7 @@ def head_common(title, desc, path, image=f"{SITE}/assets/icons/og-image.jpg", la
         '<meta property="og:image:height" content="630">',
         '<meta property="og:image:alt" content="J.K.FOOD – Dáváme jídlu chuť. Od roku 1996.">',
         '<meta name="twitter:card" content="summary_large_image">',
+        '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">',
     ])
 
 
@@ -143,9 +144,20 @@ def org_ld():
         "vatID": ORG["dic"], "taxID": ORG["ico"], "telephone": ORG["phone"], "email": ORG["email"],
         "address": {"@type": "PostalAddress", "streetAddress": ORG["street"], "addressLocality": ORG["city"],
                     "postalCode": ORG["zip"], "addressRegion": "Moravskoslezský kraj", "addressCountry": "CZ"},
-        "areaServed": "CZ", "sameAs": ORG["same_as"],
-        "contactPoint": {"@type": "ContactPoint", "contactType": "sales", "telephone": ORG["phone"],
-                         "email": ORG["email"], "availableLanguage": "cs"},
+        "areaServed": {"@type": "Country", "name": "Česká republika"}, "sameAs": ORG["same_as"],
+        "foundingLocation": {"@type": "Place", "name": "Větřkovice, okres Opava"},
+        "numberOfEmployees": {"@type": "QuantitativeValue", "minValue": 60},
+        "slogan": "Dáváme jídlu chuť. Od roku 1996.",
+        "knowsAbout": ["koření", "kořenicí směsi", "sušená zelenina", "dehydratované potraviny",
+                       "směsi pro masný průmysl", "kombi směsi", "bujóny a polévky", "vývoj kořenicích směsí na míru",
+                       "velkoobchod koření", "dodávky pro školní a nemocniční jídelny"],
+        "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Sortiment J.K.FOOD", "url": f"{SITE}/sortiment.html",
+                            "itemListElement": [{"@type": "OfferCatalog", "name": c["name"], "url": f"{SITE}/{c['file']}"} for c in CATS]},
+        "contactPoint": [
+            {"@type": "ContactPoint", "contactType": "sales", "telephone": ORG["phone"], "email": ORG["email"],
+             "availableLanguage": ["cs", "en"], "areaServed": "CZ"},
+            {"@type": "ContactPoint", "contactType": "sales", "name": "Jana Galčanová, obchodní ředitel",
+             "telephone": "+420777340321", "email": "jana.galcanova@kostera.cz"}],
     }
 
 
@@ -675,6 +687,72 @@ def build_en():
         print("⚠ zbytky češtiny v anglické verzi:\n  " + "\n  ".join(sorted(set(leftovers))))
     return [("en/", "0.8"), ("en/products.html", "0.7"), ("en/team.html", "0.5")]
 
+# ---------------------------------------------------------------- AI vyhledávače
+AI_BOTS = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot", "Claude-User",
+           "PerplexityBot", "Perplexity-User", "Google-Extended", "Applebot-Extended", "Bingbot",
+           "DuckAssistBot", "Meta-ExternalAgent", "MistralAI-User", "CCBot"]
+
+
+def build_ai(items):
+    """robots.txt (výslovně povolené AI roboty), llms.txt a llms-full.txt – stručný strojově čitelný
+    přehled firmy pro ChatGPT, Claude, Gemini, Perplexity a další (konvence llmstxt.org)."""
+    robots = ["# Vyhledávače i AI asistenti mají k veřejnému obsahu webu přístup povolený.", "User-agent: *",
+              "Allow: /", "Disallow: /api/", "Disallow: /tools/", ""]
+    for bot in AI_BOTS:
+        robots += [f"User-agent: {bot}", "Allow: /", "Disallow: /api/", "Disallow: /tools/", ""]
+    robots += [f"Sitemap: {SITE}/sitemap.xml", ""]
+    (ROOT / "robots.txt").write_text("\n".join(robots), encoding="utf-8")
+
+    faq = faq_data("cs")["polozky"]
+    team = json.loads((ROOT / "assets" / "tym.json").read_text(encoding="utf-8"))
+    people = [p for g in team["skupiny"] for p in g["lide"] if not p["jmeno"].startswith("[")]
+    groups = "\n".join(f"- [{c['name']}]({SITE}/{c['file']}): {c['desc']} ({sum(1 for x in items if x['g'] == i)} výrobků)"
+                       for i, c in enumerate(CATS))
+    head = f"""# J.K.FOOD – Jaroslav Kostera, J.K.FOOD s.r.o.
+
+> Česká rodinná firma z Větřkovic (okres Opava, Moravskoslezský kraj). Od roku 1996 vyrábí koření,
+> kořenicí směsi, sušenou zeleninu a dehydratované potraviny podle vlastních receptur – pro potravinářský
+> průmysl (zejména masnou výrobu), školní a nemocniční jídelny, restaurace a domácnosti.
+
+## Fakta o firmě
+- Obchodní název: Jaroslav Kostera, J.K.FOOD s.r.o.; značka J.K.FOOD
+- Sídlo a výroba: Větřkovice 243, 747 43 Větřkovice, Česká republika
+- IČ 27780384, DIČ CZ27780384; zapsaná v obchodním rejstříku u Krajského soudu v Ostravě, sp. zn. C 51605
+- Založení: 1996 (Jaroslav Kostera), společnost s.r.o. od roku 2001
+- Zaměstnanci: více než 60
+- Sortiment: přes {len(items)} výrobků v {len(CATS)} skupinách
+- Služby: vývoj kořenicích směsí na míru, navážení směsí na výrobní dávku, technologické postupy ke kombi směsím,
+  dodávky vlastní dopravou (obvykle do 5 pracovních dnů), osobní odběr, obchodní zástupci ve všech krajích ČR
+- Kontakt: +420 556 310 205, kostera@kostera.cz
+""" + "".join(f"- {p['jmeno']} ({p['pozice']}): {p.get('telefon', '')}, {p.get('email', '')}\n" for p in people) + f"""- E-shop pro domácnosti: https://eshop.kostera.cz/
+- Jazyky: čeština, angličtina
+
+## Hlavní stránky
+- [Úvod]({SITE}/): kdo jsme, pro koho vyrábíme, výroba na míru, kontakt
+- [Sortiment]({SITE}/sortiment.html): kompletní seznam výrobků s možností poptávky
+- [Náš tým]({SITE}/nas-tym.html): vedení firmy, obchod, výroba
+- [Kariéra]({SITE}/kariera.html): volné pozice
+- [English version]({SITE}/en/): company overview and product range in English
+
+## Skupiny sortimentu
+{groups}
+
+## Časté dotazy
+""" + "".join(f"- **{q}** {a}\n" for q, a in faq) + f"""
+## Optional
+- [Úplný seznam výrobků]({SITE}/llms-full.txt)
+"""
+    (ROOT / "llms.txt").write_text(head, encoding="utf-8")
+    full = [head.replace("## Optional\n- [Úplný seznam výrobků](" + SITE + "/llms-full.txt)\n", ""), "## Úplný seznam výrobků\n"]
+    for i, c in enumerate(CATS):
+        full.append(f"\n### {c['name']}\n")
+        for sub in dict.fromkeys(x["s"] for x in items if x["g"] == i):
+            names = [x["n"] for x in items if x["g"] == i and x["s"] == sub]
+            full.append((f"- {sub}: " if sub != c["name"] else "- ") + ", ".join(names) + "\n")
+    full.append("\nNázvy výrobků jsou obchodní názvy v češtině. Poptávka: kostera@kostera.cz, +420 556 310 205.\n")
+    (ROOT / "llms-full.txt").write_text("".join(full), encoding="utf-8")
+
+
 def build_sitemap(pages):
     urls = [("", "1.0")] + pages
     pairs = {"": "en/", "sortiment.html": "en/products.html", "nas-tym.html": "en/team.html"}
@@ -700,6 +778,7 @@ def main():
     pages += build_team(v)
     pages += build_career(v)
     pages += build_en()
+    build_ai(items)
     build_sitemap(pages)
     print(f"hotovo: {len(items)} výrobků, {len(pages)} stránek (sortiment, tým, kariéra), verze stylů {v}")
 

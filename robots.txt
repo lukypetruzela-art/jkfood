@@ -1,4 +1,80 @@
+# Vyhledávače i AI asistenti mají k veřejnému obsahu webu přístup povolený.
 User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: DuckAssistBot
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: Meta-ExternalAgent
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: MistralAI-User
+Allow: /
+Disallow: /api/
+Disallow: /tools/
+
+User-agent: CCBot
 Allow: /
 Disallow: /api/
 Disallow: /tools/

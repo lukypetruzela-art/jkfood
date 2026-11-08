@@ -53,3 +53,26 @@ python3 tools/build.py
 
 Skript znovu vygeneruje stránky sortimentu, metadata, `sitemap.xml` a verze stylů pro prohlížeče.
 Pokud by se změnila adresa webu, upravte `SITE` v `tools/build.py` a adresu v `robots.txt`.
+
+## Vyhledávání přes AI (ChatGPT, Claude, Gemini, Perplexity, Copilot)
+
+Hotové v kódu:
+- `robots.txt` výslovně povoluje roboty AI vyhledávačů (GPTBot, OAI-SearchBot, ClaudeBot,
+  Claude-SearchBot, PerplexityBot, Google-Extended, Applebot-Extended, Bingbot …).
+- `llms.txt` a `llms-full.txt`: stručný strojově čitelný přehled firmy (fakta, kontakty, služby,
+  skupiny sortimentu, časté dotazy) a úplný seznam výrobků – generuje `python3 tools/build.py`.
+- Strukturovaná data: firma včetně oboru (`knowsAbout`), počtu zaměstnanců, sloganu, katalogu
+  sortimentu, kontaktů; časté dotazy (`FAQPage`), drobečková navigace, seznamy výrobků.
+- Obsah je přímo v HTML (bez načítání JavaScriptem), takže ho AI roboti přečtou celý.
+
+Při spuštění:
+1. **Bing Webmaster Tools** (bing.com/webmasters) – odeslat sitemap. ChatGPT Search a Copilot
+   čerpají z indexu Bingu, je to pro AI vyhledávání stejně důležité jako Google.
+2. **Google Search Console** – Gemini a AI přehledy v Googlu vycházejí z indexu Googlu.
+3. **Konzistentní údaje všude**: název, adresa, telefon a web stejně na webu, Firmy.cz,
+   Profilu firmy na Googlu, e-shopu i sociálních sítích – AI asistenti si fakta ověřují z více zdrojů.
+4. Za pár týdnů vyzkoušet v ChatGPT / Claude / Perplexity dotazy typu „výrobce koření Opava“,
+   „dodavatel kořenicích směsí pro masnou výrobu“ nebo „kdo vyrábí koření ve Větřkovicích“.
+
+Co AI viditelnost posune nejvíc dlouhodobě: konkrétní popisy výrobků, zmínky o firmě na jiných
+webech (oborové katalogy, Firmy.cz, články, reference odběratelů) a aktuální Časté dotazy.
