@@ -38,7 +38,9 @@ ErrorDocument 404 /404.html
     RewriteRule ^nabidka/(susene-houby_c5|suche-plody_c6)(/.*)?$       /sortiment-susene-houby-a-plody.html [R=301,L,NC]
     RewriteRule ^nabidka/(bujony-polevky_c7|omacky-stavy_c8|marinady_c11)(/.*)?$  /sortiment-bujony-polevky-omacky.html [R=301,L,NC]
     RewriteRule ^nabidka/bramborove-vyrobky_c12(/.*)?$                 /sortiment-bramborove-vyrobky.html [R=301,L,NC]
-    RewriteRule ^nabidka/(skroby_c14|testoviny_c33|sladky-program_c9|cesnekova-pasta_c10|ostatni_c13)(/.*)?$  /sortiment-skroby-testoviny.html [R=301,L,NC]
+    RewriteRule ^nabidka/testoviny_c33(/.*)?$                          /sortiment-testoviny.html [R=301,L,NC]
+    RewriteRule ^nabidka/(skroby_c14|sladky-program_c9|cesnekova-pasta_c10|ostatni_c13)(/.*)?$  /sortiment-skroby-a-dalsi.html [R=301,L,NC]
+    RewriteRule ^sortiment-skroby-testoviny\.html$                     /sortiment-skroby-a-dalsi.html [R=301,L,NC]
     RewriteRule ^nabidka/smesi-pro-masny-prumysl_c15(/.*)?$            /sortiment-smesi-pro-masny-prumysl.html [R=301,L,NC]
     RewriteRule ^nabidka(/.*)?$                                        /sortiment.html [R=301,L,NC]
 

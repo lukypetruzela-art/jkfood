@@ -39,8 +39,11 @@ ORG = {
     "same_as": ["https://www.facebook.com/Jaroslav-Kostera-JK-FOOD-355532857955037/"],
 }
 
-# osm skupin – pořadí musí odpovídat JK.CATS v assets/products.js
+# devět skupin – pořadí musí odpovídat JK.CATS v assets/products.js
 CATS = [
+    dict(id="testoviny", slug="testoviny", name="Těstoviny",
+         title="Těstoviny – vřetena, kolínka, široké i řezané",
+         desc="Těstoviny J.K.FOOD: vřetena, kolínka, široké, řezané, větrníky, těstovinová rýže i tagliatelle s medvědím česnekem. Pro jídelny, gastro i domácnosti."),
     dict(id="koreni", slug="koreni-jednodruhove", name="Koření jednodruhové",
          title="Jednodruhové koření celé, drcené i mleté",
          desc="Jednodruhové koření celé, drcené i mleté: pepř, paprika, kmín, koriandr, majoránka, badyán a další. Výroba J.K.FOOD ve Větřkovicích."),
@@ -62,9 +65,9 @@ CATS = [
     dict(id="brambory", slug="bramborove-vyrobky", name="Bramborové výrobky",
          title="Bramborové kaše, knedlíky a halušky",
          desc="Bramborové kaše, bramborové a slezské knedlíky, halušky, bramborák a bramborové těsto J.K.FOOD pro velké i domácí kuchyně."),
-    dict(id="testoviny", slug="skroby-testoviny", name="Škroby, těstoviny a další",
-         title="Škroby, těstoviny a česnekové pasty",
-         desc="Škroby (bramborový, kukuřičný, pšeničný, rýžový, tapiokový), těstoviny, česnekové pasty, paprikové výtažky, sladký program a další suroviny."),
+    dict(id="skroby", slug="skroby-a-dalsi", name="Škroby a další",
+         title="Škroby, česnekové pasty a další suroviny",
+         desc="Škroby (bramborový, kukuřičný, pšeničný, rýžový, tapiokový), česnekové pasty, paprikové výtažky, sladký program a další suroviny pro výrobu i kuchyně."),
 ]
 for c in CATS:
     c["file"] = f"sortiment-{c['slug']}.html"
@@ -214,7 +217,7 @@ def build_catalog(items, v):
             title = "Sortiment koření, směsí a sušených potravin | J.K.FOOD"
             desc = ("Přes 490 výrobků J.K.FOOD: koření, kořenicí směsi, sušená zelenina, směsi pro masný průmysl, "
                     "houby, bujóny, polévky, bramborové výrobky a těstoviny.")
-            intro = ("Přes 490 výrobků v osmi skupinách. U každého výrobku můžete rovnou poslat poptávku, "
+            intro = ("Přes 490 výrobků v devíti skupinách. U každého výrobku můžete rovnou poslat poptávku, "
                      "balení pro domácnost najdete v e-shopu.")
             crumbs = [("Úvod", ""), ("Sortiment", "sortiment.html")]
             shown = items
@@ -305,10 +308,6 @@ def build_index(v):
         ld({"@context": "https://schema.org", "@graph": graph}),
     ])
     s = re.sub(r"<!-- META:START -->.*?<!-- META:END -->", lambda m: f"<!-- META:START -->\n{meta}\n<!-- META:END -->", s, flags=re.S)
-    legend = "\n".join(
-        f'<li><a href="{c["file"]}" data-cat="{i}"><canvas class="sw-ic" data-ic="{i}" width="28" height="28" aria-hidden="true"></canvas><span class="nm">{esc(c["name"])}</span></a></li>'
-        for i, c in enumerate(CATS))
-    s = re.sub(r"<!-- LEGEND:START -->.*?<!-- LEGEND:END -->", lambda m: f"<!-- LEGEND:START -->\n{legend}\n<!-- LEGEND:END -->", s, flags=re.S)
     foot = "".join(f'<li><a href="{c["file"]}">{esc(c["name"])}</a></li>' for c in CATS)
     s = re.sub(r"<!-- FOOTCATS:START -->.*?<!-- FOOTCATS:END -->", lambda m: f"<!-- FOOTCATS:START -->{foot}<!-- FOOTCATS:END -->", s, flags=re.S)
     s = re.sub(r"<!-- REFERENCE:START -->.*?<!-- REFERENCE:END -->", lambda m: f"<!-- REFERENCE:START -->\n{render_refs()}\n<!-- REFERENCE:END -->", s, flags=re.S)
@@ -581,7 +580,7 @@ def build_en():
     html = names(html)
     html = html.replace('<h1 class="h2 cat-title" id="cat-title">Sortiment</h1>', '<h1 class="h2 cat-title" id="cat-title">Products</h1>')
     html = re.sub(r'<p class="intro">Přes 490 výrobků.*?</p>',
-                  '<p class="intro">Over 490 products in eight groups. Product names are given in Czech – just send us an enquiry '
+                  '<p class="intro">Over 490 products in nine groups. Product names are given in Czech – just send us an enquiry '
                   'and we will reply in English.</p>', html, flags=re.S)
     html = re.sub(r'(<nav class="crumbs"[^>]*>)<a href="index.html">Úvod</a>(.*?)<span aria-current="page">Sortiment</span>',
                   r'\1<a href="index.html">Home</a>\2<span aria-current="page">Products</span>', html)

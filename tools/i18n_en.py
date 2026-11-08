@@ -7,6 +7,7 @@ přestala sedět, a je potřeba ji tu upravit.
 
 # skupiny sortimentu (pořadí jako JK.CATS)
 CATS_EN = [
+    ("Pasta", "Pasta: fusilli, elbows, wide and cut noodles, pinwheels, rice-shaped pasta and tagliatelle with wild garlic."),
     ("Single spices", "Whole, crushed and ground single spices: pepper, paprika, caraway, coriander, marjoram, star anise and many more."),
     ("Seasoning blends", "Seasoning blends made to our own recipes – for chicken, fish, steak, gyros, goulash, grilling and classic Czech dishes."),
     ("Dried vegetables", "Dried onion, garlic, carrot, celery, parsley, beetroot, horseradish, spinach and vegetable mixes – flakes, cubes, granules and powder."),
@@ -14,7 +15,7 @@ CATS_EN = [
     ("Dried mushrooms, fruit and nuts", "Porcini, chanterelle, shiitake, oyster mushrooms and forest mixes, almonds, hazelnuts, walnuts, raisins and dried fruit."),
     ("Stocks, soups and sauces", "Chicken, beef, vegetable and mushroom stocks, soups, sauces, gravies and marinades for canteens, restaurants and home cooking."),
     ("Potato products", "Mashed potatoes, potato dumplings, gnocchi-style halušky, potato pancakes and potato dough mixes."),
-    ("Starches, pasta and more", "Potato, corn, wheat, rice and tapioca starches, pasta, garlic pastes, paprika extracts and sweet bakery mixes."),
+    ("Starches and more", "Potato, corn, wheat, rice and tapioca starches, garlic pastes, paprika extracts and sweet bakery mixes."),
 ]
 
 # podskupiny v katalogu
@@ -95,7 +96,7 @@ INDEX = [
     ("Video se přehraje ze služby YouTube.", "The video plays from YouTube."),
     ("'Video J.K.FOOD – Seznamte se s námi (YouTube)'", "'J.K.FOOD video – Meet us (YouTube)'"),
     # sortiment
-    ("Přes 490 výrobků v&nbsp;osmi skupinách", "Over 490 products in eight groups"),
+    ("Přes 490 výrobků v&nbsp;devíti skupinách", "Over 490 products in nine groups"),
     ("Celý sortiment <span", "Full product range <span"),
     ('aria-label="Tvar loga J.K.FOOD vyplněný barevnými zrnky koření. Každé zrnko představuje jeden výrobek a barva jeho skupinu."',
      'aria-label="The J.K.FOOD logo shape filled with illustrations of our products."'),

@@ -1,15 +1,16 @@
 /* Skupiny sortimentu a ilustrace výrobků J.K.FOOD – sdílí index.html a sortiment.html */
 (() => {
-  // osm skupin sortimentu; id = kotva v sortiment.html, count = počet výrobků v sortimentu
+  // devět skupin sortimentu; id = kotva / stránka skupiny, count = počet výrobků v sortimentu
   const CATS = [
-    { id: 'koreni', name: 'Koření jednodruhové', count: 76, color: '#2E211E' },
+    { id: 'testoviny', name: 'Těstoviny', count: 7, color: '#E3B94F' },
+    { id: 'koreni', name: 'Koření jednodruhové', count: 74, color: '#2E211E' },
     { id: 'smesi', name: 'Kořenicí směsi', count: 71, color: '#C8231A' },
     { id: 'zelenina', name: 'Sušená zelenina', count: 72, color: '#6F8435' },
     { id: 'maso', name: 'Směsi pro masný průmysl', count: 181, color: '#7C1A12' },
     { id: 'houby', name: 'Sušené houby a plody', count: 20, color: '#8B6447' },
     { id: 'polevky', name: 'Bujóny, polévky, omáčky', count: 19, color: '#DE9B2A' },
     { id: 'brambory', name: 'Bramborové výrobky', count: 14, color: '#C9A06A' },
-    { id: 'testoviny', name: 'Škroby, těstoviny a další', count: 39, color: '#E3B94F' }
+    { id: 'skroby', name: 'Škroby a další', count: 32, color: '#CDB892' }
   ];
 
   /* ---------- ilustrace výrobků ----------
@@ -152,6 +153,19 @@
       [[-.1, .35], [.05, -.35], [-.6, .25], [.7, .1]].forEach(([x, y]) => { c.beginPath(); c.arc(x, y, .04, 0, TAU); c.fill(); });
     },
     // vřetýnko – šroubovice ze šikmých závitů
+    // pytel se škrobem / moukou, zavázaný provázkem, s hromádkou prášku
+    sack(c) {
+      const body = c => { c.moveTo(-.58, -.42); c.quadraticCurveTo(-.92, .2, -.74, .78); c.quadraticCurveTo(0, 1, .74, .78); c.quadraticCurveTo(.92, .2, .58, -.42); c.quadraticCurveTo(0, -.3, -.58, -.42); };
+      shaded(c, body, '#E8D7B4', '#B99E6E', 'rgba(255,255,255,.4)');
+      const neck = c => { c.moveTo(-.42, -.46); c.quadraticCurveTo(-.5, -.9, -.2, -.98); c.quadraticCurveTo(0, -.86, .2, -.98); c.quadraticCurveTo(.5, -.9, .42, -.46); c.quadraticCurveTo(0, -.36, -.42, -.46); };
+      shaded(c, neck, '#E1CDA4', '#B99E6E', null);
+      c.strokeStyle = '#A7110C'; c.lineWidth = .1; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(-.46, -.5); c.quadraticCurveTo(0, -.4, .46, -.5); c.stroke();
+      c.fillStyle = '#FBF6EA';
+      c.beginPath(); c.ellipse(0, .78, .5, .13, 0, 0, TAU); c.fill();
+      c.fillStyle = 'rgba(167,17,12,.85)'; c.beginPath(); c.roundRect(-.3, .02, .6, .34, .06); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.roundRect(-.2, .14, .4, .1, .04); c.fill();
+    },
     fusilli(c) {
       // závity se střídavě natáčejí k divákovi (světlé) a od něj (tmavé), vzadu tenké jádro
       c.fillStyle = '#C9922B'; c.beginPath(); c.roundRect(-.9, -.13, 1.8, .26, .13); c.fill();
@@ -169,6 +183,7 @@
 
   // druhy výrobků v jednotlivých skupinách (u směsí se střídají)
   const KINDS = [
+    ['fusilli'],                   // těstoviny
     ['pepper'],                    // koření jednodruhové
     ['chilli', 'anise', 'bay'],    // kořenicí směsi
     ['carrot', 'pea'],             // sušená zelenina
@@ -176,10 +191,10 @@
     ['mushroom'],                  // sušené houby
     ['soup'],                      // bujóny, polévky, omáčky
     ['potato'],                    // bramborové výrobky
-    ['fusilli']                    // těstoviny
+    ['sack']                       // škroby a další
   ];
   // výrobky, které mají zůstat zhruba nastojato (miska, houba, mrkev)
-  const UPRIGHT = { soup: .12, mushroom: .3, carrot: .45 };
+  const UPRIGHT = { soup: .12, mushroom: .3, carrot: .45, sack: .15 };
 
   /* nakreslí výrobek skupiny cat; k = poloměr v px, v = index druhu (bere se modulo),
      'mix' = ikonka do legendy složená ze dvou druhů */
