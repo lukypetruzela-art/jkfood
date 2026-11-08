@@ -1,0 +1,14 @@
+{
+  "_navod": "Reference na úvodní stránce (slider). Po úpravě spusťte: python3 tools/build.py. Logo dejte do img/reference/ (SVG nebo PNG s průhledným pozadím, cca 400 × 200 px) a do 'logo' napište název souboru. 'citace' a 'osoba' jsou nepovinné. Položky s hranatými závorkami jsou zástupné. Loga a názvy zveřejňujte jen se souhlasem odběratele.",
+  "nadpis": "Důvěřují nám",
+  "intro": "Naše koření a směsi používají výrobci, jídelny i restaurace po celé České republice.",
+  "polozky": [
+    { "nazev": "[Název odběratele]", "typ": "Masná výroba", "logo": "", "citace": "", "osoba": "" },
+    { "nazev": "[Název odběratele]", "typ": "Školní jídelna", "logo": "", "citace": "", "osoba": "" },
+    { "nazev": "[Název odběratele]", "typ": "Nemocnice", "logo": "", "citace": "", "osoba": "" },
+    { "nazev": "[Název odběratele]", "typ": "Restaurace", "logo": "", "citace": "", "osoba": "" },
+    { "nazev": "[Název odběratele]", "typ": "Pekárna", "logo": "", "citace": "", "osoba": "" },
+    { "nazev": "[Název odběratele]", "typ": "Domov pro seniory", "logo": "", "citace": "", "osoba": "" },
+    { "nazev": "[Název odběratele]", "typ": "Catering", "logo": "", "citace": "", "osoba": "" }
+  ]
+}

@@ -30,7 +30,7 @@
 <link rel="preload" href="assets/fonts/dmsans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/styles.css?v=0e069075">
+<link rel="stylesheet" href="assets/styles.css?v=b3f0f3ce">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -217,6 +217,31 @@
     </div>
   </section>
 
+  <!-- REFERENCE -->
+  <section class="block refs" id="reference" aria-labelledby="ref-title">
+    <div class="wrap">
+<!-- REFERENCE:START -->
+      <div class="refs-head">
+        <div>
+          <h2 class="h2" id="ref-title">Důvěřují nám</h2>
+          <p class="intro">Naše koření a&nbsp;směsi používají výrobci, jídelny i&nbsp;restaurace po celé České republice.</p>
+        </div>
+      </div>
+      <div class="ref-slider" id="refSlider">
+        <ul class="ref-track" tabindex="0" aria-label="Reference – posouvejte šipkami vlevo a vpravo">
+          <li class="ref is-empty"><div class="ref-logo"><svg class="ref-mk" viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg></div><p class="ref-type">Masná výroba</p><h3>[Název odběratele]</h3></li><li class="ref is-empty"><div class="ref-logo"><svg class="ref-mk" viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg></div><p class="ref-type">Školní jídelna</p><h3>[Název odběratele]</h3></li><li class="ref is-empty"><div class="ref-logo"><svg class="ref-mk" viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg></div><p class="ref-type">Nemocnice</p><h3>[Název odběratele]</h3></li><li class="ref is-empty"><div class="ref-logo"><svg class="ref-mk" viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg></div><p class="ref-type">Restaurace</p><h3>[Název odběratele]</h3></li><li class="ref is-empty"><div class="ref-logo"><svg class="ref-mk" viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg></div><p class="ref-type">Pekárna</p><h3>[Název odběratele]</h3></li><li class="ref is-empty"><div class="ref-logo"><svg class="ref-mk" viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg></div><p class="ref-type">Domov pro seniory</p><h3>[Název odběratele]</h3></li><li class="ref is-empty"><div class="ref-logo"><svg class="ref-mk" viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg></div><p class="ref-type">Catering</p><h3>[Název odběratele]</h3></li>
+        </ul>
+        <div class="ref-ctrl">
+          <div class="ref-bar" aria-hidden="true"><i></i></div>
+          <button type="button" class="ref-play g-play" aria-pressed="false" aria-label="Pozastavit posouvání referencí"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4.5 3h2.2v10H4.5zM9.3 3h2.2v10H9.3z"/><path class="i-play" d="M5 3l8 5-8 5z"/></svg></button>
+          <button type="button" class="ref-prev ref-arrow" aria-label="Předchozí reference"><span aria-hidden="true">←</span></button>
+          <button type="button" class="ref-next ref-arrow" aria-label="Další reference"><span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+<!-- REFERENCE:END -->
+    </div>
+  </section>
+
   <!-- KONTAKT -->
   <section class="block" id="kontakt" aria-labelledby="kontakt-title">
     <div class="wrap">
@@ -286,7 +311,7 @@
   </div>
 </footer>
 
-<script src="assets/products.js?v=0e069075"></script>
+<script src="assets/products.js?v=b3f0f3ce"></script>
 <script>
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -545,6 +570,61 @@
       new IntersectionObserver((es, io) => { if (es[0].isIntersecting) { warm(); io.disconnect(); } },
         { rootMargin: '400px 0px' }).observe(box);
     }
+  })();
+
+  /* ---------- reference: slider (posouvání prstem, šipkami, klávesnicí, pomalé samo-posouvání) ---------- */
+  (() => {
+    const box = document.getElementById('refSlider');
+    if (!box) return;
+    const track = box.querySelector('.ref-track');
+    const prev = box.querySelector('.ref-prev'), next = box.querySelector('.ref-next');
+    const bar = box.querySelector('.ref-bar i'), play = box.querySelector('.ref-play');
+    const cards = [...track.children];
+    const step = () => cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth;
+    const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+    const behavior = reduce ? 'auto' : 'smooth';
+    const go = dir => {
+      if (dir > 0 && atEnd()) track.scrollTo({ left: 0, behavior });
+      else track.scrollBy({ left: dir * step(), behavior });
+    };
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      const fits = max <= 4;
+      box.classList.toggle('fits', fits);
+      prev.disabled = track.scrollLeft <= 4;
+      next.disabled = fits;
+      bar.style.width = (fits ? 100 : Math.max(track.clientWidth / track.scrollWidth, Math.min(1, (track.scrollLeft + track.clientWidth) / track.scrollWidth)) * 100) + '%';
+    };
+    // samo-posouvání: zastaví se myší, fokusem, mimo obrazovku a natrvalo po ručním ovládání
+    const hold = new Set(reduce ? ['user'] : []);
+    let timer = null;
+    const restart = () => {
+      clearInterval(timer);
+      if (!hold.size && !box.classList.contains('fits')) timer = setInterval(() => go(1), 4500);
+      const paused = hold.has('user');
+      play.setAttribute('aria-pressed', paused);
+      play.setAttribute('aria-label', paused ? 'Spustit posouvání referencí' : 'Pozastavit posouvání referencí');
+    };
+    const toggle = (k, on) => { on ? hold.add(k) : hold.delete(k); restart(); };
+    const manual = () => toggle('user', true);
+    prev.addEventListener('click', () => { manual(); go(-1); });
+    next.addEventListener('click', () => { manual(); go(1); });
+    play.addEventListener('click', () => toggle('user', !hold.has('user')));
+    track.addEventListener('pointerdown', manual);
+    track.addEventListener('wheel', e => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) manual(); }, { passive: true });
+    track.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); manual(); go(e.key === 'ArrowRight' ? 1 : -1); }
+    });
+    box.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') toggle('hover', true); });
+    box.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') toggle('hover', false); });
+    box.addEventListener('focusin', () => toggle('focus', true));
+    box.addEventListener('focusout', e => { if (!box.contains(e.relatedTarget)) toggle('focus', false); });
+    document.addEventListener('visibilitychange', () => toggle('hidden', document.hidden));
+    new IntersectionObserver(es => toggle('offscreen', !es[0].isIntersecting)).observe(box);
+    let raf = 0;
+    track.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+    new ResizeObserver(() => { update(); restart(); }).observe(track);
+    update(); restart();
   })();
 
   /* ---------- hero gallery ---------- */

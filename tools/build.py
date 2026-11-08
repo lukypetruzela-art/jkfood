@@ -249,6 +249,39 @@ def build_catalog(items, v):
     return [("sortiment.html", "0.9")] + [(c["file"], "0.8") for c in CATS]
 
 
+def render_refs():
+    """Slider referencí na úvodní stránce z assets/reference.json."""
+    data = json.loads((ROOT / "assets" / "reference.json").read_text(encoding="utf-8"))
+    cards = []
+    for r in data["polozky"]:
+        ph = r["nazev"].strip().startswith("[")
+        if r.get("logo"):
+            logo = f'<img src="img/reference/{esc(r["logo"])}" alt="{esc(r["nazev"])}" width="400" height="200" loading="lazy" decoding="async">'
+        else:
+            logo = '<svg class="ref-mk" viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg>'
+        quote_html = ""
+        if r.get("citace"):
+            quote_html = f'<blockquote class="ref-quote">„{esc(r["citace"])}“</blockquote>' + (f'<p class="ref-who">{esc(r["osoba"])}</p>' if r.get("osoba") else "")
+        cards.append(f'<li class="ref{" is-empty" if ph else ""}"><div class="ref-logo">{logo}</div>'
+                     f'<p class="ref-type">{esc(r["typ"])}</p><h3>{esc(r["nazev"])}</h3>{quote_html}</li>')
+    return f"""      <div class="refs-head">
+        <div>
+          <h2 class="h2" id="ref-title">{esc(data["nadpis"])}</h2>
+          <p class="intro">{nbsp(esc(data["intro"]))}</p>
+        </div>
+      </div>
+      <div class="ref-slider" id="refSlider">
+        <ul class="ref-track" tabindex="0" aria-label="Reference – posouvejte šipkami vlevo a vpravo">
+          {"".join(cards)}
+        </ul>
+        <div class="ref-ctrl">
+          <div class="ref-bar" aria-hidden="true"><i></i></div>
+          <button type="button" class="ref-play g-play" aria-pressed="false" aria-label="Pozastavit posouvání referencí"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4.5 3h2.2v10H4.5zM9.3 3h2.2v10H9.3z"/><path class="i-play" d="M5 3l8 5-8 5z"/></svg></button>
+          <button type="button" class="ref-prev ref-arrow" aria-label="Předchozí reference"><span aria-hidden="true">←</span></button>
+          <button type="button" class="ref-next ref-arrow" aria-label="Další reference"><span aria-hidden="true">→</span></button>
+        </div>
+      </div>"""
+
 def build_index(v):
     p = ROOT / "index.html"
     s = p.read_text(encoding="utf-8")
@@ -272,6 +305,7 @@ def build_index(v):
     s = re.sub(r"<!-- LEGEND:START -->.*?<!-- LEGEND:END -->", lambda m: f"<!-- LEGEND:START -->\n{legend}\n<!-- LEGEND:END -->", s, flags=re.S)
     foot = "".join(f'<li><a href="{c["file"]}">{esc(c["name"])}</a></li>' for c in CATS)
     s = re.sub(r"<!-- FOOTCATS:START -->.*?<!-- FOOTCATS:END -->", lambda m: f"<!-- FOOTCATS:START -->{foot}<!-- FOOTCATS:END -->", s, flags=re.S)
+    s = re.sub(r"<!-- REFERENCE:START -->.*?<!-- REFERENCE:END -->", lambda m: f"<!-- REFERENCE:START -->\n{render_refs()}\n<!-- REFERENCE:END -->", s, flags=re.S)
     s = re.sub(r'(assets/(?:styles\.css|products\.js))\?v=\w+', rf"\1?v={v}", s)
     p.write_text(s, encoding="utf-8")
 
