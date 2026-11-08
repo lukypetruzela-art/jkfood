@@ -83,11 +83,11 @@
   <section class="video" aria-labelledby="video-title">
     <div class="wrap">
       <div class="video-head">
-        <h2 id="video-title">J.K.FOOD na videu</h2>
+        <h2 id="video-title">Seznamte se s&nbsp;námi</h2>
         <a class="video-yt" href="https://www.youtube.com/watch?v=OY0Jb6nByGY" target="_blank" rel="noopener">Otevřít na YouTube <span class="ext" aria-hidden="true">↗</span></a>
       </div>
       <div class="yt" id="yt" data-id="OY0Jb6nByGY">
-        <a class="yt-poster" href="https://www.youtube.com/watch?v=OY0Jb6nByGY" aria-label="Přehrát video J.K.FOOD">
+        <a class="yt-poster" href="https://www.youtube.com/watch?v=OY0Jb6nByGY" aria-label="Přehrát video J.K.FOOD – Seznamte se s námi">
           <svg class="yt-mark" viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg>
           <span class="yt-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
           <span class="yt-label">Přehrát video</span>
@@ -463,32 +463,57 @@
     else if (state === 'chyba') fail('Poptávku se nepodařilo odeslat.');
   })();
 
-  /* ---------- video: YouTube (nocookie) se načte až po kliknutí ---------- */
+  /* ---------- video: YouTube (nocookie) ----------
+     Spustí se samo bez zvuku, až když k němu návštěvník doscrolluje (YouTube se do té doby
+     nenačítá vůbec). Mimo obrazovku se pozastaví. Při omezení animací / úspoře dat jen po kliknutí. */
   (() => {
     const box = document.getElementById('yt');
     const poster = box.querySelector('.yt-poster');
-    let warmed = false;
-    // při najetí / fokusu předem navázat spojení, aby se video spustilo rychleji
+    const saveData = navigator.connection && navigator.connection.saveData;
+    const auto = !reduce && !saveData && 'IntersectionObserver' in window;
+    let frame = null, warmed = false;
+
     const warm = () => {
       if (warmed) return; warmed = true;
       ['https://www.youtube-nocookie.com', 'https://i.ytimg.com', 'https://www.google.com'].forEach(h => {
         const l = document.createElement('link'); l.rel = 'preconnect'; l.href = h; document.head.appendChild(l);
       });
     };
+    const load = (muted, focus) => {
+      if (frame) return;
+      frame = document.createElement('iframe');
+      frame.src = 'https://www.youtube-nocookie.com/embed/' + box.dataset.id +
+        '?autoplay=1&rel=0&playsinline=1&enablejsapi=1' +
+        (muted ? '&mute=1&loop=1&playlist=' + box.dataset.id : '');   // smyčka u jednoho videa potřebuje playlist=ID
+      frame.title = 'Video J.K.FOOD – Seznamte se s námi (YouTube)';
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      frame.allowFullscreen = true;
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      poster.replaceWith(frame);
+      if (focus) frame.focus();
+    };
+    // ovládání přehrávače přes YouTube IFrame API (postMessage)
+    const cmd = func => frame && frame.contentWindow &&
+      frame.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
+
     poster.addEventListener('pointerenter', warm, { once: true });
     poster.addEventListener('focus', warm, { once: true });
     poster.addEventListener('click', e => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;   // nová karta = otevřít na YouTube
       e.preventDefault();
-      const f = document.createElement('iframe');
-      f.src = 'https://www.youtube-nocookie.com/embed/' + box.dataset.id + '?autoplay=1&rel=0&playsinline=1';
-      f.title = 'Video J.K.FOOD (YouTube)';
-      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-      f.allowFullscreen = true;
-      f.referrerPolicy = 'strict-origin-when-cross-origin';
-      poster.replaceWith(f);
-      f.focus();
+      load(false, true);
     });
+
+    if (auto) {
+      new IntersectionObserver(es => {
+        const e = es[0];
+        if (e.isIntersecting && e.intersectionRatio >= 0.5) load(true, false);   // poprvé: načíst a pustit bez zvuku
+        else if (frame && !e.isIntersecting) cmd('pauseVideo');                  // pryč z obrazovky: pozastavit
+      }, { threshold: [0, 0.5] }).observe(box);
+      // těsně před příjezdem k videu předem navázat spojení
+      new IntersectionObserver((es, io) => { if (es[0].isIntersecting) { warm(); io.disconnect(); } },
+        { rootMargin: '400px 0px' }).observe(box);
+    }
   })();
 
   /* ---------- hero gallery ---------- */
