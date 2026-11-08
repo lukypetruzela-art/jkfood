@@ -80,6 +80,7 @@ button{font:inherit;color:inherit}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);grid-template-areas:"text jar" "rail jar";column-gap:clamp(32px,5vw,88px);row-gap:36px;align-items:start}
 .hero-text{grid-area:text}
 .hero h1{font-size:clamp(40px,5.9vw,92px);line-height:.96;letter-spacing:-.025em;font-weight:650;font-variation-settings:"opsz" 96,"wdth" 90;max-width:12.5ch;text-wrap:balance}
+.hero h1 .since{display:block;color:var(--red)}
 .hero .lead{margin-top:24px;font-size:clamp(18px,1.4vw,20px);color:var(--muted);max-width:46ch}
 .hero .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
 .reveal{opacity:0;transform:translateY(18px);animation:rise .9s var(--ease) forwards}
@@ -271,8 +272,8 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     <div class="wrap">
       <div class="hero-grid">
         <div class="hero-text">
-          <h1 id="hero-title" class="reveal">Koření z&nbsp;Větřkovic, poctivě od roku&nbsp;1996</h1>
-          <p class="lead reveal d1">Rodinná firma Jaroslava Kostery. Koření, kořenicí směsi a sušené potraviny podle vlastních receptur pro průmysl, jídelny, restaurace i&nbsp;domácí kuchyně.</p>
+          <h1 id="hero-title" class="reveal">Dáváme jídlu chuť. <span class="since">Od roku&nbsp;1996.</span></h1>
+          <p class="lead reveal d1">Rodinná firma Jaroslava Kostery z&nbsp;Větřkovic. Koření, kořenicí směsi a sušené potraviny podle vlastních receptur pro průmysl, jídelny, restaurace i&nbsp;domácí kuchyně.</p>
           <div class="ctas reveal d2">
             <a class="btn btn-red" href="#sortiment">Prohlédnout sortiment</a>
             <a class="btn btn-line" href="#firmy">Spolupráce pro firmy</a>
