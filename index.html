@@ -128,7 +128,6 @@ button{font:inherit;color:inherit}
 .cats a{display:flex;align-items:center;gap:12px;min-height:52px;padding:8px 0;text-decoration:none}
 .cats .sw{width:13px;height:13px;flex:none;border-radius:var(--drop);background:var(--c);transition:transform .35s var(--ease)}
 .cats .nm{flex:1;font-weight:520;font-size:16.5px;line-height:1.25;transition:color .2s}
-.cats .ct{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
 .cats a:hover .sw,.cats a:focus-visible .sw{transform:scale(1.7)}
 .cats .sw-ic{width:22px;height:22px;flex:none;transition:transform .35s var(--ease)}
 .cats a:hover .sw-ic,.cats a:focus-visible .sw-ic{transform:scale(1.35) rotate(-8deg)}
@@ -343,7 +342,7 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
           <h2 class="h2" id="sort-title">Přes 490 výrobků v&nbsp;osmi skupinách</h2>
           <div class="rail">
             <div class="rail-head">
-              <p>Najeďte na skupinu a&nbsp;uvidíte ji v&nbsp;logu.</p>
+              <p>Najeďte na skupinu a&nbsp;pixla se naplní jejími výrobky.</p>
               <a href="#">Celý sortiment</a>
             </div>
             <ul class="cats" id="cats"></ul>
@@ -351,7 +350,7 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
         </div>
         <figure class="jar" id="jar">
           <canvas id="grains" role="img" aria-label="Tvar loga J.K.FOOD vyplněný barevnými zrnky koření. Každé zrnko představuje jeden výrobek a barva jeho skupinu."></canvas>
-          <figcaption>Každé zrnko je jeden z&nbsp;našich výrobků, barva určuje skupinu.</figcaption>
+          <figcaption>Každý kousek je jeden z&nbsp;našich výrobků.</figcaption>
         </figure>
       </div>
     </div>
@@ -486,25 +485,17 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- data ---------- */
+  // každá skupina má svůj typický výrobek (viz drawProduct); count = počet kousků v pixle
   const CATS = [
-    { name: 'Koření jednodruhové', count: 76, color: '#A7110C' },
-    { name: 'Kořenicí směsi', count: 71, color: '#D4441C' },
-    { name: 'Sušená zelenina', count: 72, color: '#6F8435' },
-    { name: 'Směsi pro masný průmysl', count: 181, color: '#5C0A07' },
-    { name: 'Sušené houby a plody', count: 20, color: '#8B6447' },
-    { name: 'Bujóny, polévky, omáčky', count: 19, color: '#DE9B2A' },
-    { name: 'Bramborové výrobky', count: 14, color: '#CDAE7E' },
-    { name: 'Škroby, těstoviny a další', count: 39, color: '#2E211E' }
+    { name: 'Koření jednodruhové', count: 76, color: '#2E211E' },        // kulička pepře
+    { name: 'Kořenicí směsi', count: 71, color: '#C8231A' },             // chilli paprička
+    { name: 'Sušená zelenina', count: 72, color: '#6F8435' },            // lístek
+    { name: 'Směsi pro masný průmysl', count: 181, color: '#7C1A12' },   // klobáska
+    { name: 'Sušené houby a plody', count: 20, color: '#8B6447' },       // houba
+    { name: 'Bujóny, polévky, omáčky', count: 19, color: '#DE9B2A' },    // bujónová kostka
+    { name: 'Bramborové výrobky', count: 14, color: '#C9A06A' },         // brambora
+    { name: 'Škroby, těstoviny a další', count: 39, color: '#E3B94F' }   // těstovina – motýlek
   ];
-  /* varianta „produkty“ (index.html?varianta=produkty):
-     místo zrnek se kreslí typický výrobek každé skupiny */
-  const PRODUCTS = new URLSearchParams(location.search).get('varianta') === 'produkty';
-  if (PRODUCTS) {
-    // pepř, chilli, list, klobáska, houba, bujónová kostka, brambora, těstovina (motýlek)
-    ['#2E211E', '#C8231A', '#6F8435', '#7C1A12', '#8B6447', '#DE9B2A', '#C9A06A', '#E3B94F']
-      .forEach((c, i) => { CATS[i].color = c; });
-    document.querySelector('#jar figcaption').innerHTML = 'Každý kousek je jeden z&nbsp;našich výrobků, tvar ukazuje skupinu.';
-  }
 
   /* typický výrobek skupiny; kreslí se kolem (0,0), k = poloměr */
   function drawProduct(c, cat, k, color) {
@@ -588,9 +579,9 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   const footCats = document.getElementById('footCats');
   CATS.forEach((c, i) => {
     const li = document.createElement('li');
-    li.innerHTML = `<a href="#" data-cat="${i}" style="--c:${c.color}"><span class="sw" aria-hidden="true"></span><span class="nm">${c.name}</span><span class="ct">${c.count}<span class="sr"> výrobků</span></span></a>`;
+    li.innerHTML = `<a href="#" data-cat="${i}" style="--c:${c.color}"><span class="sw" aria-hidden="true"></span><span class="nm">${c.name}</span></a>`;
     catsEl.appendChild(li);
-    if (PRODUCTS) {
+    {
       const ic = document.createElement('canvas');
       const px = 22, d = Math.min(2, devicePixelRatio || 1);
       ic.width = ic.height = px * d; ic.className = 'sw-ic'; ic.setAttribute('aria-hidden', 'true');
@@ -767,11 +758,11 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   const G = pts.map((p, i) => ({
     ux: p.x, uy: p.y, cat: catOf[i],
     r: cell * (0.4 + Math.random() * 0.14),
-    e: 0.62 + Math.random() * 0.34,
     rot: Math.random() * Math.PI,
     spin: (Math.random() - .5) * 0.5,
     delay: T_POUR + (1 - (p.y - OY)) * POUR + Math.random() * 450,
-    x: 0, y: 0, vx: 0, vy: 0, a: 1, started: false, fall: false
+    x: 0, y: 0, vx: 0, vy: 0, started: false, fall: false,
+    show: catOf[i], sc: 1, sp: 0.16 + Math.random() * 0.18   // zobrazený výrobek, měřítko při proměně, rychlost
   }));
   const T_CLOSE = Math.max(...G.map(g => g.delay)) + 450, CLOSE = 750;
 
@@ -823,21 +814,13 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     ctx.clearRect(0, 0, S, S * HR);
     for (const g of G) {
       if (!g.started) continue;
-      ctx.globalAlpha = g.a;
-      if (PRODUCTS) {
-        ctx.save();
-        ctx.translate(g.x, g.y);
-        ctx.rotate(g.cat === 4 ? (g.rot - Math.PI / 2) * .3 : g.rot);   // houby zůstávají zhruba nastojato
-        drawProduct(ctx, g.cat, g.r * S * 1.2, CATS[g.cat].color);
-        ctx.restore();
-      } else {
-        ctx.fillStyle = CATS[g.cat].color;
-        ctx.beginPath();
-        ctx.ellipse(g.x, g.y, g.r * S, g.r * S * g.e, g.rot, 0, Math.PI * 2);
-        ctx.fill();
-      }
+      if (g.sc < 0.02) continue;
+      ctx.save();
+      ctx.translate(g.x, g.y);
+      ctx.rotate(g.show === 4 ? (g.rot - Math.PI / 2) * .3 : g.rot);   // houby zůstávají zhruba nastojato
+      drawProduct(ctx, g.show, g.r * S * 1.2 * g.sc, CATS[g.show].color);
+      ctx.restore();
     }
-    ctx.globalAlpha = 1;
     ctx.lineWidth = S * STROKE;
     ctx.strokeStyle = RED;
     ctx.lineJoin = 'miter';
@@ -891,9 +874,12 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
       g.vx *= 0.8; g.vy *= 0.8;
       g.x += g.vx; g.y += g.vy;
       g.rot += g.spin * Math.min(1, Math.abs(g.vx) + Math.abs(g.vy)) * 0.1;
-      const ta = active < 0 || g.cat === active ? 1 : 0.12;
-      g.a += (ta - g.a) * 0.14;
-      energy += Math.abs(g.vx) + Math.abs(g.vy) + Math.abs(ta - g.a) * 10;
+      // proměna: kousek se zmenší, vymění výrobek a zase naroste
+      const want = active < 0 ? g.cat : active;
+      const tsc = g.show === want ? 1 : 0;
+      g.sc += (tsc - g.sc) * g.sp;
+      if (g.show !== want && g.sc < 0.06) { g.show = want; g.rot = Math.random() * Math.PI; }
+      energy += Math.abs(g.vx) + Math.abs(g.vy) + Math.abs(tsc - g.sc) * 10;
     }
     draw();
     if (thudded && energy < 0.4 && !mouse) { running = false; done = true; jar.classList.add('settled'); return; }
@@ -902,7 +888,7 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   function kick() { if (!running && !reduce && seen) { running = true; requestAnimationFrame(step); } }
 
   function reducedUpdate() {
-    G.forEach(g => { g.a = active < 0 || g.cat === active ? 1 : 0.12; });
+    G.forEach(g => { g.show = active < 0 ? g.cat : active; g.sc = 1; });
     draw();
   }
 
@@ -925,6 +911,8 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   catsEl.addEventListener('pointerleave', () => setActive(-1));
   catsEl.addEventListener('focusin', e => { const a = e.target.closest('[data-cat]'); if (a) setActive(+a.dataset.cat); });
   catsEl.addEventListener('focusout', () => setActive(-1));
+  // odkazy na skupiny zatím nikam nevedou: ťuknutí na mobilu jen ukáže skupinu v pixle
+  catsEl.addEventListener('click', e => { const a = e.target.closest('a[href="#"]'); if (a) { e.preventDefault(); setActive(+a.dataset.cat); } });
 })();
 </script>
 </body>
