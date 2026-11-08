@@ -1,4 +1,5 @@
 /* Sortiment J.K.FOOD – převzato z původního webu kostera.cz (490 výrobků).
+   Po úpravě spusťte: python3 tools/build_sortiment.py (vygeneruje výpis do sortiment.html).
    n = název, g = skupina (index do JK.CATS), s = podskupina */
 window.SORTIMENT = [
 {"n": "Anýz", "g": 0, "s": "Koření jednodruhové"},

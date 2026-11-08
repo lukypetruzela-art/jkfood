@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="cs">
 <head>
 <meta charset="utf-8">
@@ -8,9 +8,8 @@
 <meta name="theme-color" content="#A7110C">
 <meta name="color-scheme" content="light">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2097.6%2097.6%22%3E%3Ccircle%20cx%3D%2248.8%22%20cy%3D%2248.8%22%20r%3D%2244%22%20fill%3D%22%23fff%22/%3E%3Cpath%20fill%3D%22%23A7110C%22%20d%3D%22M44.2%2C29.4L44.2%2C29.4h-6.9h-8.9c-0.3%2C0-0.6%2C0.3-0.6%2C0.6v3.9c0%2C1.6%2C1.3%2C3%2C3%2C3h5.3c0.3%2C0%2C0.5%2C0.2%2C0.5%2C0.5v16.2%20c0%2C3.8-1.5%2C5.2-3.6%2C5.2c-1.2%2C0-2.1-0.2-3.2-0.6l-1.5-0.5c-0.4-0.2-0.7%2C0-0.8%2C0.4l-2.1%2C5.6c-0.1%2C0.4%2C0%2C0.7%2C0.4%2C0.8l1.4%2C0.5%20c2.2%2C0.8%2C3.8%2C1.1%2C5.8%2C1.1c7.4%2C0%2C11.8-4.7%2C11.8-12.6V36.9v-6.8V30C44.8%2C29.7%2C44.5%2C29.4%2C44.2%2C29.4z%22/%3E%3Cpath%20fill%3D%22%23A7110C%22%20d%3D%22M65.2%2C53.9c-1.6-3.1-3.7-5.2-6.7-6.5c-0.4-0.2-0.3-0.5%2C0-0.6c2.8-1.1%2C4.8-2.9%2C6.4-6l5.4-10.4%20c0.3-0.5%2C0.1-0.8-0.5-0.8h-7.4c-0.4%2C0-0.6%2C0.2-0.8%2C0.5l-3.9%2C7.4c-2%2C3.8-4.9%2C6.1-7.9%2C6.1c-0.3%2C0-0.5%2C0.2-0.5%2C0.5v6.2%20c0%2C0.3%2C0.2%2C0.5%2C0.5%2C0.5H50c2.9%2C0%2C6%2C2.5%2C8.2%2C6.6l4.1%2C7.9c0.2%2C0.3%2C0.4%2C0.5%2C0.8%2C0.5h7.6c0.6%2C0%2C0.8-0.3%2C0.5-0.8L65.2%2C53.9z%22/%3E%3Cpath%20fill%3D%22%23A7110C%22%20d%3D%22M48.8%2C0L48.8%2C0C21.8%2C0%2C0%2C21.8%2C0%2C48.8v48.8h48.8c26.9%2C0%2C48.8-21.8%2C48.8-48.8l0%2C0C97.6%2C21.8%2C75.7%2C0%2C48.8%2C0z%20M89.1%2C48.8c0%2C22.3-18.1%2C40.4-40.4%2C40.4H8.4V48.8c0-22.3%2C18.1-40.4%2C40.4-40.4S89.1%2C26.5%2C89.1%2C48.8L89.1%2C48.8z%22/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/bricolage-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
@@ -59,14 +58,647 @@
 
   <div class="chips-bar">
     <div class="wrap">
-      <div class="chips" id="chips" role="toolbar" aria-label="Skupiny výrobků"></div>
+      <div class="chips" id="chips" role="toolbar" aria-label="Skupiny výrobků">
+<!-- CHIPS:START -->
+<button type="button" class="chip all" data-id="" aria-pressed="true">Vše</button>
+<button type="button" class="chip" data-id="koreni" aria-pressed="false"><canvas data-ic="0" width="26" height="26" aria-hidden="true"></canvas>Koření jednodruhové</button>
+<button type="button" class="chip" data-id="smesi" aria-pressed="false"><canvas data-ic="1" width="26" height="26" aria-hidden="true"></canvas>Kořenicí směsi</button>
+<button type="button" class="chip" data-id="zelenina" aria-pressed="false"><canvas data-ic="2" width="26" height="26" aria-hidden="true"></canvas>Sušená zelenina</button>
+<button type="button" class="chip" data-id="maso" aria-pressed="false"><canvas data-ic="3" width="26" height="26" aria-hidden="true"></canvas>Směsi pro masný průmysl</button>
+<button type="button" class="chip" data-id="houby" aria-pressed="false"><canvas data-ic="4" width="26" height="26" aria-hidden="true"></canvas>Sušené houby a plody</button>
+<button type="button" class="chip" data-id="polevky" aria-pressed="false"><canvas data-ic="5" width="26" height="26" aria-hidden="true"></canvas>Bujóny, polévky, omáčky</button>
+<button type="button" class="chip" data-id="brambory" aria-pressed="false"><canvas data-ic="6" width="26" height="26" aria-hidden="true"></canvas>Bramborové výrobky</button>
+<button type="button" class="chip" data-id="testoviny" aria-pressed="false"><canvas data-ic="7" width="26" height="26" aria-hidden="true"></canvas>Škroby, těstoviny a další</button>
+<!-- CHIPS:END -->
+      </div>
     </div>
   </div>
 
   <section class="cat-list" aria-live="polite">
     <div class="wrap">
-      <p class="cat-count" id="count"></p>
-      <div id="groups"></div>
+      <p class="cat-count" id="count">Celkem 490 výrobků</p>
+      <div id="groups">
+<!-- SORTIMENT:START -->
+<section class="grp" id="sk-koreni" data-id="koreni" aria-labelledby="h-koreni">
+<div class="grp-head"><span class="grp-ic"><canvas data-ic="0" width="52" height="52" aria-hidden="true"></canvas></span><h2 id="h-koreni">Koření jednodruhové</h2><span class="n">74 výrobků</span></div>
+<div class="sub" data-s="Koření jednodruhové">
+<ul class="items">
+<li><a class="item" href="index.html?produkt=An%C3%BDz#kontakt">Anýz</a></li>
+<li><a class="item" href="index.html?produkt=An%C3%BDz%20mlet%C3%BD#kontakt">Anýz mletý</a></li>
+<li><a class="item" href="index.html?produkt=Bady%C3%A1n%20cel%C3%BD#kontakt">Badyán celý</a></li>
+<li><a class="item" href="index.html?produkt=Bady%C3%A1n%20mlet%C3%BD#kontakt">Badyán mletý</a></li>
+<li><a class="item" href="index.html?produkt=Bazalka#kontakt">Bazalka</a></li>
+<li><a class="item" href="index.html?produkt=Bazalka%20mlet%C3%A1#kontakt">Bazalka mletá</a></li>
+<li><a class="item" href="index.html?produkt=Bobkov%C3%BD%20list#kontakt">Bobkový list</a></li>
+<li><a class="item" href="index.html?produkt=Citronov%C3%A1%20k%C5%AFra%20-%20drcen%C3%A1#kontakt">Citronová kůra - drcená</a></li>
+<li><a class="item" href="index.html?produkt=Citronov%C3%A1%20k%C5%AFra%20-%20mlet%C3%A1#kontakt">Citronová kůra - mletá</a></li>
+<li><a class="item" href="index.html?produkt=Citr%C3%B3nov%C3%A1%20k%C5%AFra#kontakt">Citrónová kůra</a></li>
+<li><a class="item" href="index.html?produkt=Fenykl%20cel%C3%BD#kontakt">Fenykl celý</a></li>
+<li><a class="item" href="index.html?produkt=Fenykl%20drcen%C3%BD#kontakt">Fenykl drcený</a></li>
+<li><a class="item" href="index.html?produkt=Fenykl%20mlet%C3%BD#kontakt">Fenykl mletý</a></li>
+<li><a class="item" href="index.html?produkt=Ho%C5%99%C4%8Dice%20b%C3%ADl%C3%A1%20cel%C3%A1#kontakt">Hořčice bílá celá</a></li>
+<li><a class="item" href="index.html?produkt=Ho%C5%99%C4%8Dice%20b%C3%ADl%C3%A1%20drcen%C3%A1#kontakt">Hořčice bílá drcená</a></li>
+<li><a class="item" href="index.html?produkt=Ho%C5%99%C4%8Dice%20b%C3%ADl%C3%A1%20mlet%C3%A1#kontakt">Hořčice bílá mletá</a></li>
+<li><a class="item" href="index.html?produkt=H%C5%99eb%C3%AD%C4%8Dek%20cel%C3%BD#kontakt">Hřebíček celý</a></li>
+<li><a class="item" href="index.html?produkt=H%C5%99eb%C3%AD%C4%8Dek%20mlet%C3%BD#kontakt">Hřebíček mletý</a></li>
+<li><a class="item" href="index.html?produkt=Chilli%20mlet%C3%A9#kontakt">Chilli mleté</a></li>
+<li><a class="item" href="index.html?produkt=Chilli%20papri%C4%8Dky#kontakt">Chilli papričky</a></li>
+<li><a class="item" href="index.html?produkt=Jalovec#kontakt">Jalovec</a></li>
+<li><a class="item" href="index.html?produkt=Jalovec%20-%20mlet%C3%BD#kontakt">Jalovec - mletý</a></li>
+<li><a class="item" href="index.html?produkt=Kardamon%20mlet%C3%BD#kontakt">Kardamon mletý</a></li>
+<li><a class="item" href="index.html?produkt=Kari%20l%C3%ADstky#kontakt">Kari lístky</a></li>
+<li><a class="item" href="index.html?produkt=Km%C3%ADn%20cel%C3%BD#kontakt">Kmín celý</a></li>
+<li><a class="item" href="index.html?produkt=Km%C3%ADn%20drcen%C3%BD#kontakt">Kmín drcený</a></li>
+<li><a class="item" href="index.html?produkt=Km%C3%ADn%20mlet%C3%BD#kontakt">Kmín mletý</a></li>
+<li><a class="item" href="index.html?produkt=Km%C3%ADn%20%C5%99%C3%ADmsk%C3%BD#kontakt">Kmín římský</a></li>
+<li><a class="item" href="index.html?produkt=Km%C3%ADn%20%C5%99%C3%ADmsk%C3%BD%20drcen%C3%BD#kontakt">Kmín římský drcený</a></li>
+<li><a class="item" href="index.html?produkt=Km%C3%ADn%20%C5%99%C3%ADmsk%C3%BD%20mlet%C3%BD#kontakt">Kmín římský mletý</a></li>
+<li><a class="item" href="index.html?produkt=Koriandr%20cel%C3%BD#kontakt">Koriandr celý</a></li>
+<li><a class="item" href="index.html?produkt=Koriandr%20drcen%C3%BD#kontakt">Koriandr drcený</a></li>
+<li><a class="item" href="index.html?produkt=Koriandr%20mlet%C3%BD#kontakt">Koriandr mletý</a></li>
+<li><a class="item" href="index.html?produkt=Kurkuma%20mlet%C3%A1#kontakt">Kurkuma mletá</a></li>
+<li><a class="item" href="index.html?produkt=Major%C3%A1nka#kontakt">Majoránka</a></li>
+<li><a class="item" href="index.html?produkt=M%C3%A1ta%20peprn%C3%A1%20drcen%C3%A1#kontakt">Máta peprná drcená</a></li>
+<li><a class="item" href="index.html?produkt=Mu%C5%A1k%C3%A1tov%C3%BD%20kv%C4%9Bt%20mlet%C3%BD#kontakt">Muškátový květ mletý</a></li>
+<li><a class="item" href="index.html?produkt=Mu%C5%A1k%C3%A1tov%C3%BD%20o%C5%99ech%20cel%C3%BD#kontakt">Muškátový ořech celý</a></li>
+<li><a class="item" href="index.html?produkt=Mu%C5%A1k%C3%A1tov%C3%BD%20o%C5%99ech%20mlet%C3%BD#kontakt">Muškátový ořech mletý</a></li>
+<li><a class="item" href="index.html?produkt=Nov%C3%A9%20ko%C5%99en%C3%AD%20cel%C3%A9#kontakt">Nové koření celé</a></li>
+<li><a class="item" href="index.html?produkt=Nov%C3%A9%20ko%C5%99en%C3%AD%20mlet%C3%A9#kontakt">Nové koření mleté</a></li>
+<li><a class="item" href="index.html?produkt=Oregano#kontakt">Oregano</a></li>
+<li><a class="item" href="index.html?produkt=Oregano%20mlet%C3%A9#kontakt">Oregano mleté</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20mlet%C3%A1%20p%C3%A1liv%C3%A1%2080ASTA#kontakt">Paprika mletá pálivá 80ASTA</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20mlet%C3%A1%20sladk%C3%A1%20uzen%C3%A1#kontakt">Paprika mletá sladká uzená</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20mlet%C3%A1%20sladk%C3%A1%20120ASTA#kontakt">Paprika mletá sladká 120ASTA</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20mlet%C3%A1%20sladk%C3%A1%20160ASTA#kontakt">Paprika mletá sladká 160ASTA</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20mlet%C3%A1%20sladk%C3%A1%2080ASTA#kontakt">Paprika mletá sladká 80ASTA</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20ml.sl.lah%C5%AFdkov%C3%A1%20140%20ASTA#kontakt">Paprika ml.sl.lahůdková 140 ASTA</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20b%C3%ADl%C3%BD%20cel%C3%BD#kontakt">Pepř bílý celý</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20b%C3%ADl%C3%BD%20mlet%C3%BD#kontakt">Pepř bílý mletý</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20citronov%C3%BD%20mlet%C3%BD#kontakt">Pepř citronový mletý</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20%C4%8Dern%C3%BD%20cel%C3%BD%20S#kontakt">Pepř černý celý S</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20%C4%8Dern%C3%BD%20cel%C3%BD%206-8%25%20piperinu#kontakt">Pepř černý celý 6-8% piperinu</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20%C4%8Dern%C3%BD%20mlet%C3%BD%20M#kontakt">Pepř černý mletý M</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20%C4%8Dern%C3%BD%20mlet%C3%BD%206-8%25%20piperinu#kontakt">Pepř černý mletý 6-8% piperinu</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20%C4%8Derven%C3%BD%20cel%C3%BD#kontakt">Pepř červený celý</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20kajensk%C3%BD#kontakt">Pepř kajenský</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20se%C4%8Du%C3%A1nsk%C3%BD#kontakt">Pepř sečuánský</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20zelen%C3%BD%20cel%C3%BD#kontakt">Pepř zelený celý</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99%20zelen%C3%BD%20drcen%C3%BD#kontakt">Pepř zelený drcený</a></li>
+<li><a class="item" href="index.html?produkt=P%C3%ADskavice%20mlet%C3%A1#kontakt">Pískavice mletá</a></li>
+<li><a class="item" href="index.html?produkt=Rozmar%C3%BDn#kontakt">Rozmarýn</a></li>
+<li><a class="item" href="index.html?produkt=Rozmar%C3%BDn%20citronov%C3%BD%20mlet%C3%BD#kontakt">Rozmarýn citronový mletý</a></li>
+<li><a class="item" href="index.html?produkt=Rozmar%C3%BDn%20mlet%C3%BD#kontakt">Rozmarýn mletý</a></li>
+<li><a class="item" href="index.html?produkt=Saturejka#kontakt">Saturejka</a></li>
+<li><a class="item" href="index.html?produkt=Sko%C5%99ice%20cel%C3%A1#kontakt">Skořice celá</a></li>
+<li><a class="item" href="index.html?produkt=Sko%C5%99ice%20mlet%C3%A1#kontakt">Skořice mletá</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20pep%C5%99%C5%AF%20drcen%C3%A1%20-%20cel%C3%A1#kontakt">Směs pepřů drcená - celá</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0alv%C4%9Bj#kontakt">Šalvěj</a></li>
+<li><a class="item" href="index.html?produkt=Tymi%C3%A1n#kontakt">Tymián</a></li>
+<li><a class="item" href="index.html?produkt=Tymi%C3%A1n%20citronov%C3%BD#kontakt">Tymián citronový</a></li>
+<li><a class="item" href="index.html?produkt=Tymi%C3%A1n%20mlet%C3%BD#kontakt">Tymián mletý</a></li>
+<li><a class="item" href="index.html?produkt=Z%C3%A1zvor%20mlet%C3%BD#kontakt">Zázvor mletý</a></li>
+</ul></div>
+</section>
+<section class="grp" id="sk-smesi" data-id="smesi" aria-labelledby="h-smesi">
+<div class="grp-head"><span class="grp-ic"><canvas data-ic="1" width="52" height="52" aria-hidden="true"></canvas></span><h2 id="h-smesi">Kořenicí směsi</h2><span class="n">71 výrobků</span></div>
+<div class="sub" data-s="Kořenicí směsi">
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Barbecue%20ko%C5%99en%C3%AD#kontakt">Barbecue koření</a></li>
+<li><a class="item" href="index.html?produkt=Bylinkov%C3%A1%20z%C3%A1livka#kontakt">Bylinková zálivka</a></li>
+<li><a class="item" href="index.html?produkt=Bylinkov%C3%A9%20m%C3%A1slo%20%C4%8D.%202#kontakt">Bylinkové máslo č. 2</a></li>
+<li><a class="item" href="index.html?produkt=Country%20sm%C4%9Bs#kontakt">Country směs</a></li>
+<li><a class="item" href="index.html?produkt=Divok%C3%A9%20ko%C5%99en%C3%AD#kontakt">Divoké koření</a></li>
+<li><a class="item" href="index.html?produkt=Dom%C3%A1c%C3%AD%20jaternice#kontakt">Domácí jaternice</a></li>
+<li><a class="item" href="index.html?produkt=Dom%C3%A1c%C3%AD%20jel%C3%ADtka#kontakt">Domácí jelítka</a></li>
+<li><a class="item" href="index.html?produkt=Dom%C3%A1c%C3%AD%20sekan%C3%A1%20pe%C4%8Den%C4%9B#kontakt">Domácí sekaná pečeně</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8E%C3%A1belsk%C3%A9%20ko%C5%99en%C3%AD#kontakt">Ďábelské koření</a></li>
+<li><a class="item" href="index.html?produkt=Glutas%C5%AFl#kontakt">Glutasůl</a></li>
+<li><a class="item" href="index.html?produkt=Grilovac%C3%AD%20ko%C5%99en%C3%AD#kontakt">Grilovací koření</a></li>
+<li><a class="item" href="index.html?produkt=Grilovac%C3%AD%20ko%C5%99en%C3%AD%2050%25#kontakt">Grilovací koření 50%</a></li>
+<li><a class="item" href="index.html?produkt=Gul%C3%A1%C5%A1ov%C3%A9%20ko%C5%99en%C3%AD#kontakt">Gulášové koření</a></li>
+<li><a class="item" href="index.html?produkt=Gyros#kontakt">Gyros</a></li>
+<li><a class="item" href="index.html?produkt=Gyros%20%C4%8Derven%C3%BD#kontakt">Gyros červený</a></li>
+<li><a class="item" href="index.html?produkt=Gyros%20zelen%C3%BD#kontakt">Gyros zelený</a></li>
+<li><a class="item" href="index.html?produkt=Houbov%C3%A9%20ko%C5%99en%C3%AD#kontakt">Houbové koření</a></li>
+<li><a class="item" href="index.html?produkt=Houbov%C3%BD%20kucht%C3%ADk#kontakt">Houbový kuchtík</a></li>
+<li><a class="item" href="index.html?produkt=Houbov%C3%BD%20kucht%C3%ADk%20speci%C3%A1l#kontakt">Houbový kuchtík speciál</a></li>
+<li><a class="item" href="index.html?produkt=Hungaria%20%C4%8Derven%C3%A1#kontakt">Hungaria červená</a></li>
+<li><a class="item" href="index.html?produkt=Chutn%C3%BD%20brambor%C3%A1k#kontakt">Chutný bramborák</a></li>
+<li><a class="item" href="index.html?produkt=J%C3%A1trov%C3%A9%20knedl%C3%AD%C4%8Dky#kontakt">Játrové knedlíčky</a></li>
+<li><a class="item" href="index.html?produkt=Kari%20ko%C5%99en%C3%AD#kontakt">Kari koření</a></li>
+<li><a class="item" href="index.html?produkt=Klob%C3%A1sov%C3%A9%20ko%C5%99en%C3%AD#kontakt">Klobásové koření</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%ADc%C3%AD%20s%C5%AFl%20na%20ku%C5%99e#kontakt">Kořenící sůl na kuře</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20do%20pa%C5%A1tiky#kontakt">Koření do paštiky</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20%C4%8D%C3%ADnu#kontakt">Koření na čínu</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20francouzsk%C3%A9%20brambory#kontakt">Koření na francouzské brambory</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20hranolky%20a%20americk%C3%A9%20brambory#kontakt">Koření na hranolky a americké brambory</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20kr%C3%A1l%C3%ADka#kontakt">Koření na králíka</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20ku%C5%99e#kontakt">Koření na kuře</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20mlet%C3%A1%20masa#kontakt">Koření na mletá masa</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20pe%C4%8Den%C3%AD%20a%20grilov%C3%A1n%C3%AD#kontakt">Koření na pečení a grilování</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20pizzu#kontakt">Koření na pizzu</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20ryby#kontakt">Koření na ryby</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20ryby%20s%20bylinkami#kontakt">Koření na ryby s bylinkami</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20%C5%99o%C5%BEn%C4%9Bn%C3%AD#kontakt">Koření na řožnění</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20steak#kontakt">Koření na steak</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20sv%C3%AD%C4%8Dkovou#kontakt">Koření na svíčkovou</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20%C5%A1pagety#kontakt">Koření na špagety</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20zv%C4%9B%C5%99inu#kontakt">Koření na zvěřinu</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20vep%C5%99ov%C3%A1%20pe%C4%8Den%C4%9B#kontakt">Koření vepřová pečeně</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20-%20bylinky#kontakt">Koření - bylinky</a></li>
+<li><a class="item" href="index.html?produkt=Kucht%C3%ADk#kontakt">Kuchtík</a></li>
+<li><a class="item" href="index.html?produkt=Kucht%C3%ADk%20speci%C3%A1l#kontakt">Kuchtík speciál</a></li>
+<li><a class="item" href="index.html?produkt=Kucht%C3%ADk%20-%20paprikov%C3%BD#kontakt">Kuchtík - paprikový</a></li>
+<li><a class="item" href="index.html?produkt=Mexick%C3%A9%20ko%C5%99en%C3%AD#kontakt">Mexické koření</a></li>
+<li><a class="item" href="index.html?produkt=Orient%C3%A1ln%C3%AD%20ko%C5%99en%C3%AD#kontakt">Orientální koření</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%A9%20ko%C5%99en%C3%AD%20na%20bramb%C5%AFrky#kontakt">Paprikové koření na brambůrky</a></li>
+<li><a class="item" href="index.html?produkt=Pa%C5%BEitkov%C3%A9%20ko%C5%99en%C3%AD#kontakt">Pažitkové koření</a></li>
+<li><a class="item" href="index.html?produkt=Pe%C4%8Den%C3%A1%20kolena#kontakt">Pečená kolena</a></li>
+<li><a class="item" href="index.html?produkt=Pe%C4%8Den%C3%A9%20ku%C5%99e#kontakt">Pečené kuře</a></li>
+<li><a class="item" href="index.html?produkt=Pe%C4%8Den%C3%BD%20b%C5%AF%C4%8Dek#kontakt">Pečený bůček</a></li>
+<li><a class="item" href="index.html?produkt=Pep%C5%99ov%C3%A9%20ko%C5%99en%C3%AD#kontakt">Pepřové koření</a></li>
+<li><a class="item" href="index.html?produkt=Pern%C3%ADkov%C3%A9%20ko%C5%99en%C3%AD#kontakt">Perníkové koření</a></li>
+<li><a class="item" href="index.html?produkt=Provens%C3%A1lsk%C3%A9%20ko%C5%99en%C3%AD#kontakt">Provensálské koření</a></li>
+<li><a class="item" href="index.html?produkt=%C5%98%C3%ADzek%20na%20ruby#kontakt">Řízek na ruby</a></li>
+<li><a class="item" href="index.html?produkt=%C5%98%C3%ADzek%20pikant#kontakt">Řízek pikant</a></li>
+<li><a class="item" href="index.html?produkt=Sal%C3%A1tov%C3%A1%20z%C3%A1livka#kontakt">Salátová zálivka</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20ko%C5%99en%C3%AD%20na%20s%C3%BDry%20%28bylinky%29#kontakt">Směs koření na sýry (bylinky)</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20ko%C5%99en%C3%AD%201#kontakt">Směs koření 1</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20ko%C5%99en%C3%AD%202%20s%20petr%C5%BEelovou%20nat%C3%AD#kontakt">Směs koření 2 s petrželovou natí</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20ko%C5%99en%C3%AD%203%20s%20cibul%C3%AD#kontakt">Směs koření 3 s cibulí</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20ko%C5%99en%C3%AD%204%20s%20%C4%8Desnekem#kontakt">Směs koření 4 s česnekem</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20ko%C5%99en%C3%AD%205%20%C4%8F%C3%A1belsk%C3%A9#kontakt">Směs koření 5 ďábelské</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20pep%C5%99%C5%AF%20cel%C3%A1#kontakt">Směs pepřů celá</a></li>
+<li><a class="item" href="index.html?produkt=Staro%C4%8Desk%C3%A9%20ko%C5%99en%C3%AD#kontakt">Staročeské koření</a></li>
+<li><a class="item" href="index.html?produkt=Tzaziky#kontakt">Tzaziky</a></li>
+<li><a class="item" href="index.html?produkt=Zabija%C4%8Dkov%C3%A9%20ko%C5%99en%C3%AD#kontakt">Zabijačkové koření</a></li>
+<li><a class="item" href="index.html?produkt=Zlat%C3%A9%20ku%C5%99e#kontakt">Zlaté kuře</a></li>
+<li><a class="item" href="index.html?produkt=6%20druhov%C3%A9%20pep%C5%99ov%C3%A9%20steakov%C3%A9%20ko%C5%99en%C3%AD#kontakt">6 druhové pepřové steakové koření</a></li>
+</ul></div>
+</section>
+<section class="grp" id="sk-zelenina" data-id="zelenina" aria-labelledby="h-zelenina">
+<div class="grp-head"><span class="grp-ic"><canvas data-ic="2" width="52" height="52" aria-hidden="true"></canvas></span><h2 id="h-zelenina">Sušená zelenina</h2><span class="n">72 výrobků</span></div>
+<div class="sub" data-s="Sušená zelenina">
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Brambory%20kostka%20-%20granule#kontakt">Brambory kostka - granule</a></li>
+<li><a class="item" href="index.html?produkt=Brambory%20kostka%20-%2010x10x8mm#kontakt">Brambory kostka - 10x10x8mm</a></li>
+<li><a class="item" href="index.html?produkt=Brambory%20kostka%2010x10x2mm#kontakt">Brambory kostka 10x10x2mm</a></li>
+<li><a class="item" href="index.html?produkt=Celer%20ko%C5%99en#kontakt">Celer kořen</a></li>
+<li><a class="item" href="index.html?produkt=Celer%20ko%C5%99en%20-%20granule#kontakt">Celer kořen - granule</a></li>
+<li><a class="item" href="index.html?produkt=Celer%20ko%C5%99en%20-%20pudr#kontakt">Celer kořen - pudr</a></li>
+<li><a class="item" href="index.html?produkt=Celer%20na%C5%A5#kontakt">Celer nať</a></li>
+<li><a class="item" href="index.html?produkt=Cibule%20pl%C3%A1tky#kontakt">Cibule plátky</a></li>
+<li><a class="item" href="index.html?produkt=Cibule%20p%C5%99edsma%C5%BEen%C3%A1%20-%20mlet%C3%A1#kontakt">Cibule předsmažená - mletá</a></li>
+<li><a class="item" href="index.html?produkt=Cibule%20-%20granule#kontakt">Cibule - granule</a></li>
+<li><a class="item" href="index.html?produkt=Cibule%20-%20pudr#kontakt">Cibule - pudr</a></li>
+<li><a class="item" href="index.html?produkt=Cibulov%C3%A1%20zelenina#kontakt">Cibulová zelenina</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cerven%C3%A1%20%C5%99epa#kontakt">Červená řepa</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cerven%C3%A1%20%C5%99epa%20-%20granule#kontakt">Červená řepa - granule</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cerven%C3%A1%20%C5%99epa%20-%20pudr#kontakt">Červená řepa - pudr</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnek%20pl%C3%A1tky#kontakt">Česnek plátky</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnek%20-%20granule%20G1#kontakt">Česnek - granule G1</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnek%20-%20granule%20G2#kontakt">Česnek - granule G2</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnek%20-%20granule%20G4#kontakt">Česnek - granule G4</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnek%20-%20granule%20G5#kontakt">Česnek - granule G5</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnek%20-%20pudr#kontakt">Česnek - pudr</a></li>
+<li><a class="item" href="index.html?produkt=Hr%C3%A1%C5%A1ek%20zelen%C3%BD#kontakt">Hrášek zelený</a></li>
+<li><a class="item" href="index.html?produkt=Kapusta#kontakt">Kapusta</a></li>
+<li><a class="item" href="index.html?produkt=Karotka#kontakt">Karotka</a></li>
+<li><a class="item" href="index.html?produkt=Karotka%20-%20granule#kontakt">Karotka - granule</a></li>
+<li><a class="item" href="index.html?produkt=Karotka%20-%20pudr#kontakt">Karotka - pudr</a></li>
+<li><a class="item" href="index.html?produkt=Kopr%20-%20list#kontakt">Kopr - list</a></li>
+<li><a class="item" href="index.html?produkt=Kopr%20-%20stonky#kontakt">Kopr - stonky</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99enov%C3%A1%20sm%C4%9Bs#kontakt">Kořenová směs</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99enov%C3%A1%20zelenina#kontakt">Kořenová zelenina</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%A1%C5%A5%C3%A1lov%C3%A1%20zeleninaKo%C5%A1%C5%A5%C3%A1loviny%20tvo%C5%99%C3%AD%20v%C3%BD%C5%BEivov%C4%9B#kontakt">Košťálová zeleninaKošťáloviny tvoří výživově</a></li>
+<li><a class="item" href="index.html?produkt=K%C5%99en%20-%20granule#kontakt">Křen - granule</a></li>
+<li><a class="item" href="index.html?produkt=K%C5%99en%20-%20pudr#kontakt">Křen - pudr</a></li>
+<li><a class="item" href="index.html?produkt=Kv%C4%9Bt%C3%A1k#kontakt">Květák</a></li>
+<li><a class="item" href="index.html?produkt=Kv%C4%9Bt%C3%A1k%20-%20granule#kontakt">Květák - granule</a></li>
+<li><a class="item" href="index.html?produkt=Kv%C4%9Bt%C3%A1k%20-%20pudr#kontakt">Květák - pudr</a></li>
+<li><a class="item" href="index.html?produkt=Libe%C4%8Dek#kontakt">Libeček</a></li>
+<li><a class="item" href="index.html?produkt=Lu%C5%A1t%C4%9Bniny%20a%20jin%C3%A1%20zelenina#kontakt">Luštěniny a jiná zelenina</a></li>
+<li><a class="item" href="index.html?produkt=Na%C5%A5ov%C3%A1%20zeleninaNa%C5%A5ov%C3%A1%20zelenina%20se%20pou%C5%BE%C3%ADv%C3%A1%20jako#kontakt">Naťová zeleninaNaťová zelenina se používá jako</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20flok%20%C4%8Derven%C3%BD%20-%20granule#kontakt">Paprika flok červený - granule</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20flok%20%C4%8Derven%C3%BD%20-%20gr.%20ostr%C3%BD#kontakt">Paprika flok červený - gr. ostrý</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20flok%20%C4%8Derven%C3%BD%209mm#kontakt">Paprika flok červený 9mm</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20flok%20mix#kontakt">Paprika flok mix</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20flok%20zelen%C3%BD%20-%20granule#kontakt">Paprika flok zelený - granule</a></li>
+<li><a class="item" href="index.html?produkt=Paprika%20flok%20zelen%C3%BD%209mm#kontakt">Paprika flok zelený 9mm</a></li>
+<li><a class="item" href="index.html?produkt=Pastin%C3%A1k#kontakt">Pastinák</a></li>
+<li><a class="item" href="index.html?produkt=Pastin%C3%A1k%20-%20granule#kontakt">Pastinák - granule</a></li>
+<li><a class="item" href="index.html?produkt=Pastin%C3%A1k%20-%20pudr#kontakt">Pastinák - pudr</a></li>
+<li><a class="item" href="index.html?produkt=Pa%C5%BEitka%20flok#kontakt">Pažitka flok</a></li>
+<li><a class="item" href="index.html?produkt=Pa%C5%BEitka%20trubi%C4%8Dky#kontakt">Pažitka trubičky</a></li>
+<li><a class="item" href="index.html?produkt=Petr%C5%BEel%20ko%C5%99en#kontakt">Petržel kořen</a></li>
+<li><a class="item" href="index.html?produkt=Petr%C5%BEel%20ko%C5%99en%20-%20granule#kontakt">Petržel kořen - granule</a></li>
+<li><a class="item" href="index.html?produkt=Petr%C5%BEel%20ko%C5%99en%20-%20pudr#kontakt">Petržel kořen - pudr</a></li>
+<li><a class="item" href="index.html?produkt=Petr%C5%BEel%20na%C5%A5#kontakt">Petržel nať</a></li>
+<li><a class="item" href="index.html?produkt=Petr%C5%BEel%20na%C5%A5%20mlet%C3%A1#kontakt">Petržel nať mletá</a></li>
+<li><a class="item" href="index.html?produkt=Petr%C5%BEel%20na%C5%A5%20-%202-4mm#kontakt">Petržel nať - 2-4mm</a></li>
+<li><a class="item" href="index.html?produkt=Petr%C5%BEel%20na%C5%A5%20-%204-6mm#kontakt">Petržel nať - 4-6mm</a></li>
+<li><a class="item" href="index.html?produkt=Plodov%C3%A1%20a%20hl%C3%ADznat%C3%A1%20zelenina#kontakt">Plodová a hlíznatá zelenina</a></li>
+<li><a class="item" href="index.html?produkt=P%C3%B3rek#kontakt">Pórek</a></li>
+<li><a class="item" href="index.html?produkt=P%C3%B3rek%20granule#kontakt">Pórek granule</a></li>
+<li><a class="item" href="index.html?produkt=P%C3%B3rek%20krou%C5%BEky#kontakt">Pórek kroužky</a></li>
+<li><a class="item" href="index.html?produkt=Raj%C4%8De%20flok#kontakt">Rajče flok</a></li>
+<li><a class="item" href="index.html?produkt=Raj%C4%8De%20-%20pudr#kontakt">Rajče - pudr</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0pen%C3%A1t%20vlo%C4%8Dky%202-4mm#kontakt">Špenát vločky 2-4mm</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0pen%C3%A1t%20-%20pudr#kontakt">Špenát - pudr</a></li>
+<li><a class="item" href="index.html?produkt=Zeleninov%C3%A1%20sm%C4%9Bs#kontakt">Zeleninová směs</a></li>
+<li><a class="item" href="index.html?produkt=Zeleninov%C3%A1%20sm%C4%9Bs%20jarn%C3%AD#kontakt">Zeleninová směs jarní</a></li>
+<li><a class="item" href="index.html?produkt=Zeleninov%C3%A1%20sm%C4%9Bs%20letn%C3%AD#kontakt">Zeleninová směs letní</a></li>
+<li><a class="item" href="index.html?produkt=Zeleninov%C3%A1%20sm%C4%9Bs%20na%20%C4%8C%C3%ADnu#kontakt">Zeleninová směs na Čínu</a></li>
+<li><a class="item" href="index.html?produkt=Zeleninov%C3%A1%20sm%C4%9Bs%20podzimn%C3%AD#kontakt">Zeleninová směs podzimní</a></li>
+<li><a class="item" href="index.html?produkt=Zeleninov%C3%A1%20sm%C4%9Bs%20s%20houbami#kontakt">Zeleninová směs s houbami</a></li>
+<li><a class="item" href="index.html?produkt=Zel%C3%AD#kontakt">Zelí</a></li>
+</ul></div>
+</section>
+<section class="grp" id="sk-maso" data-id="maso" aria-labelledby="h-maso">
+<div class="grp-head"><span class="grp-ic"><canvas data-ic="3" width="52" height="52" aria-hidden="true"></canvas></span><h2 id="h-maso">Směsi pro masný průmysl</h2><span class="n">181 výrobků</span></div>
+<div class="sub" data-s="Dekorativní koření">
+<h3>Dekorativní koření</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20ko%C5%99en%C3%AD%201#kontakt">Směs koření 1</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20ko%C5%99en%C3%AD%202%20s%20petr%C5%BEelovou%20nat%C3%AD#kontakt">Směs koření 2 s petrželovou natí</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20ko%C5%99en%C3%AD%203%20s%20cibul%C3%AD#kontakt">Směs koření 3 s cibulí</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20ko%C5%99en%C3%AD%204%20s%20%C4%8Desnekem#kontakt">Směs koření 4 s česnekem</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20pa%C5%BEitkov%C3%A9ho%20ko%C5%99en%C3%AD#kontakt">Směs pažitkového koření</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20pep%C5%99ov%C3%A9ho%20ko%C5%99en%C3%AD#kontakt">Směs pepřového koření</a></li>
+</ul></div>
+<div class="sub" data-s="Kombi směsi">
+<h3>Kombi směsi</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Beskyd%20sal%C3%A1m#kontakt">Beskyd salám</a></li>
+<li><a class="item" href="index.html?produkt=Bylinkov%C3%A1%20klob%C3%A1sa#kontakt">Bylinková klobása</a></li>
+<li><a class="item" href="index.html?produkt=Cig%C3%A1ro%20lah%C5%AFdkov%C3%A9#kontakt">Cigáro lahůdkové</a></li>
+<li><a class="item" href="index.html?produkt=Cik%C3%A1nsk%C3%A1%20klob%C3%A1sa#kontakt">Cikánská klobása</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cabajka#kontakt">Čabajka</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cajovky#kontakt">Čajovky</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Certovky#kontakt">Čertovky</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesk%C3%BD%20sal%C3%A1m#kontakt">Český salám</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnekov%C3%BD%20sal%C3%A1m#kontakt">Česnekový salám</a></li>
+<li><a class="item" href="index.html?produkt=Debrec%C3%ADnky#kontakt">Debrecínky</a></li>
+<li><a class="item" href="index.html?produkt=Debrec%C3%ADnsk%C3%A9%20p%C3%A1re%C4%8Dky#kontakt">Debrecínské párečky</a></li>
+<li><a class="item" href="index.html?produkt=Debrec%C3%ADnsk%C3%A9%20p%C3%A1rky#kontakt">Debrecínské párky</a></li>
+<li><a class="item" href="index.html?produkt=Dom%C3%A1c%C3%AD%20%C4%8Derstv%C3%A9%20klob%C3%A1sy#kontakt">Domácí čerstvé klobásy</a></li>
+<li><a class="item" href="index.html?produkt=Dunajsk%C3%A1%20klob%C3%A1sa#kontakt">Dunajská klobása</a></li>
+<li><a class="item" href="index.html?produkt=Gothajsk%C3%BD%20sal%C3%A1m#kontakt">Gothajský salám</a></li>
+<li><a class="item" href="index.html?produkt=Grilovan%C3%AD%20klob%C3%A1sy#kontakt">Grilovaní klobásy</a></li>
+<li><a class="item" href="index.html?produkt=Hlavi%C4%8Dkov%C3%BD%20sal%C3%A1m#kontakt">Hlavičkový salám</a></li>
+<li><a class="item" href="index.html?produkt=Inoveck%C3%BD%20sal%C3%A1m#kontakt">Inovecký salám</a></li>
+<li><a class="item" href="index.html?produkt=J%C3%A1trov%C3%A1%20zav%C3%A1%C5%99ka#kontakt">Játrová zavářka</a></li>
+<li><a class="item" href="index.html?produkt=J%C3%A1trovka%20s%20mandlemi#kontakt">Játrovka s mandlemi</a></li>
+<li><a class="item" href="index.html?produkt=J%C3%A1trov%C3%BD%20s%C3%BDr#kontakt">Játrový sýr</a></li>
+<li><a class="item" href="index.html?produkt=Jemn%C3%A9%20p%C3%A1rky#kontakt">Jemné párky</a></li>
+<li><a class="item" href="index.html?produkt=Junior%20sal%C3%A1m#kontakt">Junior salám</a></li>
+<li><a class="item" href="index.html?produkt=Kabanos%20dom%C3%A1c%C3%AD#kontakt">Kabanos domácí</a></li>
+<li><a class="item" href="index.html?produkt=Kabanos%20lah%C5%AFdkov%C3%BD#kontakt">Kabanos lahůdkový</a></li>
+<li><a class="item" href="index.html?produkt=Kabanos%20slovensk%C3%BD#kontakt">Kabanos slovenský</a></li>
+<li><a class="item" href="index.html?produkt=Km%C3%ADnov%C3%A9%20klob%C3%A1sy#kontakt">Kmínové klobásy</a></li>
+<li><a class="item" href="index.html?produkt=Km%C3%ADnov%C3%BD%20sal%C3%A1m#kontakt">Kmínový salám</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%88sk%C3%BD%20sal%C3%A1m#kontakt">Koňský salám</a></li>
+<li><a class="item" href="index.html?produkt=Krajov%C3%A9%20klob%C3%A1sy#kontakt">Krajové klobásy</a></li>
+<li><a class="item" href="index.html?produkt=Krajov%C3%A9%20trvanliv%C3%A9%20ty%C4%8Dinky#kontakt">Krajové trvanlivé tyčinky</a></li>
+<li><a class="item" href="index.html?produkt=Krajov%C3%BD%20sal%C3%A1m%20se%20s%C3%BDrem#kontakt">Krajový salám se sýrem</a></li>
+<li><a class="item" href="index.html?produkt=Kr%C5%AFt%C3%AD%20klob%C3%A1sa#kontakt">Krůtí klobása</a></li>
+<li><a class="item" href="index.html?produkt=Kr%C5%AFt%C3%AD%20klob%C3%A1sa%20se%20s%C3%BDrem#kontakt">Krůtí klobása se sýrem</a></li>
+<li><a class="item" href="index.html?produkt=Luncheon%20meat%20v%C4%8Detn%C4%9B%20zahu%C5%A1%C5%A5ovadla#kontakt">Luncheon meat včetně zahušťovadla</a></li>
+<li><a class="item" href="index.html?produkt=Ma%C4%8Farsk%C3%A1%20klob%C3%A1sa#kontakt">Maďarská klobása</a></li>
+<li><a class="item" href="index.html?produkt=Moravsk%C3%A9%20klob%C3%A1sy#kontakt">Moravské klobásy</a></li>
+<li><a class="item" href="index.html?produkt=Mysliveck%C3%BD%20sal%C3%A1m#kontakt">Myslivecký salám</a></li>
+<li><a class="item" href="index.html?produkt=Odersk%C3%A1%20klob%C3%A1sa#kontakt">Oderská klobása</a></li>
+<li><a class="item" href="index.html?produkt=Ostravsk%C3%A9%20klob%C3%A1sy#kontakt">Ostravské klobásy</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%A1%20klob%C3%A1sa#kontakt">Papriková klobása</a></li>
+<li><a class="item" href="index.html?produkt=Pa%C5%99%C3%AD%C5%BEsk%C3%BD%20sal%C3%A1m#kontakt">Pařížský salám</a></li>
+<li><a class="item" href="index.html?produkt=Pa%C5%A1er%C3%A1ck%C3%A1%20klob%C3%A1sa#kontakt">Pašerácká klobása</a></li>
+<li><a class="item" href="index.html?produkt=P%C3%A1rky#kontakt">Párky</a></li>
+<li><a class="item" href="index.html?produkt=Pikantn%C3%AD%20klob%C3%A1sa#kontakt">Pikantní klobása</a></li>
+<li><a class="item" href="index.html?produkt=Pivn%C3%AD%20sal%C3%A1m#kontakt">Pivní salám</a></li>
+<li><a class="item" href="index.html?produkt=Poli%C4%8Dan#kontakt">Poličan</a></li>
+<li><a class="item" href="index.html?produkt=Polo%C5%A1unkov%C3%A9%20klob%C3%A1sy#kontakt">Pološunkové klobásy</a></li>
+<li><a class="item" href="index.html?produkt=Polo%C5%A1unkov%C3%BD%20sal%C3%A1m#kontakt">Pološunkový salám</a></li>
+<li><a class="item" href="index.html?produkt=Polsk%C3%BD%20to%C4%8Den%C3%BD#kontakt">Polský točený</a></li>
+<li><a class="item" href="index.html?produkt=Ro%C5%BEnovsk%C3%BD%20sal%C3%A1m#kontakt">Rožnovský salám</a></li>
+<li><a class="item" href="index.html?produkt=Sekan%C3%A1%20sv%C3%AD%C4%8Dkov%C3%A1%20panenka#kontakt">Sekaná svíčková panenka</a></li>
+<li><a class="item" href="index.html?produkt=Sekan%C3%A1%20sv%C3%AD%C4%8Dkov%C3%A1%20se%20s%C3%BDrem#kontakt">Sekaná svíčková se sýrem</a></li>
+<li><a class="item" href="index.html?produkt=Sekan%C3%A1%20sv%C3%AD%C4%8Dkov%C3%A1%20se%20zeleninou%20v%C4%8Detn%C4%9B%20n%C3%A1pln%C4%9B#kontakt">Sekaná svíčková se zeleninou včetně náplně</a></li>
+<li><a class="item" href="index.html?produkt=Selsk%C3%BD%20trvanliv%C3%BD#kontakt">Selský trvanlivý</a></li>
+<li><a class="item" href="index.html?produkt=Slov%C3%A1ck%C3%A1%20klob%C3%A1sa#kontakt">Slovácká klobása</a></li>
+<li><a class="item" href="index.html?produkt=Slovensk%C3%BD%20to%C4%8Den%C3%BD#kontakt">Slovenský točený</a></li>
+<li><a class="item" href="index.html?produkt=Spi%C5%A1sk%C3%A9%20p%C3%A1rky#kontakt">Spišské párky</a></li>
+<li><a class="item" href="index.html?produkt=Stript%C3%A9rky#kontakt">Striptérky</a></li>
+<li><a class="item" href="index.html?produkt=S%C3%BDrov%C3%A9%20klob%C3%A1sy#kontakt">Sýrové klobásy</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0pek%C3%A1%C4%8Dky#kontakt">Špekáčky</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0unkov%C3%A9%20klob%C3%A1sy#kontakt">Šunkové klobásy</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0unkov%C3%BD%20sal%C3%A1m#kontakt">Šunkový salám</a></li>
+<li><a class="item" href="index.html?produkt=To%C4%8Den%C3%BD%20hlavi%C4%8Dkov%C3%BD#kontakt">Točený hlavičkový</a></li>
+<li><a class="item" href="index.html?produkt=Trampsk%C3%A9%20cig%C3%A1ro#kontakt">Trampské cigáro</a></li>
+<li><a class="item" href="index.html?produkt=Trampsk%C3%BD%20sal%C3%A1m#kontakt">Trampský salám</a></li>
+<li><a class="item" href="index.html?produkt=Turistick%C3%BD%20oby%C4%8Dejn%C3%BD%20sal%C3%A1m#kontakt">Turistický obyčejný salám</a></li>
+<li><a class="item" href="index.html?produkt=Turistick%C3%BD%20sal%C3%A1m#kontakt">Turistický salám</a></li>
+<li><a class="item" href="index.html?produkt=Tyrolsk%C3%BD%20sal%C3%A1m#kontakt">Tyrolský salám</a></li>
+<li><a class="item" href="index.html?produkt=V%C3%ADde%C5%88sk%C3%A9%20p%C3%A1rky#kontakt">Vídeňské párky</a></li>
+<li><a class="item" href="index.html?produkt=Vyso%C4%8Dina%20sal%C3%A1m#kontakt">Vysočina salám</a></li>
+<li><a class="item" href="index.html?produkt=V%C3%BDrobn%C3%AD%20sal%C3%A1m#kontakt">Výrobní salám</a></li>
+<li><a class="item" href="index.html?produkt=Z%C3%A1les%C3%A1ck%C3%BD%20sal%C3%A1m#kontakt">Zálesácký salám</a></li>
+</ul></div>
+<div class="sub" data-s="Kořenicí směsi z přírodního koření">
+<h3>Kořenicí směsi z přírodního koření</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=B%C3%ADl%C3%A9%20klob%C3%A1sy#kontakt">Bílé klobásy</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cabajkov%C3%BD%20kabanos#kontakt">Čabajkový kabanos</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cajovky#kontakt">Čajovky</a></li>
+<li><a class="item" href="index.html?produkt=Debrec%C3%ADnsk%C3%A9%20p%C3%A1rky#kontakt">Debrecínské párky</a></li>
+<li><a class="item" href="index.html?produkt=Dom%C3%A1c%C3%AD%20jaternice#kontakt">Domácí jaternice</a></li>
+<li><a class="item" href="index.html?produkt=Dom%C3%A1c%C3%AD%20jel%C3%ADtka#kontakt">Domácí jelítka</a></li>
+<li><a class="item" href="index.html?produkt=Dom%C3%A1c%C3%AD%20sekan%C3%A1%20pe%C4%8Den%C4%9B#kontakt">Domácí sekaná pečeně</a></li>
+<li><a class="item" href="index.html?produkt=Dunajsk%C3%A1%20klob%C3%A1sa#kontakt">Dunajská klobása</a></li>
+<li><a class="item" href="index.html?produkt=Glutas%C5%AFl#kontakt">Glutasůl</a></li>
+<li><a class="item" href="index.html?produkt=Gothajsk%C3%BD%20sal%C3%A1m#kontakt">Gothajský salám</a></li>
+<li><a class="item" href="index.html?produkt=Herkules%20sal%C3%A1m#kontakt">Herkules salám</a></li>
+<li><a class="item" href="index.html?produkt=Inoveck%C3%BD%20sal%C3%A1m#kontakt">Inovecký salám</a></li>
+<li><a class="item" href="index.html?produkt=Inoveck%C3%BD%20sal%C3%A1m%20speci%C3%A1l#kontakt">Inovecký salám speciál</a></li>
+<li><a class="item" href="index.html?produkt=J%C3%A1trov%C3%A1%20zav%C3%A1%C5%99ka#kontakt">Játrová zavářka</a></li>
+<li><a class="item" href="index.html?produkt=J%C3%A1trovky#kontakt">Játrovky</a></li>
+<li><a class="item" href="index.html?produkt=Jemn%C3%A9%20p%C3%A1rky#kontakt">Jemné párky</a></li>
+<li><a class="item" href="index.html?produkt=Junior%20sal%C3%A1m#kontakt">Junior salám</a></li>
+<li><a class="item" href="index.html?produkt=Kabanos#kontakt">Kabanos</a></li>
+<li><a class="item" href="index.html?produkt=Klob%C3%A1sov%C3%A9%20ko%C5%99en%C3%AD#kontakt">Klobásové koření</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20do%20pa%C5%A1tiky#kontakt">Koření do paštiky</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20mlet%C3%A1%20masa#kontakt">Koření na mletá masa</a></li>
+<li><a class="item" href="index.html?produkt=Ko%C5%99en%C3%AD%20na%20%C5%A1kvarky#kontakt">Koření na škvarky</a></li>
+<li><a class="item" href="index.html?produkt=Kucht%C3%ADk%20dochucovac%C3%AD%20sm%C4%9Bs%20s%20glutamanem#kontakt">Kuchtík dochucovací směs s glutamanem</a></li>
+<li><a class="item" href="index.html?produkt=Kucht%C3%ADk%20speci%C3%A1l%20dochucovac%C3%AD%20sm%C4%9Bs%20bez%20glutamanu#kontakt">Kuchtík speciál dochucovací směs bez glutamanu</a></li>
+<li><a class="item" href="index.html?produkt=Loveck%C3%BD%20sal%C3%A1m#kontakt">Lovecký salám</a></li>
+<li><a class="item" href="index.html?produkt=Ostravsk%C3%A9%20klob%C3%A1sy#kontakt">Ostravské klobásy</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%A1%20klob%C3%A1sa#kontakt">Papriková klobása</a></li>
+<li><a class="item" href="index.html?produkt=Pa%C5%99%C3%AD%C5%BEsk%C3%BD%20sal%C3%A1m#kontakt">Pařížský salám</a></li>
+<li><a class="item" href="index.html?produkt=P%C3%A1liv%C3%BD%20paprikov%C3%BD%20sal%C3%A1m#kontakt">Pálivý paprikový salám</a></li>
+<li><a class="item" href="index.html?produkt=P%C3%A1rky#kontakt">Párky</a></li>
+<li><a class="item" href="index.html?produkt=Poli%C4%8Dan%20sal%C3%A1m#kontakt">Poličan salám</a></li>
+<li><a class="item" href="index.html?produkt=Selsk%C3%BD%20sal%C3%A1m#kontakt">Selský salám</a></li>
+<li><a class="item" href="index.html?produkt=Selsk%C3%BD%20trvanliv%C3%BD%20sal%C3%A1m#kontakt">Selský trvanlivý salám</a></li>
+<li><a class="item" href="index.html?produkt=Slov%C3%A1ck%C3%A1%20klob%C3%A1sa#kontakt">Slovácká klobása</a></li>
+<li><a class="item" href="index.html?produkt=Slov%C3%A1ck%C3%A1%20klob%C3%A1sa%20speci%C3%A1l#kontakt">Slovácká klobása speciál</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20na%20j%C3%A1trov%C3%A9%20knedl%C3%AD%C4%8Dky#kontakt">Směs na játrové knedlíčky</a></li>
+<li><a class="item" href="index.html?produkt=Spi%C5%A1sk%C3%A1%20klob%C3%A1sa#kontakt">Spišská klobása</a></li>
+<li><a class="item" href="index.html?produkt=Spi%C5%A1sk%C3%A1%20klob%C3%A1sa%20ostr%C3%A1#kontakt">Spišská klobása ostrá</a></li>
+<li><a class="item" href="index.html?produkt=Spi%C5%A1sk%C3%A1%20klob%C3%A1sa%20speci%C3%A1l#kontakt">Spišská klobása speciál</a></li>
+<li><a class="item" href="index.html?produkt=Spi%C5%A1sk%C3%A9%20p%C3%A1rky#kontakt">Spišské párky</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0pek%C3%A1%C4%8Dky#kontakt">Špekáčky</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0unkov%C3%BD%20sal%C3%A1m#kontakt">Šunkový salám</a></li>
+<li><a class="item" href="index.html?produkt=Tla%C4%8Denka%20sv%C4%9Btl%C3%A1#kontakt">Tlačenka světlá</a></li>
+<li><a class="item" href="index.html?produkt=Tla%C4%8Denka%20tmav%C3%A1#kontakt">Tlačenka tmavá</a></li>
+<li><a class="item" href="index.html?produkt=Turistick%C3%BD%20sal%C3%A1m#kontakt">Turistický salám</a></li>
+<li><a class="item" href="index.html?produkt=Vinn%C3%A9%20klob%C3%A1sy#kontakt">Vinné klobásy</a></li>
+<li><a class="item" href="index.html?produkt=Zabija%C4%8Dkov%C3%A9%20ko%C5%99en%C3%AD#kontakt">Zabijačkové koření</a></li>
+</ul></div>
+<div class="sub" data-s="Lakovací kombi směs - nástřik s barvivem">
+<h3>Lakovací kombi směs - nástřik s barvivem</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%20100%25%20L.12#kontakt">Nástřik 100% L.12</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2040%25%20L.08#kontakt">Nástřik 40% L.08</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2050%25%20L.09#kontakt">Nástřik 50% L.09</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2060%25%20L.10#kontakt">Nástřik 60% L.10</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2080%25%20L.11#kontakt">Nástřik 80% L.11</a></li>
+</ul></div>
+<div class="sub" data-s="Lakovací kombi směs - nástřik (šunkový program)">
+<h3>Lakovací kombi směs - nástřik (šunkový program)</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%20100%25%20L.07#kontakt">Nástřik 100% L.07</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2020%25%20L.01#kontakt">Nástřik 20% L.01</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2030%25%20L.02#kontakt">Nástřik 30% L.02</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2040%25%20L.03#kontakt">Nástřik 40% L.03</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2050%25%20L.04#kontakt">Nástřik 50% L.04</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2060%25%20L.05#kontakt">Nástřik 60% L.05</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2080%25%20L.06#kontakt">Nástřik 80% L.06</a></li>
+</ul></div>
+<div class="sub" data-s="Lakovací kombi směs - nástřik (uzená masa)">
+<h3>Lakovací kombi směs - nástřik (uzená masa)</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%20100%25%20L.07#kontakt">Nástřik 100% L.07</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2020%25%20L.01#kontakt">Nástřik 20% L.01</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2030%25%20L.02#kontakt">Nástřik 30% L.02</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2040%25%20L.03#kontakt">Nástřik 40% L.03</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2050%25%20L.04#kontakt">Nástřik 50% L.04</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2060%25%20L.05#kontakt">Nástřik 60% L.05</a></li>
+<li><a class="item" href="index.html?produkt=N%C3%A1st%C5%99ik%2080%25%20L.06#kontakt">Nástřik 80% L.06</a></li>
+</ul></div>
+<div class="sub" data-s="Ostatní směsi">
+<h3>Ostatní směsi</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Agar%20800#kontakt">Agar 800</a></li>
+<li><a class="item" href="index.html?produkt=%C5%BDelatina%20220-230%20Bloom#kontakt">Želatina 220-230 Bloom</a></li>
+<li><a class="item" href="index.html?produkt=%C5%BDelatina%20250-260%20Bloom#kontakt">Želatina 250-260 Bloom</a></li>
+</ul></div>
+<div class="sub" data-s="Technické fosfáty">
+<h3>Technické fosfáty</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Colormix%20forte%20%28sm%C4%9Bs%20fosf%C3%A1t%2C%20antioxidant%2C%20cukry%2C%20barvivo%29#kontakt">Colormix forte (směs fosfát, antioxidant, cukry, barvivo)</a></li>
+<li><a class="item" href="index.html?produkt=Colormix%20%28sm%C4%9Bs%20fosf%C3%A1t%2C%20antioxidant%2C%20cukry%29#kontakt">Colormix (směs fosfát, antioxidant, cukry)</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cist%C3%BD%20fosf%C3%A1t%20%28obsah%20P205%29%2060%25#kontakt">Čistý fosfát (obsah P205) 60%</a></li>
+</ul></div>
+<div class="sub" data-s="Technologické náhrady masa">
+<h3>Technologické náhrady masa</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Ekofix#kontakt">Ekofix</a></li>
+<li><a class="item" href="index.html?produkt=Ekofix%20forte#kontakt">Ekofix forte</a></li>
+<li><a class="item" href="index.html?produkt=Ekonomix%20forte#kontakt">Ekonomix forte</a></li>
+<li><a class="item" href="index.html?produkt=Ekonomix%20%28sm%C4%9Bs%20hydrokoloid%C5%AF%29#kontakt">Ekonomix (směs hydrokoloidů)</a></li>
+<li><a class="item" href="index.html?produkt=Kutromix%20zahu%C5%A1%C5%A5ovadlo#kontakt">Kutromix zahušťovadlo</a></li>
+<li><a class="item" href="index.html?produkt=Kutrovac%C3%AD%20kombi%20sm%C4%9Bs%20K1#kontakt">Kutrovací kombi směs K1</a></li>
+<li><a class="item" href="index.html?produkt=Kutrovac%C3%AD%20kombi%20sm%C4%9Bs%20K1C#kontakt">Kutrovací kombi směs K1C</a></li>
+<li><a class="item" href="index.html?produkt=Soko%20G#kontakt">Soko G</a></li>
+<li><a class="item" href="index.html?produkt=Turbofosv%C3%A1t%20K2#kontakt">Turbofosvát K2</a></li>
+</ul></div>
+<div class="sub" data-s="Technologické přísady">
+<h3>Technologické přísady</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Barvivo%202%25%20n%C3%ADzk%C3%A9%20d%C3%A1vkov%C3%A1n%C3%AD#kontakt">Barvivo 2% nízké dávkování</a></li>
+<li><a class="item" href="index.html?produkt=Cibule%20p%C5%99edsma%C5%BEen%C3%A1%20tekut%C3%A1#kontakt">Cibule předsmažená tekutá</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnek%20tekut%C3%BD#kontakt">Česnek tekutý</a></li>
+<li><a class="item" href="index.html?produkt=Karm%C3%ADna%202%25%20tekut%C3%A1#kontakt">Karmína 2% tekutá</a></li>
+<li><a class="item" href="index.html?produkt=Kul%C3%A9r#kontakt">Kulér</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%A1%20emulze#kontakt">Papriková emulze</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%A1%20emulze%2040%20000%20%28na%20b%C3%A1zi%20oleje%29#kontakt">Papriková emulze 40 000 (na bázi oleje)</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%A1%20emulze%205-6000%20BJ#kontakt">Papriková emulze 5-6000 BJ</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%BD%20kr%C3%A9m%205000%20BJ#kontakt">Paprikový krém 5000 BJ</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%BD%20v%C3%BDta%C5%BEek%20p%C3%A1liv%C3%BD#kontakt">Paprikový výtažek pálivý</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%BD%20v%C3%BDta%C5%BEek%2040%20000%20%28na%20b%C3%A1zi%20vody%29#kontakt">Paprikový výtažek 40 000 (na bázi vody)</a></li>
+</ul></div>
+<div class="sub" data-s="Uzené speciality">
+<h3>Uzené speciality</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Coantry%20pikant#kontakt">Coantry pikant</a></li>
+<li><a class="item" href="index.html?produkt=Hungaria%20pikant#kontakt">Hungaria pikant</a></li>
+<li><a class="item" href="index.html?produkt=Krkovice%20dekor%20s%20%C4%8Desnekem#kontakt">Krkovice dekor s česnekem</a></li>
+<li><a class="item" href="index.html?produkt=Selsk%C3%BD%20bok#kontakt">Selský bok</a></li>
+</ul></div>
+<div class="sub" data-s="Vaječné náhrady">
+<h3>Vaječné náhrady</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Su%C5%A1en%C3%BD%20vaje%C4%8Dn%C3%BD%20b%C3%ADlek#kontakt">Sušený vaječný bílek</a></li>
+<li><a class="item" href="index.html?produkt=Su%C5%A1en%C3%BD%20vaje%C4%8Dn%C3%BD%20b%C3%ADlek%20%C5%A1lehan%C3%BD#kontakt">Sušený vaječný bílek šlehaný</a></li>
+<li><a class="item" href="index.html?produkt=Su%C5%A1en%C3%BD%20vaje%C4%8Dn%C3%BD%20%C5%BEloutek#kontakt">Sušený vaječný žloutek</a></li>
+<li><a class="item" href="index.html?produkt=Vaje%C4%8Dn%C3%A1%20n%C3%A1hrada%20LP%2020#kontakt">Vaječná náhrada LP 20</a></li>
+<li><a class="item" href="index.html?produkt=Vaje%C4%8Dn%C3%A1%20n%C3%A1hrada%20LP%2070#kontakt">Vaječná náhrada LP 70</a></li>
+<li><a class="item" href="index.html?produkt=Vaje%C4%8Dn%C3%A1%20sm%C4%9Bs#kontakt">Vaječná směs</a></li>
+</ul></div>
+</section>
+<section class="grp" id="sk-houby" data-id="houby" aria-labelledby="h-houby">
+<div class="grp-head"><span class="grp-ic"><canvas data-ic="4" width="52" height="52" aria-hidden="true"></canvas></span><h2 id="h-houby">Sušené houby a plody</h2><span class="n">20 výrobků</span></div>
+<div class="sub" data-s="Suché plody">
+<h3>Suché plody</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Hru%C5%A1ky#kontakt">Hrušky</a></li>
+<li><a class="item" href="index.html?produkt=Jablka%20kostky%20-%20loupan%C3%A9#kontakt">Jablka kostky - loupané</a></li>
+<li><a class="item" href="index.html?produkt=Jablka%20kostky%20-%20neloupan%C3%A1#kontakt">Jablka kostky - neloupaná</a></li>
+<li><a class="item" href="index.html?produkt=L%C3%ADskov%C3%A9%20o%C5%99echy#kontakt">Lískové ořechy</a></li>
+<li><a class="item" href="index.html?produkt=Mandle%20hranolky#kontakt">Mandle hranolky</a></li>
+<li><a class="item" href="index.html?produkt=Mandle%20loupan%C3%A9#kontakt">Mandle loupané</a></li>
+<li><a class="item" href="index.html?produkt=Mandle%20neloupan%C3%A9#kontakt">Mandle neloupané</a></li>
+<li><a class="item" href="index.html?produkt=Mandle%20pl%C3%A1tky%20%28lup%C3%ADnky%29#kontakt">Mandle plátky (lupínky)</a></li>
+<li><a class="item" href="index.html?produkt=M%C3%A1k#kontakt">Mák</a></li>
+<li><a class="item" href="index.html?produkt=Rozinky#kontakt">Rozinky</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0vestky%20bez%20pecek#kontakt">Švestky bez pecek</a></li>
+<li><a class="item" href="index.html?produkt=Vla%C5%A1sk%C3%A9%20o%C5%99echy#kontakt">Vlašské ořechy</a></li>
+</ul></div>
+<div class="sub" data-s="Sušené houby">
+<h3>Sušené houby</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Hl%C3%ADva%20%C3%BAst%C5%99i%C4%8Dn%C3%A1#kontakt">Hlíva ústřičná</a></li>
+<li><a class="item" href="index.html?produkt=H%C5%99ib%20prav%C3%BD#kontakt">Hřib pravý</a></li>
+<li><a class="item" href="index.html?produkt=Jid%C3%A1%C5%A1ovo%20ucho#kontakt">Jidášovo ucho</a></li>
+<li><a class="item" href="index.html?produkt=Lesn%C3%AD%20sm%C4%9Bs#kontakt">Lesní směs</a></li>
+<li><a class="item" href="index.html?produkt=LLi%C5%A1ka%20obecn%C3%A1#kontakt">LLiška obecná</a></li>
+<li><a class="item" href="index.html?produkt=Shi-ta-ke#kontakt">Shi-ta-ke</a></li>
+<li><a class="item" href="index.html?produkt=Sm%C4%9Bs%20h%C5%99ibovit%C3%BDch%20hub#kontakt">Směs hřibovitých hub</a></li>
+<li><a class="item" href="index.html?produkt=%C5%BDampiony%20pl%C3%A1tky#kontakt">Žampiony plátky</a></li>
+</ul></div>
+</section>
+<section class="grp" id="sk-polevky" data-id="polevky" aria-labelledby="h-polevky">
+<div class="grp-head"><span class="grp-ic"><canvas data-ic="5" width="52" height="52" aria-hidden="true"></canvas></span><h2 id="h-polevky">Bujóny, polévky, omáčky</h2><span class="n">19 výrobků</span></div>
+<div class="sub" data-s="Bujóny">
+<h3>Bujóny</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Buj%C3%B3n%20dr%C5%AFbe%C5%BE%C3%AD#kontakt">Bujón drůbeží</a></li>
+<li><a class="item" href="index.html?produkt=Buj%C3%B3n%20houbov%C3%BD#kontakt">Bujón houbový</a></li>
+<li><a class="item" href="index.html?produkt=Buj%C3%B3n%20hov%C4%9Bz%C3%AD#kontakt">Bujón hovězí</a></li>
+<li><a class="item" href="index.html?produkt=Buj%C3%B3n%20hov%C4%9Bz%C3%AD%20%C4%8Dir%C3%BD#kontakt">Bujón hovězí čirý</a></li>
+<li><a class="item" href="index.html?produkt=Buj%C3%B3n%20masov%C3%BD%20%C4%8Dir%C3%BD#kontakt">Bujón masový čirý</a></li>
+<li><a class="item" href="index.html?produkt=Buj%C3%B3n%20uzen%C3%BD#kontakt">Bujón uzený</a></li>
+<li><a class="item" href="index.html?produkt=Buj%C3%B3n%20zeleninov%C3%BD#kontakt">Bujón zeleninový</a></li>
+</ul></div>
+<div class="sub" data-s="Marinády">
+<h3>Marinády</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Dr%C3%A1culova%20smrt%20s%20olejem#kontakt">Dráculova smrt s olejem</a></li>
+<li><a class="item" href="index.html?produkt=Ku%C5%99ec%C3%AD%20s%20bylinkami#kontakt">Kuřecí s bylinkami</a></li>
+<li><a class="item" href="index.html?produkt=Mexiko%20pikant%20s%20v%C3%ADnem#kontakt">Mexiko pikant s vínem</a></li>
+<li><a class="item" href="index.html?produkt=Om%C3%A1%C4%8Dka%20-%20gurm%C3%A1novo%20poku%C5%A1en%C3%AD#kontakt">Omáčka - gurmánovo pokušení</a></li>
+<li><a class="item" href="index.html?produkt=Orient%20sladk%C3%A1%20s%20olejem#kontakt">Orient sladká s olejem</a></li>
+</ul></div>
+<div class="sub" data-s="Omáčky, Šťávy">
+<h3>Omáčky, Šťávy</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Om%C3%A1%C4%8Dka%20k%20pe%C4%8Den%C3%AD#kontakt">Omáčka k pečení</a></li>
+<li><a class="item" href="index.html?produkt=Rajsk%C3%A1%20om%C3%A1%C4%8Dka#kontakt">Rajská omáčka</a></li>
+<li><a class="item" href="index.html?produkt=S%C3%BDrov%C3%A1%20om%C3%A1%C4%8Dka#kontakt">Sýrová omáčka</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0%C5%A5%C3%A1va%20z%20pe%C4%8Den%C4%9B%20dr%C5%AFbe%C5%BE%C3%AD#kontakt">Šťáva z pečeně drůbeží</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0%C5%A5%C3%A1va%20z%20pe%C4%8Den%C4%9B%20vep%C5%99ov%C3%A1#kontakt">Šťáva z pečeně vepřová</a></li>
+</ul></div>
+<div class="sub" data-s="Polévky">
+<h3>Polévky</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Buj%C3%B3n%20masov%C3%BD%20%C4%8Dir%C3%BD#kontakt">Bujón masový čirý</a></li>
+<li><a class="item" href="index.html?produkt=Rajsk%C3%A1%20pol%C3%A9vka#kontakt">Rajská polévka</a></li>
+</ul></div>
+</section>
+<section class="grp" id="sk-brambory" data-id="brambory" aria-labelledby="h-brambory">
+<div class="grp-head"><span class="grp-ic"><canvas data-ic="6" width="52" height="52" aria-hidden="true"></canvas></span><h2 id="h-brambory">Bramborové výrobky</h2><span class="n">14 výrobků</span></div>
+<div class="sub" data-s="Bramborové výrobky">
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Bramborov%C3%A1%20ka%C5%A1e%20barven%C3%A1#kontakt">Bramborová kaše barvená</a></li>
+<li><a class="item" href="index.html?produkt=Bramborov%C3%A1%20ka%C5%A1e%20s%20ml%C3%A9kem#kontakt">Bramborová kaše s mlékem</a></li>
+<li><a class="item" href="index.html?produkt=Bramborov%C3%A1%20ka%C5%A1e%20-%20p%C5%99edsma%C5%BEen%C3%A1%20cibulka#kontakt">Bramborová kaše - předsmažená cibulka</a></li>
+<li><a class="item" href="index.html?produkt=Bramborov%C3%A9%20knedl%C3%ADky%20s%20bylinkami#kontakt">Bramborové knedlíky s bylinkami</a></li>
+<li><a class="item" href="index.html?produkt=Bramborov%C3%A9%20t%C4%9Bsto%20D#kontakt">Bramborové těsto D</a></li>
+<li><a class="item" href="index.html?produkt=Bramborov%C3%BD%20%C5%A1krob#kontakt">Bramborový škrob</a></li>
+<li><a class="item" href="index.html?produkt=Halu%C5%A1ky%20D#kontakt">Halušky D</a></li>
+<li><a class="item" href="index.html?produkt=Ka%C5%A1e%20bramborov%C3%A1%20-%20houbov%C3%A1#kontakt">Kaše bramborová - houbová</a></li>
+<li><a class="item" href="index.html?produkt=Ka%C5%A1e%20bramborov%C3%A1%20-%20hov%C4%9Bz%C3%AD#kontakt">Kaše bramborová - hovězí</a></li>
+<li><a class="item" href="index.html?produkt=Ka%C5%A1e%20bramborov%C3%A1%20-%20ku%C5%99ec%C3%AD#kontakt">Kaše bramborová - kuřecí</a></li>
+<li><a class="item" href="index.html?produkt=Ka%C5%A1e%20bramborov%C3%A1%20-%20pa%C5%BEitkov%C3%A1#kontakt">Kaše bramborová - pažitková</a></li>
+<li><a class="item" href="index.html?produkt=Ka%C5%A1e%20bramborov%C3%A1%20-%20petr%C5%BEel.na%C5%A5#kontakt">Kaše bramborová - petržel.nať</a></li>
+<li><a class="item" href="index.html?produkt=Slezsk%C3%A9%20bramborov%C3%A9%20knedl%C3%ADky#kontakt">Slezské bramborové knedlíky</a></li>
+<li><a class="item" href="index.html?produkt=Staro%C4%8Desk%C3%BD%20brambor%C3%A1k#kontakt">Staročeský bramborák</a></li>
+</ul></div>
+</section>
+<section class="grp" id="sk-testoviny" data-id="testoviny" aria-labelledby="h-testoviny">
+<div class="grp-head"><span class="grp-ic"><canvas data-ic="7" width="52" height="52" aria-hidden="true"></canvas></span><h2 id="h-testoviny">Škroby, těstoviny a další</h2><span class="n">39 výrobků</span></div>
+<div class="sub" data-s="Česneková pasta">
+<h3>Česneková pasta</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=%C4%8Cesnekov%C3%A1%20pasta%200%25#kontakt">Česneková pasta 0%</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnekov%C3%A1%20pasta%2010%25#kontakt">Česneková pasta 10%</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnekov%C3%A1%20pasta%2030%25#kontakt">Česneková pasta 30%</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnekov%C3%A1%20pasta%2050%25#kontakt">Česneková pasta 50%</a></li>
+</ul></div>
+<div class="sub" data-s="Ostatní">
+<h3>Ostatní</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Cibule%20sma%C5%BEen%C3%A1%20tekut%C3%A1#kontakt">Cibule smažená tekutá</a></li>
+<li><a class="item" href="index.html?produkt=%C4%8Cesnek%20TR%2F2%2C5%20tekut%C3%BD#kontakt">Česnek TR/2,5 tekutý</a></li>
+<li><a class="item" href="index.html?produkt=Glutaman%20E621#kontakt">Glutaman E621</a></li>
+<li><a class="item" href="index.html?produkt=Magie%20pol%C3%A9vkov%C3%A9%20ko%C5%99en%C3%AD%201l#kontakt">Magie polévkové koření 1l</a></li>
+<li><a class="item" href="index.html?produkt=Okurky%20sterilovan%C3%A9%206%2F9%20balen%C3%AD%20po%203ks#kontakt">Okurky sterilované 6/9 balení po 3ks</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%BD%20kr%C3%A9m%205-6000%20BJ#kontakt">Paprikový krém 5-6000 BJ</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%BD%20v%C3%BDta%C5%BEek%20p%C3%A1liv%C3%BD#kontakt">Paprikový výtažek pálivý</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%BD%20v%C3%BDta%C5%BEek%2040%20000%20BJ#kontakt">Paprikový výtažek 40 000 BJ</a></li>
+<li><a class="item" href="index.html?produkt=Paprikov%C3%BD%20v%C3%BDta%C5%BEek%205-6000%20BJ#kontakt">Paprikový výtažek 5-6000 BJ</a></li>
+<li><a class="item" href="index.html?produkt=S%C3%B3jov%C3%A1%20om%C3%A1%C4%8Dka%201l#kontakt">Sójová omáčka 1l</a></li>
+<li><a class="item" href="index.html?produkt=Worcesterov%C3%A1%20om%C3%A1%C4%8Dka%201l#kontakt">Worcesterová omáčka 1l</a></li>
+</ul></div>
+<div class="sub" data-s="Sladký program">
+<h3>Sladký program</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Makov%C3%A1%20n%C3%A1pl%C5%88#kontakt">Maková náplň</a></li>
+<li><a class="item" href="index.html?produkt=Pala%C4%8Dinky#kontakt">Palačinky</a></li>
+<li><a class="item" href="index.html?produkt=Pern%C3%ADk#kontakt">Perník</a></li>
+<li><a class="item" href="index.html?produkt=Pern%C3%ADk%20strouhan%C3%BD#kontakt">Perník strouhaný</a></li>
+<li><a class="item" href="index.html?produkt=Puding%20vanilkov%C3%BD#kontakt">Puding vanilkový</a></li>
+<li><a class="item" href="index.html?produkt=Sladk%C3%A9%20knedl%C3%ADky%20s%20jogurtem#kontakt">Sladké knedlíky s jogurtem</a></li>
+</ul></div>
+<div class="sub" data-s="Škroby">
+<h3>Škroby</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Dextriny#kontakt">Dextriny</a></li>
+<li><a class="item" href="index.html?produkt=Lepek%20p%C5%A1eni%C4%8Dn%C3%BD%20devit%C3%A1ln%C3%AD#kontakt">Lepek pšeničný devitální</a></li>
+<li><a class="item" href="index.html?produkt=Lepek%20p%C5%A1eni%C4%8Dn%C3%BD%20vit%C3%A1ln%C3%AD#kontakt">Lepek pšeničný vitální</a></li>
+<li><a class="item" href="index.html?produkt=P%C5%A1eni%C4%8Dn%C3%A1%20mouka%20instantn%C3%AD#kontakt">Pšeničná mouka instantní</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0kroby%20bramborov%C3%A9%20modyfikovan%C3%A9#kontakt">Škroby bramborové modyfikované</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0kroby%20p%C5%A1eni%C4%8Dn%C3%A9%20modifikovan%C3%A9#kontakt">Škroby pšeničné modifikované</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0krob%20bramborov%C3%BD#kontakt">Škrob bramborový</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0krob%20kuku%C5%99i%C4%8Dn%C3%BD#kontakt">Škrob kukuřičný</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0krob%20p%C5%A1eni%C4%8Dn%C3%BD#kontakt">Škrob pšeničný</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0krob%20r%C3%BD%C5%BEov%C3%BD#kontakt">Škrob rýžový</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0krob%20tapiokov%C3%BD#kontakt">Škrob tapiokový</a></li>
+</ul></div>
+<div class="sub" data-s="Těstoviny">
+<h3>Těstoviny</h3>
+<ul class="items">
+<li><a class="item" href="index.html?produkt=Kol%C3%ADnka#kontakt">Kolínka</a></li>
+<li><a class="item" href="index.html?produkt=%C5%98ezan%C3%A9#kontakt">Řezané</a></li>
+<li><a class="item" href="index.html?produkt=%C5%A0irok%C3%A9#kontakt">Široké</a></li>
+<li><a class="item" href="index.html?produkt=Tagliatelle%20s%20medv%C4%9Bd%C3%ADm%20%C4%8Desnekem#kontakt">Tagliatelle s medvědím česnekem</a></li>
+<li><a class="item" href="index.html?produkt=T%C4%9Bstovinov%C3%A1%20r%C3%BD%C5%BEe#kontakt">Těstovinová rýže</a></li>
+<li><a class="item" href="index.html?produkt=V%C4%9Btrn%C3%ADky#kontakt">Větrníky</a></li>
+<li><a class="item" href="index.html?produkt=V%C5%99etena#kontakt">Vřetena</a></li>
+</ul></div>
+</section>
+<!-- SORTIMENT:END -->
+      </div>
       <div class="cat-empty" id="empty" hidden>
         <p class="cat-empty-title">Tohle jsme v&nbsp;sortimentu nenašli.</p>
         <p>Zkuste jiné slovo, nebo nám napište – směs vám rádi připravíme na míru.</p>
@@ -108,12 +740,10 @@
   </div>
 </footer>
 
-<script src="assets/products.js"></script>
-<script src="assets/sortiment-data.js"></script>
+<script src="assets/products.js" defer></script>
 <script>
-(() => {
-  const { CATS, productIcon } = window.JK;
-  const DATA = window.SORTIMENT;
+addEventListener('DOMContentLoaded', () => {
+  const { CATS, drawProduct } = window.JK;
 
   /* ---------- hlavička (menu, stín při scrollu) ---------- */
   const top = document.getElementById('top');
@@ -128,102 +758,97 @@
   burger.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
   nav.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
   addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { setMenu(false); burger.focus(); } });
-  const onScroll = () => top.classList.toggle('scrolled', scrollY > 8);
-  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  let ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => { top.classList.toggle('scrolled', scrollY > 8); ticking = false; });
+  }, { passive: true });
+  top.classList.toggle('scrolled', scrollY > 8);
+
+  /* ---------- ikonky skupin (plátna mají pevnou velikost už v HTML) ---------- */
+  const dpr = Math.min(2, devicePixelRatio || 1);
+  document.querySelectorAll('canvas[data-ic]').forEach(cv => {
+    const px = cv.width;
+    cv.style.width = cv.style.height = px + 'px';
+    cv.width = cv.height = Math.round(px * dpr);
+    const x = cv.getContext('2d'); x.scale(dpr, dpr); x.translate(px / 2, px / 2);
+    drawProduct(x, +cv.dataset.ic, px * .42, 'mix');
+  });
 
   /* ---------- patička ---------- */
   const footCats = document.getElementById('footCats');
   CATS.forEach(c => { const li = document.createElement('li'); li.innerHTML = `<a href="#${c.id}">${c.name}</a>`; footCats.appendChild(li); });
 
-  /* ---------- hledání bez ohledu na diakritiku ---------- */
-  const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  /* ---------- hledání a filtr (výpis je hotový v HTML, tady se jen skrývá) ---------- */
+  const fold = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   const esc = s => s.replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
-  // zvýrazní nalezený text v původním (diakritickém) názvu
-  function highlight(name, q) {
-    if (!q) return esc(name);
-    const i = fold(name).indexOf(q);
-    if (i < 0) return esc(name);
-    return esc(name.slice(0, i)) + '<mark>' + esc(name.slice(i, i + q.length)) + '</mark>' + esc(name.slice(i + q.length));
-  }
-  DATA.forEach(p => { p.f = fold(p.n + ' ' + p.s); });
+  const plural = n => n === 1 ? 'výrobek' : n >= 2 && n <= 4 ? 'výrobky' : 'výrobků';
+  const groups = [...document.querySelectorAll('.grp')].map(sec => ({
+    sec, id: sec.dataset.id, n: sec.querySelector('.grp-head .n'),
+    subs: [...sec.querySelectorAll('.sub')].map(sub => ({
+      sub, items: [...sub.querySelectorAll('.item')].map(a => ({ a, li: a.parentNode, name: a.textContent, f: fold(a.textContent + ' ' + sub.dataset.s), marked: false }))
+    }))
+  }));
+  const total = groups.reduce((t, g) => t + g.subs.reduce((u, s) => u + s.items.length, 0), 0);
 
-  /* ---------- filtry skupin ---------- */
-  const chipsEl = document.getElementById('chips');
-  const mkChip = (label, id, cat) => {
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'chip' + (cat === undefined ? ' all' : ''); b.dataset.id = id;
-    if (cat !== undefined) b.appendChild(productIcon(cat, 26));
-    b.appendChild(document.createTextNode(label));
-    b.addEventListener('click', () => { setGroup(id); if (id) history.replaceState(null, '', '#' + id); else history.replaceState(null, '', location.pathname); });
-    chipsEl.appendChild(b);
-    return b;
-  };
-  const chips = [mkChip('Vše', '')].concat(CATS.map((c, i) => mkChip(c.name, c.id, i)));
-
-  /* ---------- výpis ---------- */
-  const groupsEl = document.getElementById('groups');
+  const chips = [...document.querySelectorAll('#chips .chip')];
   const countEl = document.getElementById('count');
   const emptyEl = document.getElementById('empty');
   const qEl = document.getElementById('q');
   const qClear = document.getElementById('qClear');
   let group = '', query = '';
 
-  const plural = n => n === 1 ? 'výrobek' : n >= 2 && n <= 4 ? 'výrobky' : 'výrobků';
-  const poptat = name => 'index.html?produkt=' + encodeURIComponent(name) + '#kontakt';
-
-  function render() {
+  function apply() {
     const q = fold(query.trim());
-    const list = DATA.filter(p => (!group || CATS[p.g].id === group) && (!q || p.f.includes(q)));
-    groupsEl.textContent = '';
-    CATS.forEach((c, gi) => {
-      const items = list.filter(p => p.g === gi);
-      if (!items.length) return;
-      const sec = document.createElement('section');
-      sec.className = 'grp'; sec.id = 'sk-' + c.id;
-      sec.setAttribute('aria-labelledby', 'h-' + c.id);
-      const head = document.createElement('div');
-      head.className = 'grp-head';
-      const ic = document.createElement('span'); ic.className = 'grp-ic'; ic.appendChild(productIcon(gi, 52));
-      head.appendChild(ic);
-      head.insertAdjacentHTML('beforeend', `<h2 id="h-${c.id}">${c.name}</h2><span class="n">${items.length} ${plural(items.length)}</span>`);
-      sec.appendChild(head);
-      // podskupiny (u skupin, které je mají)
-      const subs = [...new Set(items.map(p => p.s))];
-      subs.forEach(s => {
-        const wrap = document.createElement('div'); wrap.className = 'sub';
-        if (subs.length > 1 || s !== c.name) wrap.insertAdjacentHTML('beforeend', `<h3>${esc(s)}</h3>`);
-        const ul = document.createElement('ul'); ul.className = 'items';
-        ul.innerHTML = items.filter(p => p.s === s).map(p =>
-          `<li><a class="item" href="${poptat(p.n)}" aria-label="Poptat: ${esc(p.n)}"><span>${highlight(p.n, q)}</span><span class="go" aria-hidden="true">Poptat →</span></a></li>`).join('');
-        wrap.appendChild(ul);
-        sec.appendChild(wrap);
+    let shown = 0;
+    groups.forEach(g => {
+      let gCount = 0;
+      const gOn = !group || g.id === group;
+      g.subs.forEach(s => {
+        let sCount = 0;
+        s.items.forEach(it => {
+          const on = gOn && (!q || it.f.includes(q));
+          it.li.hidden = !on;
+          if (!on) return;
+          sCount++;
+          // zvýraznění hledaného textu v názvu
+          const i = q ? fold(it.name).indexOf(q) : -1;
+          if (i >= 0) { it.a.innerHTML = esc(it.name.slice(0, i)) + '<mark>' + esc(it.name.slice(i, i + q.length)) + '</mark>' + esc(it.name.slice(i + q.length)); it.marked = true; }
+          else if (it.marked) { it.a.textContent = it.name; it.marked = false; }
+        });
+        s.sub.hidden = !sCount;
+        gCount += sCount;
       });
-      groupsEl.appendChild(sec);
+      g.sec.hidden = !gCount;
+      g.n.textContent = gCount + ' ' + plural(gCount);
+      shown += gCount;
     });
-    countEl.textContent = list.length
-      ? (q || group ? `Nalezeno: ${list.length} ${plural(list.length)}` : `Celkem ${list.length} ${plural(list.length)}`)
-      : '';
-    emptyEl.hidden = list.length > 0;
+    countEl.textContent = shown ? ((q || group ? 'Nalezeno: ' : 'Celkem ') + shown + ' ' + plural(shown)) : '';
+    emptyEl.hidden = shown > 0;
     qClear.hidden = !query;
   }
 
   function setGroup(id) {
     group = CATS.some(c => c.id === id) ? id : '';
     chips.forEach(b => b.setAttribute('aria-pressed', b.dataset.id === group));
-    render();
+    apply();
     const active = chips.find(b => b.dataset.id === group);
-    if (active) active.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+    if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest', inline: 'center' });
   }
+  chips.forEach(b => b.addEventListener('click', () => {
+    setGroup(b.dataset.id);
+    history.replaceState(null, '', b.dataset.id ? '#' + b.dataset.id : location.pathname);
+  }));
 
   let t;
-  qEl.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { query = qEl.value; render(); }, 80); });
-  qClear.addEventListener('click', () => { qEl.value = ''; query = ''; render(); qEl.focus(); });
+  qEl.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { query = qEl.value; apply(); }, 60); });
+  qClear.addEventListener('click', () => { qEl.value = ''; query = ''; apply(); qEl.focus(); });
 
   // odkaz z úvodní stránky (sortiment.html#smesi) rovnou vybere skupinu
-  const fromHash = () => setGroup(decodeURIComponent(location.hash.slice(1)));
-  addEventListener('hashchange', () => { fromHash(); scrollTo({ top: 0 }); });
-  fromHash();
-})();
+  addEventListener('hashchange', () => { qEl.value = ''; query = ''; setGroup(decodeURIComponent(location.hash.slice(1))); scrollTo({ top: 0 }); });
+  if (location.hash.length > 1) setGroup(decodeURIComponent(location.hash.slice(1)));
+  if (qEl.value) { query = qEl.value; apply(); }   // prohlížeč může vyplnit pole po návratu zpět
+});
 </script>
 </body>
 </html>
