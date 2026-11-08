@@ -88,7 +88,7 @@ button{font:inherit;color:inherit}
 @keyframes rise{to{opacity:1;transform:none}}
 
 .jar{width:100%;max-width:560px;justify-self:end}
-.jar canvas{width:100%;aspect-ratio:5/6;touch-action:pan-y;cursor:crosshair}
+.jar canvas{width:100%;aspect-ratio:1;touch-action:pan-y;cursor:crosshair}
 .jar figcaption{margin-top:0;padding-left:3.5%;font-size:15px;color:var(--muted);max-width:34ch;opacity:0;transition:opacity .8s}
 .jar.settled figcaption{opacity:1}
 
@@ -635,14 +635,14 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   /* ---------- grains: pixla s víčkem ----------
      1) vykreslí se spodek pixly (bez víčka)
      2) nasype se koření (zrnka padají a skládají se odspodu)
-     3) objeví se víčko, přiklopí se, zrnka se otřesou a vznikne tvar loga */
+     3) linka pokračuje od pravého okraje přes vršek a dotáhne obrys loga */
   const jar = document.getElementById('jar');
   const cv = document.getElementById('grains');
   const ctx = cv.getContext('2d');
   const total = CATS.reduce((a, c) => a + c.count, 0);
   const PAD = 0.035;               // okraj (podíl šířky)
   const STROKE = 0.018;            // tloušťka obrysu
-  const OY = 0.2;                  // volné místo nad pixlou pro otevřené víčko
+  const OY = 0;                    // volné místo nad tvarem (není potřeba)
   const HR = 1 + OY;               // poměr výška / šířka plátna
   const SPLIT = 0.27;              // výška řezu mezi víčkem a spodkem (v rámci tvaru)
   const RED = '#A7110C';
@@ -652,6 +652,7 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   const ALPHA = Math.asin((C - SPLIT) / R);           // úhel řezu nad vodorovnou osou
   const HX = C + R * Math.cos(ALPHA), HY = OY + SPLIT; // pravý konec řezu = pant víčka
   const BOTTOM_LEN = R * (2 * ALPHA + 2 + Math.PI / 2);
+  const LID_LEN = R * (Math.PI - 2 * ALPHA);
 
   // tvar loga: kruh + čtvercový levý dolní kvadrant
   const inside = (x, y, m) => {
@@ -694,10 +695,10 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     delay: T_POUR + (1 - (p.y - OY)) * POUR + Math.random() * 450,
     x: 0, y: 0, vx: 0, vy: 0, a: 1, started: false, fall: false
   }));
-  const T_CLOSE = Math.max(...G.map(g => g.delay)) + 650, CLOSE = 620;
+  const T_CLOSE = Math.max(...G.map(g => g.delay)) + 450, CLOSE = 750;
 
   let S = 0, dpr = 1, t0 = 0, mouse = null, active = -1, running = false, done = false, seen = false;
-  let bottom = 0, lid = 0, lidIn = 0, thudded = false, shake = 0, shakeV = 0;
+  let bottom = 0, lid = 0, thudded = false;
 
   function size() {
     const w = cv.clientWidth;
@@ -727,27 +728,21 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     ctx.setLineDash([]);
   }
 
+  // vršek obrysu: dokreslí se jako pokračování linky od pravého okraje přes vršek doleva
   function drawLid() {
-    if (lidIn <= 0) return;
-    const s = S, k = easeOut(lid);
-    // otevřené víčko: nadzvednuté a natočené kolem pravého pantu
-    const lift = (1 - k) * 0.16 * s, ang = -(1 - k) * 0.2;
-    ctx.save();
-    ctx.globalAlpha = lidIn;
-    ctx.translate(HX * s, HY * s - lift);
-    ctx.rotate(ang);
-    ctx.translate(-HX * s, -HY * s);
+    if (lid <= 0) return;
+    const s = S, per = LID_LEN * s;
     ctx.beginPath();
-    ctx.arc(C * s, (OY + C) * s, R * s, Math.PI + ALPHA, 2 * Math.PI - ALPHA, false);
+    ctx.arc(C * s, (OY + C) * s, R * s, -ALPHA, -Math.PI + ALPHA, true);
+    ctx.setLineDash([per * lid, per]);
     ctx.stroke();
-    ctx.restore();
+    ctx.setLineDash([]);
   }
 
   function draw() {
     if (!S) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, S, S * HR);
-    ctx.translate(0, shake);
     for (const g of G) {
       if (!g.started) continue;
       ctx.globalAlpha = g.a;
@@ -769,17 +764,14 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     if (!t0) t0 = now;
     const t = now - t0;
     bottom = easeOut(clamp01(t / T_BOTTOM));
-    lidIn = clamp01((t - T_CLOSE + 320) / 320);   // víčko se objeví až po nasypání
-    lid = clamp01((t - T_CLOSE) / CLOSE);
+    const lk = clamp01((t - T_CLOSE) / CLOSE);
+    lid = lk < .5 ? 4 * lk * lk * lk : 1 - Math.pow(-2 * lk + 2, 3) / 2;   // ease-in-out
 
-    // víčko dosedlo: otřes pixly a zrnek
+    // obrys se uzavřel: zrnka se jemně usadí
     if (lid >= 1 && !thudded) {
       thudded = true;
-      shakeV = S * 0.012;
-      G.forEach(g => { g.vy += S * (0.002 + Math.random() * 0.004); g.vx += S * (Math.random() - .5) * 0.004; });
+      G.forEach(g => { g.vy += S * (0.001 + Math.random() * 0.002); g.vx += S * (Math.random() - .5) * 0.002; });
     }
-    shakeV += -shake * 0.35; shakeV *= 0.72; shake += shakeV;
-    if (Math.abs(shake) < 0.05 && Math.abs(shakeV) < 0.05) { shake = 0; shakeV = 0; }
 
     let energy = 0;
     for (const g of G) {
@@ -818,7 +810,7 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
       energy += Math.abs(g.vx) + Math.abs(g.vy) + Math.abs(ta - g.a) * 10;
     }
     draw();
-    if (thudded && energy < 0.4 && shake === 0 && !mouse) { running = false; done = true; jar.classList.add('settled'); return; }
+    if (thudded && energy < 0.4 && !mouse) { running = false; done = true; jar.classList.add('settled'); return; }
     requestAnimationFrame(step);
   }
   function kick() { if (!running && !reduce && seen) { running = true; requestAnimationFrame(step); } }
@@ -828,7 +820,7 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     draw();
   }
 
-  if (reduce) { bottom = 1; lid = 1; lidIn = 1; thudded = true; jar.classList.add('settled'); }
+  if (reduce) { bottom = 1; lid = 1; thudded = true; jar.classList.add('settled'); }
   new ResizeObserver(size).observe(cv);
   new IntersectionObserver((es, io) => {
     if (es.some(e => e.isIntersecting)) { seen = true; io.disconnect(); kick(); }
