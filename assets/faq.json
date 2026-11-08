@@ -1,0 +1,33 @@
+{
+  "_navod": "Časté dotazy na úvodní stránce (česky i anglicky). Po úpravě spusťte: python3 tools/build.py. Odpovědi vycházejí z údajů ze starého webu kostera.cz – firma by je měla potvrdit.",
+  "cs": {
+    "nadpis": "Časté dotazy",
+    "intro": "Nenašli jste odpověď? Napište nám nebo zavolejte na +420 556 310 205.",
+    "polozky": [
+      ["Komu dodáváte?", "Výrobcům masných, pekárenských a mlékárenských výrobků, školním a nemocničním jídelnám, domovům pro seniory, restauracím a cateringu. Pro domácnosti máme e-shop s menšími baleními."],
+      ["Umíte vyvinout směs podle naší receptury?", "Ano. Popíšete výrobek, technologii a chuť, kterou hledáte, naši technologové připraví vzorek, vyzkoušíte ho přímo ve své výrobě a doladíme ho. Pak směs vyrábíme a dodáváme pravidelně."],
+      ["Můžete směs navážit přímo na naši výrobní dávku?", "Ano. Po dohodě namícháme směsi koření, škroby i technologické přípravky přímo na vaši kutrovací či výrobní dávku. Odpadá vážení surovin, výrobek je pokaždé stejný a pracoviště se nepráší."],
+      ["Jak rychle dodáváte?", "Zboží vozíme vlastní dopravou, případně kurýrní službou, obvykle do 5 pracovních dnů od objednávky."],
+      ["V jakých baleních výrobky dodáváte?", "Balení i hmotnost se dají dohodnout podle vaší spotřeby – například v PE nebo papírových pytlích. Na každém balení je uvedena šarže, na přání ho opatříme i EAN kódem. Menší balení pro domácnost najdete v e-shopu."],
+      ["Pošlete nám vzorky?", "Ano. Napište nám v poptávce, o které výrobky máte zájem, a vzorky vám připravíme."],
+      ["Dodáváte k směsím i technologické postupy?", "Ano, ke kombi směsím pro masnou výrobu dodáváme technologické postupy a rádi poradíme i při zavádění nového výrobku."],
+      ["Můžu si zboží vyzvednout osobně?", "Ano, po domluvě si zboží můžete vyzvednout přímo u nás ve Větřkovicích 243. Připravíme ho k okamžitému odběru."],
+      ["Dodáváte i do zahraničí?", "Ano, máme odběratele i v zahraničí. Napište nám – komunikujeme i v angličtině."]
+    ]
+  },
+  "en": {
+    "nadpis": "Frequently asked questions",
+    "intro": "Can't find your answer? Write to us or call +420 556 310 205.",
+    "polozky": [
+      ["Who do you supply?", "Manufacturers of meat, bakery and dairy products, school and hospital canteens, care homes, restaurants and catering. For households we run an e-shop with smaller packs (in Czech)."],
+      ["Can you develop a blend to our recipe?", "Yes. You describe the product, your technology and the flavour you are after, our technologists prepare a sample, you test it in your own production and we fine-tune it. Then we produce and deliver the blend regularly."],
+      ["Can you pre-weigh blends for our production batch?", "Yes. By arrangement we mix spice blends, starches and technological additives for your exact cutter or production batch – no weighing of ingredients, the same result every time and a dust-free workplace."],
+      ["How fast do you deliver?", "Within the Czech Republic we deliver with our own transport or by courier, usually within 5 working days of the order."],
+      ["What packaging do you use?", "Pack size and weight can be agreed to suit your consumption – for example PE or paper sacks. Every pack carries a batch number and we can add an EAN code on request."],
+      ["Can you send samples?", "Yes. Tell us in your enquiry which products you are interested in and we will prepare samples for you."],
+      ["Do you provide technological procedures?", "Yes, our combi blends for meat processing come with technological procedures, and we are happy to help when you introduce a new product."],
+      ["Can I collect goods in person?", "Yes, by arrangement you can collect goods directly from us at Větřkovice 243, Czech Republic."],
+      ["Do you export?", "Yes, we have customers abroad as well. Write to us in English and we will be happy to help."]
+    ]
+  }
+}

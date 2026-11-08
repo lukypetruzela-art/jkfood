@@ -286,10 +286,36 @@ def render_refs():
         <div class="ref-ctrl">
           <div class="ref-bar" aria-hidden="true"><i></i></div>
           <button type="button" class="ref-play g-play" aria-pressed="false" aria-label="Pozastavit posouvání referencí"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4.5 3h2.2v10H4.5zM9.3 3h2.2v10H9.3z"/><path class="i-play" d="M5 3l8 5-8 5z"/></svg></button>
-          <button type="button" class="ref-prev ref-arrow" aria-label="Předchozí reference"><span aria-hidden="true">←</span></button>
-          <button type="button" class="ref-next ref-arrow" aria-label="Další reference"><span aria-hidden="true">→</span></button>
+          <button type="button" class="ref-prev ref-arrow" aria-label="Předchozí reference"><span class="i-prev" aria-hidden="true"></span></button>
+          <button type="button" class="ref-next ref-arrow" aria-label="Další reference"><span class="i-next" aria-hidden="true"></span></button>
         </div>
       </div>"""
+
+def faq_data(lang):
+    return json.loads((ROOT / "assets" / "faq.json").read_text(encoding="utf-8"))[lang]
+
+
+def render_faq(lang="cs"):
+    """Časté dotazy (rozbalovací) z assets/faq.json."""
+    d = faq_data(lang)
+    intro = esc(d["intro"])
+    intro = re.sub(r"\+420 556 310 205", '<a href="tel:+420556310205">+420 556 310 205</a>', intro)
+    items = "".join(f'<details><summary>{esc(q)}<span class="job-toggle" aria-hidden="true"></span></summary>'
+                    f'<p class="faq-a">{nbsp(esc(a)) if lang == "cs" else esc(a)}</p></details>' for q, a in d["polozky"])
+    return f"""      <div class="faq-grid">
+        <div class="faq-side">
+          <h2 class="h2" id="faq-title">{esc(d["nadpis"])}</h2>
+          <p class="intro">{intro}</p>
+        </div>
+        <div class="faq">{items}</div>
+      </div>"""
+
+
+def faq_ld(lang="cs"):
+    d = faq_data(lang)
+    return {"@type": "FAQPage", "inLanguage": lang, "mainEntity": [
+        {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in d["polozky"]]}
+
 
 def build_index(v):
     p = ROOT / "index.html"
@@ -300,7 +326,7 @@ def build_index(v):
     graph = [org_ld(), {
         "@type": "WebSite", "@id": f"{SITE}/#web", "url": f"{SITE}/", "name": ORG["name"],
         "inLanguage": "cs", "publisher": {"@id": f"{SITE}/#firma"},
-        }]
+        }, faq_ld("cs")]
     meta = "\n".join([
         f"<title>{esc(title)}</title>",
         f'<meta name="description" content="{esc(desc)}">',
@@ -314,6 +340,7 @@ def build_index(v):
     s = re.sub(r"<!-- LEGEND:START -->.*?<!-- LEGEND:END -->", lambda m: f"<!-- LEGEND:START -->\n{legend}\n<!-- LEGEND:END -->", s, flags=re.S)
     foot = "".join(f'<li><a href="{c["file"]}">{esc(c["name"])}</a></li>' for c in CATS)
     s = re.sub(r"<!-- FOOTCATS:START -->.*?<!-- FOOTCATS:END -->", lambda m: f"<!-- FOOTCATS:START -->{foot}<!-- FOOTCATS:END -->", s, flags=re.S)
+    s = re.sub(r"<!-- FAQ:START -->.*?<!-- FAQ:END -->", lambda m: f"<!-- FAQ:START -->\n{render_faq('cs')}\n<!-- FAQ:END -->", s, flags=re.S)
     s = re.sub(r"<!-- REFERENCE:START -->.*?<!-- REFERENCE:END -->", lambda m: f"<!-- REFERENCE:START -->\n{render_refs()}\n<!-- REFERENCE:END -->", s, flags=re.S)
     s = re.sub(r'(assets/(?:styles\.css|products\.js))\?v=\w+', rf"\1?v={v}", s)
     p.write_text(s, encoding="utf-8")
@@ -571,12 +598,13 @@ def build_en():
 
     # --- úvodní stránka
     html = (ROOT / "index.html").read_text(encoding="utf-8")
+    html = re.sub(r"<!-- FAQ:START -->.*?<!-- FAQ:END -->", lambda m: f"<!-- FAQ:START -->\n{render_faq('en')}\n<!-- FAQ:END -->", html, flags=re.S)
     html = names(tr(html, T.COMMON + T.INDEX, "index"))
     html = meta(html, "J.K.FOOD – Czech producer of spices and seasoning blends",
                 "Family company from Větřkovice, Czech Republic. Since 1996 we have produced spices, seasoning blends, dried vegetables "
                 "and dehydrated foods for food manufacturers and catering.", "", "",
                 [org, {"@type": "WebSite", "@id": f"{SITE}/en/#web", "url": f"{SITE}/en/", "name": "J.K.FOOD", "inLanguage": "en",
-                       "publisher": {"@id": f"{SITE}/#firma"}}])
+                       "publisher": {"@id": f"{SITE}/#firma"}}, faq_ld("en")])
     (ROOT / "en" / "index.html").write_text(lang_link(paths(html), ""), encoding="utf-8")
 
     # --- katalog (jedna stránka se všemi skupinami)
@@ -636,7 +664,7 @@ def build_en():
     leftovers = []
     for f in ["index.html", "products.html", "team.html"]:
         h = (ROOT / "en" / f).read_text(encoding="utf-8")
-        h = re.sub(r"<script.*?</script>|<style.*?</style>", " ", h, flags=re.S) if f == "products.html" else h
+        h = re.sub(r"<script>.*?</script>|<style.*?</style>", " ", h, flags=re.S)
         h = re.sub(r'<ul class="items">.*?</ul>', " ", h, flags=re.S)     # názvy výrobků zůstávají česky
         h = re.sub(r'<script type="application/ld\+json">.*?</script>', " ", h, flags=re.S)
         for t in re.findall(r">([^<>]*[ěščřžůťďňĚŠČŘŽŮŤĎŇ][^<>]*)<|(?:aria-label|placeholder|alt|title)=\"([^\"]*[ěščřžůťďňĚŠČŘŽŮŤĎŇ][^\"]*)\"", h):

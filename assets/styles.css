@@ -38,6 +38,20 @@ button{font:inherit;color:inherit}
 .skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--red);color:#fff;padding:10px 16px;border-radius:var(--drop);text-decoration:none}
 .skip:focus{top:12px}
 
+/* ---------- ikony (SVG maska, barva podle textu) ---------- */
+.ext,.arr,.i-next,.i-ext,.i-prev{display:inline-flex;align-items:center;justify-content:center}
+.ext::before,.arr::before,.i-next::before,.i-ext::before,.i-prev::before{content:"";display:block;width:1em;height:1em;background:currentColor;-webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
+.arr,.i-next{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E")}
+.ext,.i-ext{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17 17 7M8.5 7H17v8.5'/%3E%3C/svg%3E")}
+.i-prev{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 12H5M11 6l-6 6 6 6'/%3E%3C/svg%3E")}
+.ext::before{width:.85em;height:.85em}
+.rail-link .arr::before,.team-link .arr::before{width:22px;height:22px}
+.i-next,.i-ext{vertical-align:-.12em}
+.coop-list a .i-next,.coop-list a .i-ext{display:inline-block;transition:transform .3s var(--ease)}
+.coop-list a:hover .i-next{transform:translateX(3px)}
+.coop-list a:hover .i-ext{transform:translate(2px,-2px)}
+.ref-arrow .i-next::before,.ref-arrow .i-prev::before{width:20px;height:20px}
+
 /* ---------- buttons ---------- */
 .btn{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 26px;border-radius:var(--drop);font-weight:600;font-size:17px;text-decoration:none;border:1.5px solid transparent;transition:background-color .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease),transform .25s var(--ease);white-space:nowrap}
 .btn-red{background:var(--red);color:#fff}
@@ -68,7 +82,7 @@ button{font:inherit;color:inherit}
 .nav a.lang{font-size:14px;font-weight:600;letter-spacing:.04em;border:1.5px solid var(--line);padding:7px 11px;margin-left:6px}
 .nav a.lang:hover{border-color:var(--red)}
 .lang-note{font-size:.55em;font-weight:500;color:var(--muted);letter-spacing:0}
-:lang(en) .item::after{content:"Enquire →";content:"Enquire →" / ""}
+:lang(en) .item::after{content:"Enquire";content:"Enquire" / ""}
 .burger{display:none;width:48px;height:48px;border:0;background:none;border-radius:999px;cursor:pointer;position:relative}
 .burger span{position:absolute;left:13px;right:13px;height:2px;border-radius:2px;background:var(--ink);transition:transform .4s var(--ease),opacity .25s var(--ease)}
 .burger:hover span:nth-child(2){transform:scaleX(.6);transform-origin:right}
@@ -130,6 +144,35 @@ button{font:inherit;color:inherit}
 .g-dots button{width:44px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .g-dots button::before{content:"";width:10px;height:10px;border-radius:var(--drop);background:#D9CFCE;transition:background-color .3s,width .4s var(--ease)}
 .g-dots button[aria-current="true"]::before{background:var(--red);width:26px}
+
+/* tmavá sekce (Výroba na míru) */
+.dark{background:var(--ink);color:#fff;position:relative;overflow:hidden;isolation:isolate}
+.dark .intro{color:rgba(255,255,255,.72)}
+.dark .steps .n{background:transparent;border-color:rgba(255,255,255,.4);color:#fff}
+.dark .steps li:first-child .n{background:var(--red);border-color:var(--red)}
+.dark .steps li::after{background:rgba(255,255,255,.16)}
+.dark .steps p,.dark .steps-cta span{color:rgba(255,255,255,.72)}
+.dark .steps-cta a:not(.btn){color:#fff;text-underline-offset:4px}
+.dark :focus-visible{outline-color:#fff}
+.dark-mark{position:absolute;right:-6%;bottom:-22%;width:min(46vw,620px);color:#fff;opacity:.05;z-index:-1;pointer-events:none}
+
+/* časté dotazy */
+.faq-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(40px,6vw,104px);align-items:start}
+.faq-side .intro a{color:var(--red);font-weight:600;text-decoration:none}
+.faq-side .intro a:hover{text-decoration:underline;text-underline-offset:4px}
+.faq{border-top:1px solid var(--ink)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 0;font-family:var(--font-head);font-size:clamp(18px,1.6vw,21px);font-weight:600;letter-spacing:-.01em;line-height:1.3;transition:color .2s}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:hover{color:var(--red)}
+.faq summary:focus-visible{outline-offset:4px}
+.faq .job-toggle{flex:none;width:36px;height:36px}
+.faq details[open] .job-toggle{background:var(--red);border-color:var(--red)}
+.faq details[open] .job-toggle::before,.faq details[open] .job-toggle::after{background:#fff}
+.faq details[open] .job-toggle::after{transform:rotate(0)}
+.faq-a{padding:0 56px 24px 0;color:var(--muted);max-width:68ch}
+.faq details[open] .faq-a{animation:jobIn .45s var(--ease)}
+@media (max-width:900px){.faq-grid{grid-template-columns:1fr}.faq-a{padding-right:0}}
 
 /* způsoby spolupráce */
 .coop{margin-top:clamp(56px,7vw,96px)}
@@ -440,7 +483,7 @@ form.q[hidden],.q-done[hidden]{display:none}
 .sub h3{font-size:15px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--red);margin-bottom:12px}
 .items{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
 .item{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:60px;padding:12px 16px 12px 18px;border:1px solid var(--line);border-radius:18px 18px 18px 0;text-decoration:none;font-size:16.5px;line-height:1.3;font-weight:500;transition:border-color .2s,background-color .2s,color .2s}
-.item::after{content:"Poptat →";content:"Poptat →" / "";flex:none;font-size:13.5px;font-weight:600;color:var(--red);opacity:0;transform:translateX(-4px);transition:opacity .2s,transform .25s var(--ease);white-space:nowrap}
+.item::after{content:"Poptat";content:"Poptat" / "";padding-right:1.25em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A7110C' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") right center/1em no-repeat;flex:none;font-size:13.5px;font-weight:600;color:var(--red);opacity:0;transform:translateX(-4px);transition:opacity .2s,transform .25s var(--ease);white-space:nowrap}
 .grp[hidden],.sub[hidden],.items li[hidden]{display:none}
 .item:hover,.item:focus-visible{border-color:var(--red);background:var(--blush)}
 .item:hover::after,.item:focus-visible::after{opacity:1;transform:none}
@@ -486,7 +529,7 @@ form.q[hidden],.q-done[hidden]{display:none}
   .nav > :nth-child(2){--i:1}.nav > :nth-child(3){--i:2}.nav > :nth-child(4){--i:3}.nav > :nth-child(5){--i:4}
   .nav > :nth-child(6){--i:5}.nav > :nth-child(7){--i:6}.nav > :nth-child(8){--i:7}.nav > :nth-child(9){--i:8}.nav > :nth-child(10){--i:9}
   .nav a.link:not(.lang){position:relative}
-  .nav a.link:not(.lang)::after{content:"→";position:absolute;right:0;top:50%;transform:translate(-8px,-50%);opacity:0;color:var(--red);font-size:.8em;transition:opacity .2s,transform .3s var(--ease)}
+  .nav a.link:not(.lang)::after{content:"";width:22px;height:22px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A7110C' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center/contain no-repeat;position:absolute;right:0;top:50%;transform:translate(-8px,-50%);opacity:0;transition:opacity .2s,transform .3s var(--ease)}
   .nav a.link:not(.lang):hover::after,.nav a.link:not(.lang):focus-visible::after,.nav a.link[aria-current="page"]::after{opacity:1;transform:translate(0,-50%)}
   .nav a.link[aria-current="page"]{color:var(--red)}
   .nav a.link:not(.lang){font-size:30px;font-weight:600;padding:14px 0;border-bottom:1px solid var(--line);border-radius:0;letter-spacing:-.02em}
