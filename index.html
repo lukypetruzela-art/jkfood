@@ -633,9 +633,9 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
   })();
 
   /* ---------- grains: pixla s víčkem ----------
-     1) vykreslí se spodek pixly, nad ním visí pootevřené víčko
+     1) vykreslí se spodek pixly (bez víčka)
      2) nasype se koření (zrnka padají a skládají se odspodu)
-     3) víčko dosedne, zrnka se otřesou a vznikne tvar loga */
+     3) objeví se víčko, přiklopí se, zrnka se otřesou a vznikne tvar loga */
   const jar = document.getElementById('jar');
   const cv = document.getElementById('grains');
   const ctx = cv.getContext('2d');
@@ -769,7 +769,7 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     if (!t0) t0 = now;
     const t = now - t0;
     bottom = easeOut(clamp01(t / T_BOTTOM));
-    lidIn = clamp01((t - 250) / 500);
+    lidIn = clamp01((t - T_CLOSE + 320) / 320);   // víčko se objeví až po nasypání
     lid = clamp01((t - T_CLOSE) / CLOSE);
 
     // víčko dosedlo: otřes pixly a zrnek
