@@ -130,6 +130,8 @@ button{font:inherit;color:inherit}
 .cats .nm{flex:1;font-weight:520;font-size:16.5px;line-height:1.25;transition:color .2s}
 .cats .ct{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
 .cats a:hover .sw,.cats a:focus-visible .sw{transform:scale(1.7)}
+.cats .sw-ic{width:22px;height:22px;flex:none;transition:transform .35s var(--ease)}
+.cats a:hover .sw-ic,.cats a:focus-visible .sw-ic{transform:scale(1.35) rotate(-8deg)}
 .cats a:hover .nm,.cats a:focus-visible .nm{color:var(--red)}
 
 .facts{display:flex;flex-wrap:wrap;gap:16px 56px;margin-top:40px}
@@ -494,6 +496,74 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     { name: 'Bramborové výrobky', count: 14, color: '#CDAE7E' },
     { name: 'Škroby, těstoviny a další', count: 39, color: '#2E211E' }
   ];
+  /* varianta „produkty“ (index.html?varianta=produkty):
+     místo zrnek se kreslí typický výrobek každé skupiny */
+  const PRODUCTS = new URLSearchParams(location.search).get('varianta') === 'produkty';
+  if (PRODUCTS) {
+    // pepř, chilli, list, klobáska, houba, bujónová kostka, brambora, těstovina (motýlek)
+    ['#2E211E', '#C8231A', '#6F8435', '#7C1A12', '#8B6447', '#DE9B2A', '#C9A06A', '#E3B94F']
+      .forEach((c, i) => { CATS[i].color = c; });
+    document.querySelector('#jar figcaption').innerHTML = 'Každý kousek je jeden z&nbsp;našich výrobků, tvar ukazuje skupinu.';
+  }
+
+  /* typický výrobek skupiny; kreslí se kolem (0,0), k = poloměr */
+  function drawProduct(c, cat, k, color) {
+    c.fillStyle = color;
+    c.beginPath();
+    switch (cat) {
+      case 0: // kulička pepře
+        c.arc(0, 0, k * .85, 0, Math.PI * 2); c.fill();
+        c.fillStyle = 'rgba(255,255,255,.22)';
+        c.beginPath(); c.arc(-k * .3, -k * .3, k * .24, 0, Math.PI * 2); c.fill();
+        break;
+      case 1: // chilli paprička
+        c.moveTo(-k * .85, -k * .4);
+        c.quadraticCurveTo(k * .3, -k * .55, k * 1.15, k * .5);
+        c.quadraticCurveTo(k * .1, k * .15, -k * .85, k * .3);
+        c.closePath(); c.fill();
+        c.strokeStyle = '#4E6B2A'; c.lineWidth = k * .28; c.lineCap = 'round';
+        c.beginPath(); c.moveTo(-k * .8, -k * .05); c.lineTo(-k * 1.2, -k * .3); c.stroke();
+        break;
+      case 2: // lístek (sušená zelenina, nať)
+        c.moveTo(-k * 1.05, 0);
+        c.quadraticCurveTo(0, -k * .8, k * 1.05, 0);
+        c.quadraticCurveTo(0, k * .8, -k * 1.05, 0);
+        c.fill();
+        c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = k * .1;
+        c.beginPath(); c.moveTo(-k * .85, 0); c.lineTo(k * .8, 0); c.stroke();
+        break;
+      case 3: // klobáska
+        c.roundRect(-k * 1.1, -k * .42, k * 2.2, k * .84, k * .42); c.fill();
+        c.strokeStyle = 'rgba(255,255,255,.22)'; c.lineWidth = k * .12; c.lineCap = 'round';
+        c.beginPath(); c.moveTo(-k * .55, -k * .18); c.lineTo(k * .5, -k * .18); c.stroke();
+        break;
+      case 4: // houba
+        c.fillStyle = '#EADBC2';
+        c.roundRect(-k * .28, -k * .05, k * .56, k * .9, k * .14); c.fill();
+        c.fillStyle = color;
+        c.beginPath(); c.moveTo(-k, k * .1);
+        c.bezierCurveTo(-k, -k * 1.05, k, -k * 1.05, k, k * .1);
+        c.quadraticCurveTo(0, -k * .12, -k, k * .1); c.fill();
+        break;
+      case 5: // bujónová kostka
+        c.roundRect(-k * .75, -k * .75, k * 1.5, k * 1.5, k * .28); c.fill();
+        c.fillStyle = 'rgba(255,255,255,.3)';
+        c.beginPath(); c.roundRect(-k * .5, -k * .5, k * .55, k * .55, k * .12); c.fill();
+        break;
+      case 6: // brambora
+        c.ellipse(0, 0, k, k * .72, 0, 0, Math.PI * 2); c.fill();
+        c.fillStyle = 'rgba(90,55,25,.45)';
+        [[-.4, -.15], [.25, .2], [.45, -.3]].forEach(([x, y]) => { c.beginPath(); c.arc(x * k, y * k, k * .09, 0, Math.PI * 2); c.fill(); });
+        break;
+      case 7: // těstovina – motýlek
+        c.moveTo(0, 0); c.lineTo(-k, -k * .72); c.quadraticCurveTo(-k * 1.2, 0, -k, k * .72); c.closePath();
+        c.moveTo(0, 0); c.lineTo(k, -k * .72); c.quadraticCurveTo(k * 1.2, 0, k, k * .72); c.closePath();
+        c.fill();
+        c.fillStyle = 'rgba(120,80,10,.35)';
+        c.beginPath(); c.ellipse(0, 0, k * .22, k * .36, 0, 0, Math.PI * 2); c.fill();
+        break;
+    }
+  }
   const SEGS = [
     { id: 'maso', name: 'Masný průmysl', title: 'Kořenicí směsi pro uzeniny, salámy i marinády',
       text: 'Největší část naší výroby. Směsi ladíme podle vaší technologie a receptury, aby chuť byla stejná v každé várce.',
@@ -520,6 +590,14 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     const li = document.createElement('li');
     li.innerHTML = `<a href="#" data-cat="${i}" style="--c:${c.color}"><span class="sw" aria-hidden="true"></span><span class="nm">${c.name}</span><span class="ct">${c.count}<span class="sr"> výrobků</span></span></a>`;
     catsEl.appendChild(li);
+    if (PRODUCTS) {
+      const ic = document.createElement('canvas');
+      const px = 22, d = Math.min(2, devicePixelRatio || 1);
+      ic.width = ic.height = px * d; ic.className = 'sw-ic'; ic.setAttribute('aria-hidden', 'true');
+      const x = ic.getContext('2d'); x.scale(d, d); x.translate(px / 2, px / 2);
+      drawProduct(x, i, px * .36, c.color);
+      li.querySelector('.sw').replaceWith(ic);
+    }
     { const f = document.createElement('li'); f.innerHTML = `<a href="#">${c.name}</a>`; footCats.appendChild(f); }
   });
 
@@ -746,10 +824,18 @@ form.q{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     for (const g of G) {
       if (!g.started) continue;
       ctx.globalAlpha = g.a;
-      ctx.fillStyle = CATS[g.cat].color;
-      ctx.beginPath();
-      ctx.ellipse(g.x, g.y, g.r * S, g.r * S * g.e, g.rot, 0, Math.PI * 2);
-      ctx.fill();
+      if (PRODUCTS) {
+        ctx.save();
+        ctx.translate(g.x, g.y);
+        ctx.rotate(g.cat === 4 ? (g.rot - Math.PI / 2) * .3 : g.rot);   // houby zůstávají zhruba nastojato
+        drawProduct(ctx, g.cat, g.r * S * 1.2, CATS[g.cat].color);
+        ctx.restore();
+      } else {
+        ctx.fillStyle = CATS[g.cat].color;
+        ctx.beginPath();
+        ctx.ellipse(g.x, g.y, g.r * S, g.r * S * g.e, g.rot, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
     ctx.globalAlpha = 1;
     ctx.lineWidth = S * STROKE;
