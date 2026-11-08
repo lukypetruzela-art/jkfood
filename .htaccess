@@ -45,7 +45,7 @@ ErrorDocument 404 /404.html
     RewriteRule ^kontakty/?$     /#kontakt [R=301,L,NE,NC]
     RewriteRule ^spoluprace/?$   /#firmy [R=301,L,NE,NC]
     RewriteRule ^novinky(/.*)?$  / [R=301,L,NC]
-    RewriteRule ^kariera/?$      / [R=301,L,NC]
+    RewriteRule ^kariera/?$      /kariera.html [R=301,L,NC]
     RewriteRule ^ke-stazeni/?$   / [R=301,L,NC]
 
     # stará stránkování úvodní stránky (/?p=2 …)

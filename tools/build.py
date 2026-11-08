@@ -5,6 +5,7 @@ Vytvoří / aktualizuje:
   - sortiment.html a 8 stránek skupin (sortiment-<skupina>.html) ze šablony tools/sortiment.template.html
   - v index.html: titulek, popis, metadata pro vyhledávače a sociální sítě, strukturovaná data,
     odkazy na skupiny v legendě a patičce
+  - nas-tym.html (Náš tým) z assets/tym.json, kariera.html (Kariéra) z assets/kariera.json
   - sitemap.xml
   - verze stylů a skriptů (?v=…), aby prohlížeče po změně načetly nové soubory
 
@@ -284,6 +285,177 @@ def build_index(v):
         p404.write_text(t, encoding="utf-8")
 
 
+def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_current=None):
+    """Podstránka se stejnou hlavičkou a patičkou jako index.html (Náš tým, Kariéra)."""
+    idx = (ROOT / "index.html").read_text(encoding="utf-8")
+    head_start = idx[: idx.index("<!-- META:START -->")]
+    head_rest = idx[idx.index("<!-- META:END -->") + len("<!-- META:END -->"): idx.index("</head>")]
+    symbols = idx[idx.index('<svg width="0"'): idx.index("</svg>", idx.index('<svg width="0"')) + 6]
+    header = idx[idx.index('<header class="top"'): idx.index("</header>") + 9]
+    footer = idx[idx.index('<footer class="foot">'): idx.index("</footer>") + 9]
+
+    def relink(x):
+        x = re.sub(r'href="#(?!logo|mark|obsah")([\w-]+)"', r'href="index.html#\1"', x)
+        return x.replace('<a class="brand" href="#"', '<a class="brand" href="index.html"')
+    header, footer = relink(header), relink(footer)
+    if nav_current:
+        header = header.replace(f'<a class="link" href="{nav_current}">', f'<a class="link" href="{nav_current}" aria-current="page">')
+
+    meta = "\n".join([f"<title>{esc(title)}</title>", f'<meta name="description" content="{esc(desc)}">',
+                      head_common(title, desc, file),
+                      ld({"@context": "https://schema.org", "@graph": [org_ld(), breadcrumbs_ld(crumbs)] + graph})])
+    crumbs_html = '<nav class="crumbs" aria-label="Drobečková navigace">' + '<span aria-hidden="true">/</span>'.join(
+        (f'<a href="{u or "index.html"}">{esc(n)}</a>' if i < len(crumbs) - 1 else f'<span aria-current="page">{esc(n)}</span>')
+        for i, (n, u) in enumerate(crumbs)) + "</nav>"
+    page = f"""{head_start}{meta}{head_rest}</head>
+<body>
+{symbols}
+
+<a class="skip" href="#obsah">Přeskočit na obsah</a>
+
+{header}
+
+<main id="obsah">
+  <section class="cat-head" aria-labelledby="page-title">
+    <div class="wrap">
+      {crumbs_html}
+      <h1 class="h2 cat-title" id="page-title">{esc(h1)}</h1>
+      <p class="intro">{nbsp(esc(intro))}</p>
+    </div>
+  </section>
+  <div class="wrap page-body">
+    {body}
+  </div>
+  {cta}
+</main>
+
+{footer}
+
+<script>
+(() => {{
+  const top = document.getElementById('top'), burger = top.querySelector('.burger'), nav = document.getElementById('nav');
+  const setMenu = open => {{
+    nav.classList.toggle('open', open); burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Zavřít menu' : 'Otevřít menu'); document.body.style.overflow = open ? 'hidden' : '';
+  }};
+  burger.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+  nav.addEventListener('click', e => {{ if (e.target.closest('a')) setMenu(false); }});
+  addEventListener('keydown', e => {{ if (e.key === 'Escape' && nav.classList.contains('open')) {{ setMenu(false); burger.focus(); }} }});
+  const onScroll = () => top.classList.toggle('scrolled', scrollY > 8);
+  addEventListener('scroll', onScroll, {{ passive: true }}); onScroll();
+}})();
+</script>
+</body>
+</html>
+"""
+    (ROOT / file).write_text(page, encoding="utf-8")
+
+
+def cta_band(cid, title, text, buttons):
+    btns = "".join(f'<a class="btn {cls}" href="{href}">{label}</a>' for cls, href, label in buttons)
+    return f"""<section class="shop cat-cta" aria-labelledby="{cid}">
+    <div class="wrap">
+      <div>
+        <h2 class="h2" id="{cid}">{title}</h2>
+        <p>{text}</p>
+        <div class="cat-cta-btns">{btns}</div>
+      </div>
+      <svg class="shop-mark" viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true" style="--s:1;--o:.35"><use href="#mark"/></svg>
+    </div>
+  </section>"""
+
+
+def tel_href(t):
+    return "tel:" + re.sub(r"[^+0-9]", "", t)
+
+
+def build_team(v):
+    """Stránka Náš tým (nas-tym.html) z assets/tym.json."""
+    data = json.loads((ROOT / "assets" / "tym.json").read_text(encoding="utf-8"))
+    placeholder = lambda t: t.strip().startswith("[")
+    people_ld = []
+
+    def card(p):
+        name, role = p.get("jmeno", ""), p.get("pozice", "")
+        ph = placeholder(name)
+        if p.get("foto"):
+            img = f'<img src="img/tym/{esc(p["foto"])}" alt="{esc(name)}" width="800" height="1000" loading="lazy" decoding="async">'
+        else:
+            ini = "".join(w[0] for w in name.split()[:2]).upper() if not ph else ""
+            img = f'<span class="person-ini" aria-hidden="true">{esc(ini)}</span>'
+        bits = [f'<li class="person{" is-empty" if ph else ""}">', f'<div class="person-ph">{img}</div>',
+                f"<h3>{esc(name)}</h3>", f'<p class="person-role">{esc(role)}</p>']
+        if p.get("oblast"):
+            bits.append(f'<p class="person-area">{esc(p["oblast"])}</p>')
+        links = []
+        if p.get("telefon"):
+            links.append(f'<a href="{tel_href(p["telefon"])}">{esc(p["telefon"])}</a>')
+        if p.get("email"):
+            links.append(f'<a href="mailto:{esc(p["email"])}">{esc(p["email"])}</a>')
+        if links:
+            bits.append('<p class="person-contact">' + "".join(links) + "</p>")
+        bits.append("</li>")
+        if not ph:
+            person = {"@type": "Person", "name": name, "jobTitle": role, "worksFor": {"@id": f"{SITE}/#firma"}}
+            if p.get("telefon"): person["telephone"] = p["telefon"]
+            if p.get("email"): person["email"] = p["email"]
+            people_ld.append(person)
+        return "".join(bits)
+
+    groups = []
+    for i, g in enumerate(data["skupiny"]):
+        gid = f"tym-{i + 1}"
+        groups.append(f'<section class="team-grp" aria-labelledby="{gid}"><div class="team-grp-head"><h2 id="{gid}">{esc(g["nazev"])}</h2>'
+                      + (f'<p>{nbsp(esc(g["popis"]))}</p>' if g.get("popis") else "") + "</div>"
+                      + '<ul class="team">' + "".join(card(p) for p in g["lide"]) + "</ul></section>")
+
+    desc = "Seznamte se s lidmi z J.K.FOOD – vedení, obchodní zástupci, výroba a vývoj kořenicích směsí ve Větřkovicích."
+    graph = [{"@type": "AboutPage", "@id": f"{SITE}/nas-tym.html#stranka", "url": f"{SITE}/nas-tym.html", "name": "Náš tým",
+              "description": desc, "inLanguage": "cs", "about": {"@id": f"{SITE}/#firma"},
+              **({"mainEntity": people_ld} if people_ld else {})}]
+    cta = cta_band("team-cta", "Ozvěte se nám",
+                   "Rádi s&nbsp;vámi probereme nabídku, vzorky i&nbsp;směs připravenou přesně pro vaši výrobu.",
+                   [("btn-white", "index.html#kontakt", "Napsat poptávku"), ("btn-ghost", "kariera.html", "Chcete k&nbsp;nám? Kariéra")])
+    simple_page("nas-tym.html", "Náš tým | J.K.FOOD Větřkovice", desc,
+                [("Úvod", ""), ("O nás", "index.html#pribeh"), ("Náš tým", "nas-tym.html")],
+                "Náš tým", data["intro"], "".join(groups), cta, graph, nav_current="index.html#pribeh")
+    return [("nas-tym.html", "0.6")]
+
+
+def build_career(v):
+    """Stránka Kariéra (kariera.html) z assets/kariera.json."""
+    data = json.loads((ROOT / "assets" / "kariera.json").read_text(encoding="utf-8"))
+    mail = data["kontakt_email"]
+    why = "".join(f'<li><h3>{esc(w["nadpis"])}</h3><p>{nbsp(esc(w["text"]))}</p></li>' for w in data["proc"])
+    jobs = []
+    for i, j in enumerate(data["pozice"]):
+        tags = "".join(f"<span>{esc(t)}</span>" for t in j.get("stitky", []))
+        cols = []
+        for key, label in [("nabizime", "Nabízíme"), ("pozadujeme", "Požadujeme"), ("naplne", "Náplň práce")]:
+            if j.get(key):
+                cols.append(f'<div><h4>{label}</h4><ul>' + "".join(f"<li>{esc(x)}</li>" for x in j[key]) + "</ul></div>")
+        subj = quote(f"Zájem o pozici: {j['nazev']}")
+        actions = [f'<a class="btn btn-red" href="mailto:{esc(j.get("kontakt_email", mail))}?subject={subj}">Mám zájem – poslat životopis</a>']
+        if j.get("kontakt_tel"):
+            actions.append(f'<a class="btn btn-line" href="{tel_href(j["kontakt_tel"])}">Zavolat {esc(j["kontakt_tel"])}</a>')
+        jobs.append(f'<li class="job"><details{" open" if i == 0 else ""}><summary><h3>{esc(j["nazev"])}</h3>'
+                    f'<span class="job-tags">{tags}</span><span class="job-toggle" aria-hidden="true"></span></summary>'
+                    f'<div class="job-body"><div class="job-cols">{"".join(cols)}</div><div class="job-actions">{"".join(actions)}</div></div></details></li>')
+    body = (f'<section class="career-why" aria-labelledby="why-title"><h2 id="why-title" class="sr">Proč pracovat u nás</h2><ul class="why">{why}</ul></section>'
+            f'<section class="career-jobs" aria-labelledby="jobs-title"><div class="team-grp-head"><h2 id="jobs-title">Volné pozice</h2>'
+            f'<p>{len(data["pozice"])} {"pozice" if 2 <= len(data["pozice"]) <= 4 else "pozic" if len(data["pozice"]) != 1 else "pozice"} · klikněte pro podrobnosti</p></div>'
+            f'<ul class="jobs">{"".join(jobs)}</ul></section>')
+    cta = cta_band("career-cta", "Nenašli jste svou pozici?", nbsp(esc(data["dalsi"])),
+                   [("btn-white", f"mailto:{mail}?subject={quote('Životopis – J.K.FOOD')}", f"Napsat na {mail}"),
+                    ("btn-ghost", "nas-tym.html", "Poznejte náš tým")])
+    desc = "Kariéra v J.K.FOOD ve Větřkovicích: volné pozice ve výrobě, kvalitě a obchodě, praxe a stáže. Rodinná firma s benefity a přátelským kolektivem."
+    graph = [{"@type": "WebPage", "@id": f"{SITE}/kariera.html#stranka", "url": f"{SITE}/kariera.html", "name": "Kariéra",
+              "description": desc, "inLanguage": "cs", "about": {"@id": f"{SITE}/#firma"}}]
+    simple_page("kariera.html", "Kariéra – volné pozice | J.K.FOOD Větřkovice", desc,
+                [("Úvod", ""), ("Kariéra", "kariera.html")], "Kariéra", data["intro"], body, cta, graph)
+    return [("kariera.html", "0.6")]
+
+
 def build_sitemap(pages):
     urls = [("", "1.0")] + pages
     xml = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
@@ -298,8 +470,10 @@ def main():
     items = load_items()
     pages = build_catalog(items, v)
     build_index(v)
+    pages += build_team(v)
+    pages += build_career(v)
     build_sitemap(pages)
-    print(f"hotovo: {len(items)} výrobků, {len(pages)} stránek sortimentu, verze stylů {v}")
+    print(f"hotovo: {len(items)} výrobků, {len(pages)} stránek (sortiment, tým, kariéra), verze stylů {v}")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,41 @@
+{
+  "_navod": "Údaje pro stránku kariera.html. Po úpravě spusťte: python3 tools/build.py. Pozici odeberete smazáním jejího bloku. 'kontakt_email' / 'kontakt_tel' u pozice přebíjí výchozí kontakt.",
+  "intro": "J.K.FOOD je rodinná firma, kterou tvoří tým specializovaných a kvalifikovaných odborníků. Chcete do našeho týmu patřit i vy?",
+  "kontakt_email": "jaroslav@kostera.cz",
+  "proc": [
+    { "nadpis": "Atraktivní odměňování", "text": "Pro naše zaměstnance jsme připravili motivační systém odměňování a širokou nabídku benefitů." },
+    { "nadpis": "Přátelské prostředí", "text": "Jsme jeden tým, který táhne za jeden provaz. Přejeme si, abyste se u nás cítili jako součást rodiny." },
+    { "nadpis": "Seberealizace", "text": "Splňte si své ambice. Dáme vám možnost budovat kariéru a růst spolu s naší společností." }
+  ],
+  "pozice": [
+    {
+      "nazev": "Manažer jakosti",
+      "stitky": ["HPP", "Větřkovice", "nástup ihned"],
+      "nabizime": ["pestrou náplň práce v dynamickém provozu se širokým sortimentem výrobků", "zapojení do nových projektů a možnost ovlivnit fungování systému kvality ve firmě", "zaměstnaneckou slevu na suroviny a výrobky", "25 dní dovolené", "zajímavé finanční ohodnocení", "vzdělávání a osobní rozvoj v oblasti potravinářství – školení, kurzy", "příspěvek na stravování", "práci v přátelském kolektivu"],
+      "pozadujeme": ["VŠ vzdělání v oblasti bezpečnosti, kvality či technologie potravin", "znalost práce na PC", "zkušenosti se zaváděním požadavků normy IFS Food, popř. jejich znalost", "perfektní znalost systému HACCP", "platné senzorické zkoušky, popř. absolvovaný kurz senzorické kontroly potravin", "samostatnost, spolehlivost, odpovědnost, komunikační a organizační schopnosti", "ochotu učit se novým věcem a pracovat v týmu", "aktivní znalost angličtiny výhodou"],
+      "naplne": ["vstupní a výstupní kontrola surovin a výrobků – kvalita a zdravotní nezávadnost", "dohled nad dodržováním správné výrobní a hygienické praxe v provozu", "sledování platných legislativních předpisů", "aktualizace dokumentace, etiket a údajů ve výrobním systému", "archivace dokumentů a referenčních vzorků", "postupně tvorba a udržování dokumentace k normě IFS Food"]
+    },
+    {
+      "nazev": "Obchodní zástupce pro svěřenou oblast",
+      "stitky": ["HPP", "region"],
+      "nabizime": ["motivující systém odměňování", "práci na HPP", "5 dní dovolené navíc", "poukázky pro zdraví", "příspěvek na stravování", "třináctý plat"],
+      "pozadujeme": ["příjemné vystupování", "časovou flexibilitu", "komunikativnost, organizační a prezentační schopnosti"],
+      "naplne": ["péče o stávající zákazníky", "prodej a akvizice nových zákazníků", "účast na propagačních akcích firmy", "ekonomická odpovědnost za svěřený region"],
+      "kontakt_tel": "+420 777 340 321"
+    },
+    {
+      "nazev": "Pracovník výroby",
+      "stitky": ["HPP", "Větřkovice"],
+      "nabizime": ["motivující systém odměňování", "práci na HPP", "5 dní dovolené navíc", "poukázky pro zdraví", "příspěvek na stravování", "třináctý plat", "příspěvek na životní a penzijní pojištění"],
+      "naplne": ["výroba produktů podle stanoveného postupu a receptury", "výroba a kompletace objednávek", "údržba a čištění strojů", "příjem a expedice zboží", "dodržování hygienických předpisů", "odpovědnost za daný výrobek"]
+    },
+    {
+      "nazev": "Pracovník výroby těstovin",
+      "stitky": ["HPP", "Větřkovice", "nový provoz"],
+      "nabizime": ["zajímavou práci ve zcela novém a moderním provozu", "motivující systém odměňování", "práci na HPP", "5 dní dovolené navíc", "poukázky pro zdraví", "příspěvek na stravování", "třináctý plat", "příspěvek na životní a penzijní pojištění"],
+      "pozadujeme": ["technickou zdatnost potřebnou pro obsluhu lisu"],
+      "naplne": ["výroba těstovin", "obsluha velkokapacitního lisu na výrobu těstovin"]
+    }
+  ],
+  "dalsi": "Máte zájem o praxi, stáž nebo spolupráci na bakalářské či diplomové práci? Nebo jste mezi pozicemi nenašli tu svou? Pošlete nám životopis – rádi se vám ozveme."
+}

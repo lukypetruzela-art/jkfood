@@ -1,0 +1,35 @@
+{
+  "_navod": "Údaje pro stránku nas-tym.html. Po úpravě spusťte: python3 tools/build.py. Fotky dejte do img/tym/ (čtverec nebo na výšku, cca 800 px) a do 'foto' napište název souboru. Položky s hranatými závorkami jsou zástupné – na webu se zobrazí jako prázdné místo.",
+  "intro": "Za každou směsí stojí lidé z Větřkovic. Seznamte se s těmi, se kterými se při spolupráci potkáte nejčastěji.",
+  "skupiny": [
+    {
+      "nazev": "Vedení firmy",
+      "lide": [
+        { "jmeno": "Jaroslav Kostera", "pozice": "zakladatel a majitel", "foto": "", "telefon": "", "email": "" },
+        { "jmeno": "[Jméno a příjmení]", "pozice": "[pozice, např. obchodní ředitel]", "foto": "", "telefon": "", "email": "" }
+      ]
+    },
+    {
+      "nazev": "Obchodní zástupci",
+      "popis": "Ozvěte se zástupci pro váš kraj – připraví nabídku, přiveze vzorky a domluví pravidelné dodávky.",
+      "lide": [
+        { "jmeno": "[Jméno a příjmení]", "pozice": "obchodní zástupce", "oblast": "[kraj]", "foto": "", "telefon": "", "email": "" },
+        { "jmeno": "[Jméno a příjmení]", "pozice": "obchodní zástupce", "oblast": "[kraj]", "foto": "", "telefon": "", "email": "" },
+        { "jmeno": "[Jméno a příjmení]", "pozice": "obchodní zástupce", "oblast": "[kraj]", "foto": "", "telefon": "", "email": "" }
+      ]
+    },
+    {
+      "nazev": "Výroba a vývoj",
+      "lide": [
+        { "jmeno": "[Jméno a příjmení]", "pozice": "[vedoucí výroby]", "foto": "", "telefon": "", "email": "" },
+        { "jmeno": "[Jméno a příjmení]", "pozice": "[technolog, vývoj směsí na míru]", "foto": "", "telefon": "", "email": "" }
+      ]
+    },
+    {
+      "nazev": "Kancelář a expedice",
+      "lide": [
+        { "jmeno": "[Jméno a příjmení]", "pozice": "[objednávky a fakturace]", "foto": "", "telefon": "", "email": "" }
+      ]
+    }
+  ]
+}
