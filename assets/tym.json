@@ -18,6 +18,13 @@
           "foto": "",
           "telefon": "+420 777 340 321",
           "email": "jana.galcanova@kostera.cz"
+        },
+        {
+          "jmeno": "Bc. Jakub Kostera",
+          "pozice": "vedoucí výroby",
+          "foto": "",
+          "telefon": "+420 777 340 382",
+          "email": "jakub@kostera.cz"
         }
       ]
     },
@@ -54,13 +61,6 @@
     {
       "nazev": "Výroba a vývoj",
       "lide": [
-        {
-          "jmeno": "Bc. Jakub Kostera",
-          "pozice": "vedoucí výroby",
-          "foto": "",
-          "telefon": "+420 777 340 382",
-          "email": "jakub@kostera.cz"
-        },
         {
           "jmeno": "[Jméno a příjmení]",
           "pozice": "[technolog, vývoj směsí na míru]",
