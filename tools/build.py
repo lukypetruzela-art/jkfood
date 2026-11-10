@@ -571,7 +571,7 @@ def build_en():
     def paths(html):
         def fix(m):
             attr, u = m.group(1), m.group(2)
-            if attr == "srcset":
+            if attr in ("srcset", "imagesrcset"):
                 return 'srcset="' + ", ".join("../" + c.strip() for c in u.split(",")) + '"'
             if re.match(r"(https?:|//|#|mailto:|tel:|data:|/|\.\./)", u):
                 return m.group(0)
@@ -605,7 +605,7 @@ def build_en():
 
     def lang_link(html, cz_target):
         return re.sub(r'<a class="link lang" href="[^"]*"[^>]*>EN</a>',
-                      f'<a class="link lang" href="../{cz_target}" hreflang="cs" lang="cs" aria-label="Česká verze">CZ</a>', html)
+                      f'<a class="link lang" href="../{cz_target}" hreflang="cs" lang="cs" aria-label="CZ – česká verze">CZ</a>', html)
 
     org = dict(org_ld(), description="A Czech family company from Větřkovice. Since 1996 we have produced spices, seasoning blends, "
                "dried vegetables and dehydrated foods for food manufacturers, canteens and catering.")
@@ -674,7 +674,7 @@ def build_en():
     # --- kontrola: nepřeložené dvojice a zbytky češtiny
     if missing:
         raise SystemExit("Nepřeložené texty (upravte tools/i18n_en.py):\n  " + "\n  ".join(missing))
-    allowed = {"Větřkovice", "Galčanová", "Kostera", "Větřkovic", "Česká verze", "Má chuť", "pepř, guláš"}
+    allowed = {"Větřkovice", "Galčanová", "Kostera", "Větřkovic", "Česká verze", "CZ – česká verze", "Má chuť", "pepř, guláš"}
     leftovers = []
     for f in ["index.html", "products.html", "team.html"]:
         h = (ROOT / "en" / f).read_text(encoding="utf-8")
@@ -909,7 +909,7 @@ def v2_sortiment(items):
 
 def cards(items, cls=""):
     return (f'<ol class="coop-list v2-cards {cls}">' + "".join(
-        f'<li><span class="coop-n" aria-hidden="true">{i + 1}</span><h4>{t}</h4><p>{x}</p></li>'
+        f'<li><span class="coop-n" aria-hidden="true">{i + 1}</span><h3>{t}</h3><p>{x}</p></li>'
         for i, (t, x) in enumerate(items)) + "</ol>")
 
 
@@ -940,8 +940,8 @@ def v2_page(file, title, desc, crumbs, h1, intro, body, cta):
 
 
 def photo(src, alt, cls="v2-photo"):
-    return (f'<figure class="{cls}"><picture><source srcset="img/{src}-600.webp 600w, img/{src}-1000.webp 1000w" sizes="(max-width:900px) 92vw, 560px" type="image/webp">'
-            f'<img src="img/{src}.jpg" alt="{alt}" width="1000" height="800" loading="lazy" decoding="async"></picture></figure>')
+    return (f'<figure class="{cls}"><picture><source srcset="img/{src}-600.webp 600w, img/{src}-800.webp 800w, img/{src}-1000.webp 1000w" sizes="(max-width:900px) 92vw, 560px" type="image/webp">'
+            f'<img src="img/{src}.jpg" alt="{alt}" width="1000" height="800" fetchpriority="high" decoding="async"></picture></figure>')
 
 def v2_chrome(html, own):
     """Společné úpravy všech stránek verze 2: noindex, přepínač verzí, odkazy na obory, cesty o úroveň výš."""
@@ -967,12 +967,12 @@ def v2_chrome(html, own):
         attr, u = m.group(1), m.group(2)
         if re.match(r"(https?:|//|#|mailto:|tel:|data:|/|\.\./|\$\{)", u):
             return m.group(0)
-        if attr == "srcset":
-            return 'srcset="' + ", ".join("../" + c.strip() for c in u.split(",")) + '"'
+        if attr in ("srcset", "imagesrcset"):
+            return f'{attr}="' + ", ".join("../" + c.strip() for c in u.split(",")) + '"'
         if u.split("#")[0].split("?")[0] in V2_FILES:
             return m.group(0)
         return f'{attr}="../{u}"'
-    return re.sub(r'\b(href|src|srcset|action)="([^"]*)"', fix, html)
+    return re.sub(r'\b(href|src|srcset|imagesrcset|action)="([^"]*)"', fix, html)
 
 
 def v2_index(items):
@@ -1036,6 +1036,12 @@ def v2_index(items):
     old_btn = "(s.shop ? `<a class=\"btn btn-red\" href=\"${ESHOP}\" target=\"_blank\" rel=\"noopener\">Nakoupit v e-shopu <span class=\"ext\" aria-hidden=\"true\"></span></a>`"
     assert old_btn in html
     html = html.replace(old_btn, "(s.page ? `<div class=\"panel-btns\"><a class=\"btn btn-red\" href=\"${s.page}\">Více pro váš obor <span class=\"i-next\" aria-hidden=\"true\"></span></a><a class=\"btn btn-line\" href=\"#kontakt\">Domluvit spolupráci</a></div>`")
+    # rychlost: úvodní fotka se začne stahovat hned, CSS je přímo ve stránce (odpadá blokující požadavek)
+    pre = ('<link rel="preload" as="image" href="img/v2/hero-1536.webp" imagesrcset="img/v2/hero-900.webp 900w, img/v2/hero-1536.webp 1536w" '
+           'imagesizes="100vw" type="image/webp" fetchpriority="high">\n')
+    html = html.replace('<link rel="preload" href="assets/fonts/', pre + '<link rel="preload" href="assets/fonts/', 1)
+    css = (ROOT / "assets" / "styles.css").read_text(encoding="utf-8").replace("url(fonts/", "url(../assets/fonts/")
+    html = re.sub(r'<link rel="stylesheet" href="assets/styles\.css\?v=\w+">', lambda m: "<style>" + css + "</style>", html, count=1)
     return v2_chrome(html, "index.html")
 
 

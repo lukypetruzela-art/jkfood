@@ -103,7 +103,6 @@ INDEX = [
     # video
     ("Seznamte se s&nbsp;námi</h2>", "Meet us <span class=\"lang-note\">(video in Czech)</span></h2>"),
     ("Otevřít na YouTube", "Open on YouTube"),
-    ('aria-label="Přehrát video J.K.FOOD – Seznamte se s námi"', 'aria-label="Play the J.K.FOOD video – Meet us (in Czech)"'),
     ('<span class="yt-label">Přehrát video</span>', '<span class="yt-label">Play video</span>'),
     ("Video se přehraje ze služby YouTube.", "The video plays from YouTube."),
     ("'Video J.K.FOOD – Seznamte se s námi (YouTube)'", "'J.K.FOOD video – Meet us (YouTube)'"),
