@@ -146,7 +146,7 @@ def org_ld():
                     "postalCode": ORG["zip"], "addressRegion": "Moravskoslezský kraj", "addressCountry": "CZ"},
         "areaServed": {"@type": "Country", "name": "Česká republika"}, "sameAs": ORG["same_as"],
         "foundingLocation": {"@type": "Place", "name": "Větřkovice, okres Opava"},
-        "numberOfEmployees": {"@type": "QuantitativeValue", "minValue": 60},
+        "numberOfEmployees": {"@type": "QuantitativeValue", "minValue": 100},
         "slogan": "Dáváme jídlu chuť. Od roku 1996.",
         "knowsAbout": ["koření", "kořenicí směsi", "sušená zelenina", "dehydratované potraviny",
                        "směsi pro masný průmysl", "kombi směsi", "bujóny a polévky", "vývoj kořenicích směsí na míru",
@@ -332,9 +332,9 @@ def faq_ld(lang="cs"):
 def build_index(v):
     p = ROOT / "index.html"
     s = p.read_text(encoding="utf-8")
-    title = "J.K.FOOD – výrobce koření a kořenicích směsí z Větřkovic"
-    desc = ("Rodinná firma z Větřkovic na Opavsku. Od roku 1996 vyrábíme koření, kořenicí směsi, sušenou "
-            "zeleninu a dehydratované potraviny pro průmysl, jídelny a gastro.")
+    title = "J.K.FOOD – koření a ingredience pro potravinářský průmysl"
+    desc = ("Vyvíjíme, vyrábíme, dodáváme: koření, kořenicí směsi a dehydratované potraviny od receptury "
+            "po sériovou výrobu pro průmysl, gastro i retail. Od roku 1996.")
     graph = [org_ld(), {
         "@type": "WebSite", "@id": f"{SITE}/#web", "url": f"{SITE}/", "name": ORG["name"],
         "inLanguage": "cs", "publisher": {"@id": f"{SITE}/#firma"},
@@ -719,7 +719,9 @@ def build_ai(items):
 - Sídlo a výroba: Větřkovice 243, 747 43 Větřkovice, Česká republika
 - IČ 27780384, DIČ CZ27780384; zapsaná v obchodním rejstříku u Krajského soudu v Ostravě, sp. zn. C 51605
 - Založení: 1996 (Jaroslav Kostera), společnost s.r.o. od roku 2001
-- Zaměstnanci: více než 60
+- Zaměstnanci: více než 100
+- Výrobní kapacita: přes 30 000 t ročně
+- Certifikace: ISO, IFS
 - Sortiment: přes {len(items)} výrobků v {len(CATS)} skupinách
 - Služby: vývoj kořenicích směsí na míru, navážení směsí na výrobní dávku, technologické postupy ke kombi směsím,
   dodávky vlastní dopravou (obvykle do 5 pracovních dnů), osobní odběr, obchodní zástupci ve všech krajích ČR
