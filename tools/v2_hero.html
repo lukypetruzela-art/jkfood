@@ -1,7 +1,6 @@
-  <!-- HERO (verze 2): jedna velká fotka, vlevo rozmazaná pod textem, vpravo tmavá -->
+  <!-- HERO (verze 2): jedna velká fotka; rozmazání pod textem je předpočítané přímo ve fotce (img/v2/hero-*), ne živým filtrem -->
   <section class="vhero" aria-labelledby="hero-title">
-    <picture class="vhero-bg"><source srcset="img/v2/hero-900.webp 900w, img/v2/hero-1536.webp 1536w" sizes="100vw" type="image/webp"><img src="img/v2/hero.jpg" alt="Proud kořenicí směsi se sype z nerezové násypky do průmyslového míchacího stroje" width="1536" height="1024" fetchpriority="high" decoding="async"></picture>
-    <div class="vhero-blur" aria-hidden="true"></div>
+    <picture class="vhero-bg"><source media="(max-width:760px)" srcset="img/v2/hero-m-600.webp" type="image/webp"><source srcset="img/v2/hero-900.webp 900w, img/v2/hero-1536.webp 1536w" sizes="100vw" type="image/webp"><img src="img/v2/hero.jpg" alt="Proud kořenicí směsi se sype z nerezové násypky do průmyslového míchacího stroje" width="1536" height="1024" fetchpriority="high" decoding="async"></picture>
     <div class="vhero-shade" aria-hidden="true"></div>
     <div class="wrap vhero-in">
       <p class="vhero-eyebrow lift"><svg viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg>Dáváme jídlu chuť. Od roku&nbsp;1996.</p>

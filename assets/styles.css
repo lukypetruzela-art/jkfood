@@ -634,9 +634,6 @@ form.q[hidden],.q-done[hidden]{display:none}
 .vhero-bg{position:absolute;inset:0;z-index:-3}
 .vhero-bg img{width:100%;height:100%;object-fit:cover;object-position:62% 45%;animation:vzoom 14s var(--ease) both}
 @keyframes vzoom{from{transform:scale(1.08)}to{transform:scale(1)}}
-/* rozmazání jen pod textem – postupně do ztracena */
-.vhero-blur{position:absolute;inset:0;z-index:-2;-webkit-backdrop-filter:blur(9px) saturate(.8);backdrop-filter:blur(9px) saturate(.8);
-  -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 32%,transparent 62%);mask-image:linear-gradient(90deg,#000 0%,#000 32%,transparent 62%)}
 /* ztmavení: vlevo kvůli čitelnosti, vpravo do tmava, dole přechod pod karty */
 .vhero-shade{position:absolute;inset:0;z-index:-1;background:
   linear-gradient(90deg,rgba(18,12,11,.86) 0%,rgba(18,12,11,.64) 38%,rgba(18,12,11,.18) 64%,rgba(18,12,11,.42) 100%),
@@ -659,8 +656,7 @@ form.q[hidden],.q-done[hidden]{display:none}
 .vswitch:hover{background:var(--red)}
 @media (max-width:760px){
   .vhero{min-height:0;padding:56px 0 120px;align-items:flex-end}
-  .vhero-bg img{object-position:66% 40%}
-  .vhero-blur{-webkit-mask-image:linear-gradient(0deg,#000 0%,#000 55%,transparent 85%);mask-image:linear-gradient(0deg,#000 0%,#000 55%,transparent 85%)}
+  .vhero-bg img{object-position:50% 30%}
   .vhero-shade{background:linear-gradient(180deg,rgba(18,12,11,.35) 0%,rgba(18,12,11,.7) 45%,rgba(18,12,11,.9) 100%)}
   .vhero h1{font-size:clamp(40px,12vw,60px)}
   .vswitch{font-size:12px;padding:8px 12px}

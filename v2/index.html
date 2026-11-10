@@ -31,7 +31,8 @@
 <!-- META:END -->
 <meta name="theme-color" content="#A7110C">
 <meta name="color-scheme" content="light">
-<link rel="preload" as="image" href="../img/v2/hero-1536.webp" imagesrcset="../img/v2/hero-900.webp 900w, ../img/v2/hero-1536.webp 1536w" imagesizes="100vw" type="image/webp" fetchpriority="high">
+<link rel="preload" as="image" href="../img/v2/hero-m-600.webp" media="(max-width:760px)" type="image/webp" fetchpriority="high">
+<link rel="preload" as="image" href="../img/v2/hero-1536.webp" imagesrcset="../img/v2/hero-900.webp 900w, ../img/v2/hero-1536.webp 1536w" imagesizes="100vw" media="(min-width:761px)" type="image/webp" fetchpriority="high">
 <link rel="preload" href="../assets/fonts/dmsans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/dmsans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -672,9 +673,6 @@ form.q[hidden],.q-done[hidden]{display:none}
 .vhero-bg{position:absolute;inset:0;z-index:-3}
 .vhero-bg img{width:100%;height:100%;object-fit:cover;object-position:62% 45%;animation:vzoom 14s var(--ease) both}
 @keyframes vzoom{from{transform:scale(1.08)}to{transform:scale(1)}}
-/* rozmazání jen pod textem – postupně do ztracena */
-.vhero-blur{position:absolute;inset:0;z-index:-2;-webkit-backdrop-filter:blur(9px) saturate(.8);backdrop-filter:blur(9px) saturate(.8);
-  -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 32%,transparent 62%);mask-image:linear-gradient(90deg,#000 0%,#000 32%,transparent 62%)}
 /* ztmavení: vlevo kvůli čitelnosti, vpravo do tmava, dole přechod pod karty */
 .vhero-shade{position:absolute;inset:0;z-index:-1;background:
   linear-gradient(90deg,rgba(18,12,11,.86) 0%,rgba(18,12,11,.64) 38%,rgba(18,12,11,.18) 64%,rgba(18,12,11,.42) 100%),
@@ -697,8 +695,7 @@ form.q[hidden],.q-done[hidden]{display:none}
 .vswitch:hover{background:var(--red)}
 @media (max-width:760px){
   .vhero{min-height:0;padding:56px 0 120px;align-items:flex-end}
-  .vhero-bg img{object-position:66% 40%}
-  .vhero-blur{-webkit-mask-image:linear-gradient(0deg,#000 0%,#000 55%,transparent 85%);mask-image:linear-gradient(0deg,#000 0%,#000 55%,transparent 85%)}
+  .vhero-bg img{object-position:50% 30%}
   .vhero-shade{background:linear-gradient(180deg,rgba(18,12,11,.35) 0%,rgba(18,12,11,.7) 45%,rgba(18,12,11,.9) 100%)}
   .vhero h1{font-size:clamp(40px,12vw,60px)}
   .vswitch{font-size:12px;padding:8px 12px}
@@ -807,10 +804,9 @@ form.q[hidden],.q-done[hidden]{display:none}
 </header>
 
 <main id="obsah">
-  <!-- HERO (verze 2): jedna velká fotka, vlevo rozmazaná pod textem, vpravo tmavá -->
+  <!-- HERO (verze 2): jedna velká fotka; rozmazání pod textem je předpočítané přímo ve fotce (img/v2/hero-*), ne živým filtrem -->
   <section class="vhero" aria-labelledby="hero-title">
-    <picture class="vhero-bg"><source srcset="../img/v2/hero-900.webp 900w, ../img/v2/hero-1536.webp 1536w" sizes="100vw" type="image/webp"><img src="../img/v2/hero.jpg" alt="Proud kořenicí směsi se sype z nerezové násypky do průmyslového míchacího stroje" width="1536" height="1024" fetchpriority="high" decoding="async"></picture>
-    <div class="vhero-blur" aria-hidden="true"></div>
+    <picture class="vhero-bg"><source media="(max-width:760px)" srcset="../img/v2/hero-m-600.webp" type="image/webp"><source srcset="../img/v2/hero-900.webp 900w, ../img/v2/hero-1536.webp 1536w" sizes="100vw" type="image/webp"><img src="../img/v2/hero.jpg" alt="Proud kořenicí směsi se sype z nerezové násypky do průmyslového míchacího stroje" width="1536" height="1024" fetchpriority="high" decoding="async"></picture>
     <div class="vhero-shade" aria-hidden="true"></div>
     <div class="wrap vhero-in">
       <p class="vhero-eyebrow lift"><svg viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg>Dáváme jídlu chuť. Od roku&nbsp;1996.</p>
@@ -1071,7 +1067,7 @@ form.q[hidden],.q-done[hidden]{display:none}
   </div>
 </footer>
 
-<script src="../assets/products.js?v=54314936"></script>
+<script src="../assets/products.js?v=ea75b901"></script>
 <script>
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;

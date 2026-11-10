@@ -1037,8 +1037,9 @@ def v2_index(items):
     assert old_btn in html
     html = html.replace(old_btn, "(s.page ? `<div class=\"panel-btns\"><a class=\"btn btn-red\" href=\"${s.page}\">Více pro váš obor <span class=\"i-next\" aria-hidden=\"true\"></span></a><a class=\"btn btn-line\" href=\"#kontakt\">Domluvit spolupráci</a></div>`")
     # rychlost: úvodní fotka se začne stahovat hned, CSS je přímo ve stránce (odpadá blokující požadavek)
-    pre = ('<link rel="preload" as="image" href="img/v2/hero-1536.webp" imagesrcset="img/v2/hero-900.webp 900w, img/v2/hero-1536.webp 1536w" '
-           'imagesizes="100vw" type="image/webp" fetchpriority="high">\n')
+    pre = ('<link rel="preload" as="image" href="img/v2/hero-m-600.webp" media="(max-width:760px)" type="image/webp" fetchpriority="high">\n'
+           '<link rel="preload" as="image" href="img/v2/hero-1536.webp" imagesrcset="img/v2/hero-900.webp 900w, img/v2/hero-1536.webp 1536w" '
+           'imagesizes="100vw" media="(min-width:761px)" type="image/webp" fetchpriority="high">\n')
     html = html.replace('<link rel="preload" href="assets/fonts/', pre + '<link rel="preload" href="assets/fonts/', 1)
     css = (ROOT / "assets" / "styles.css").read_text(encoding="utf-8").replace("url(fonts/", "url(../assets/fonts/")
     html = re.sub(r'<link rel="stylesheet" href="assets/styles\.css\?v=\w+">', lambda m: "<style>" + css + "</style>", html, count=1)
