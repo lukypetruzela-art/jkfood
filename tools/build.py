@@ -775,50 +775,81 @@ def build_sitemap(pages):
 
 
 
-# Stránky pro obory (jen verze 2). Texty vycházejí z dosavadního obsahu webu – firma je doladí.
+# ---------- VERZE 2 (B2B) ----------
+# Texty vycházejí z podkladů zákazníka (Texty_na_WEB.docx) a dosavadního obsahu webu.
+
+STEPS5 = [("Analýza potřeb", "Probereme váš výrobek, technologii, požadovanou chuť i&nbsp;cenu."),
+          ("Návrh řešení", "Navrhneme suroviny nebo směs a&nbsp;připravíme vzorky."),
+          ("Testování a ladění", "Vzorky vyzkoušíte ve své výrobě, podle výsledků je doladíme."),
+          ("Výrobní standard", "Recepturu zafixujeme, aby každá šarže byla stejná."),
+          ("Dodávky a podpora", "Pravidelné dodávky vlastní dopravou a&nbsp;technická podpora.")]
+
+WHY = [("Zkušenosti napříč obory", "Od roku 1996 dodáváme masné výrobě, pekárnám, mlékárnám, výrobcům snacků i&nbsp;velkým kuchyním."),
+       ("Rozumíme výrobě", "Víme, jak se suroviny chovají při dávkování, zpracování i&nbsp;skladování."),
+       ("Kvalita a opakovatelnost", "Stejná chuť, barva a&nbsp;sypkost v&nbsp;každé šarži."),
+       ("Flexibilní přístup", "Receptura, balení i&nbsp;dodávky podle vašich potřeb.")]
+
 OBORY = [
-    dict(file="masny-prumysl.html", tab="maso", name="Masný průmysl",
+    dict(file="masny-prumysl.html", name="Masný průmysl", nav="Řeznictví a masný průmysl",
          title="Kořenicí a kombi směsi pro masný průmysl | J.K.FOOD",
-         desc="Kořenicí a kombi směsi pro uzeniny, salámy, párky a šunky, lakovací nástřiky a technologické přísady. Navážení na výrobní dávku, vývoj na míru, technologická podpora.",
-         h1="Směsi pro masný průmysl",
-         intro="Největší část naší výroby. Kořenicí a kombi směsi pro uzeniny, salámy, párky i šunky ladíme podle vaší technologie, aby chuť byla stejná v každé várce.",
-         offer=[("Směsi podle vaší receptury", "Vyvineme směs na míru nebo převezmeme vaši recepturu a vyrábíme ji ve stálé kvalitě."),
-                ("Navážení na výrobní dávku", "Směsi koření, škroby i technologické přípravky namícháme přímo na vaši kutrovací dávku. Odpadá vážení a pracoviště se nepráší."),
+         desc="Kořenicí a technologické směsi pro řeznictví a masnou výrobu: uzeniny, salámy, párky, šunky. Stabilní chuť a barva, přesné dávkování, navážení na výrobní dávku.",
+         h1="Řeznictví a masný průmysl", tag="Chuť, barva a konzistence pod kontrolou",
+         intro="Pro řeznické a masné provozy dodáváme kořenicí a technologické směsi přizpůsobené specifickým požadavkům masné výroby. Je to největší část naší výroby.",
+         focus=["stabilitu chuti a barvy", "kompatibilitu s výrobními technologiemi", "jednoduché a přesné dávkování"],
+         offer=[("Směsi podle vaší receptury", "Vyvineme směs na míru, nebo převezmeme vaši recepturu a vyrábíme ji ve stálé kvalitě."),
+                ("Navážení na výrobní dávku", "Koření, škroby i technologické přípravky namícháme přímo na vaši kutrovací dávku. Odpadá vážení a pracoviště se nepráší."),
                 ("Technologické postupy", "Ke kombi směsím dodáváme technologické postupy a pomůžeme při zavádění nového výrobku."),
                 ("Balení a značení šarží", "Balení podle vaší spotřeby, na každém balení šarže, na přání EAN kód.")],
          cats=["maso", "smesi", "koreni", "skroby"]),
-    dict(file="pekarny-a-mlekarny.html", tab="pekarny", name="Pekárny a mlékárny",
-         title="Koření a sušená zelenina pro pekárny a mlékárny | J.K.FOOD",
-         desc="Jednodruhové koření, semínka, kořenicí směsi a sušená zelenina do pečiva, pomazánek a mléčných výrobků. Balení podle objemu výroby, vzorky na vyžádání.",
-         h1="Pro pekárny a mlékárny",
-         intro="Jednodruhové koření, kořenicí směsi a sušená zelenina pro pekařské a mléčné výrobky – od kmínu do chleba po bylinky do pomazánek.",
-         offer=[("Koření a semínka do pečiva", "Kmín, koriandr, fenykl a další koření celé i mleté ve stálé kvalitě."),
-                ("Sušená zelenina do pomazánek", "Cibule, česnek, pažitka, petržel nebo paprika v plátcích, kostkách i granulích."),
-                ("Směsi na míru", "Připravíme směs pro váš výrobek – od slaného pečiva po sýrové pomazánky."),
-                ("Balení podle objemu výroby", "Velikost balení přizpůsobíme vaší spotřebě, dovezeme vlastní dopravou.")],
+    dict(file="pekarstvi.html", name="Pekařství", nav="Pekařství",
+         title="Koření a směsi pro pekárny | J.K.FOOD",
+         desc="Koření, semínka, kořenicí směsi a sušená zelenina pro pekařskou výrobu. Rovnoměrné rozložení chuti, stabilní receptury, jednoduchá aplikace.",
+         h1="Pekařství", tag="Funkční suroviny pro pekařskou výrobu",
+         intro="Pekařským provozům nabízíme suroviny a směsi, které podporují rovnoměrné rozložení chuti, stabilní strukturu a jednoduchou aplikaci ve výrobě.",
+         focus=["zjednodušení práce s ochucujícími složkami", "stabilitu receptur", "opakovatelnost výsledků ve výrobě"],
+         offer=[("Koření a semínka do pečiva", "Kmín, koriandr, fenykl a další koření celé i mleté."),
+                ("Sušená zelenina", "Cibule, česnek, paprika a další zelenina v plátcích, kostkách i granulích."),
+                ("Směsi na míru", "Připravíme směs pro váš výrobek – od slaného pečiva po plněné výrobky."),
+                ("Balení podle objemu výroby", "Velikost balení přizpůsobíme vaší spotřebě.")],
          cats=["koreni", "zelenina", "smesi", "skroby"]),
-    dict(file="gastro-a-jidelny.html", tab="jidelny", name="Gastro a jídelny",
+    dict(file="mlekarny.html", name="Mlékárny", nav="Mlékárenský průmysl",
+         title="Suroviny a směsi pro mlékárny | J.K.FOOD",
+         desc="Koření, kořenicí směsi a sušená zelenina pro mléčné výrobky – pomazánky, sýry, dresinky. Jemná chuť, stabilita při zpracování, kontrola složení.",
+         h1="Mlékárenský průmysl", tag="Stabilní chuť a funkčnost v mléčných výrobcích",
+         intro="Pro mlékárenské provozy dodáváme suroviny a směsi pro aplikace, kde je důležitá jemnost chuti, stabilita při zpracování a kontrola složení.",
+         focus=["respektují technologické požadavky mlékárenské výroby", "fungují při různých teplotních režimech", "podporují konzistentní senzorický výsledek"],
+         focus_lead="Řešení jsou navržena tak, aby:",
+         offer=[], cats=["zelenina", "koreni", "smesi"]),
+    dict(file="snacky-a-pochutiny.html", name="Snacky a pochutiny", nav="Snacky a pochutiny",
+         title="Ochucovací směsi pro snacky a pochutiny | J.K.FOOD",
+         desc="Kořenicí a ochucovací směsi pro výrobce snacků a pochutin: rychlá aplikace, rovnoměrné ochucení, stabilní chuťový profil mezi šaržemi.",
+         h1="Snacky a pochutiny", tag="Intenzivní chuť a efektivní aplikace",
+         intro="Pro výrobce snacků a pochutin nabízíme směsi určené pro rychlou aplikaci a rovnoměrné ochucení.",
+         focus=["efektivitu výroby", "stabilní chuťový profil", "minimální rozdíly mezi šaržemi"],
+         focus_lead="Řešení navrhujeme s ohledem na:",
+         offer=[], cats=["smesi", "koreni", "zelenina"]),
+    dict(file="gastro-a-jidelny.html", name="Gastro a jídelny", nav="Gastro a jídelny",
          title="Koření, bujóny a polévky pro jídelny a gastro | J.K.FOOD",
          desc="Bujóny, polévky, omáčky, kořenicí směsi a sušená zelenina v gastro baleních pro školní a nemocniční jídelny, restaurace, hotely a catering.",
-         h1="Pro jídelny, restaurace a catering",
+         h1="Gastro a jídelny", tag="Spolehlivý dodavatel pro velké kuchyně",
          intro="Bujóny, polévky, omáčky, koření a sušená zelenina v gastro baleních pro školní, nemocniční a sociální stravování, restaurace, hotely i catering.",
+         focus=[],
          offer=[("Gastro balení", "Velká balení koření, směsí i polotovarů, se kterými se ve velké kuchyni dobře pracuje."),
                 ("Pravidelné dodávky", "Zboží dovezeme vlastní dopravou obvykle do 5 pracovních dnů."),
                 ("Obchodní zástupce ve vašem kraji", "Osobní kontakt, poradenství se sortimentem a pomoc s objednávkami."),
                 ("Hotové směsi i suroviny", "Směsi na maso, ryby a zeleninu, bramborové výrobky, těstoviny i sušené houby.")],
          cats=["polevky", "smesi", "koreni", "zelenina", "brambory", "testoviny"]),
-    dict(file="privatni-znacka.html", tab="retail", name="Obchod a privátní značka",
-         title="Koření a směsi pod vaší značkou – privátní značka | J.K.FOOD",
-         desc="Výroba koření a kořenicích směsí pod značkou odběratele pro obchodní řetězce, velkoobchody a výrobce. Receptura, výroba a balení podle vašeho zadání.",
-         h1="Obchod a privátní značka",
-         intro="Vyrobíme koření a kořenicí směsi pod vaší značkou – pro obchodní řetězce, velkoobchody i výrobce, kteří chtějí rozšířit svůj sortiment.",
-         offer=[("Receptura podle zadání", "Převezmeme vaši recepturu, nebo s vámi vyvineme novou chuť pro váš sortiment."),
-                ("Výroba ve stálé kvalitě", "Každá šarže je stejná – vyrábíme ve vlastním provozu ve Větřkovicích."),
-                ("Balení a značení", "Balení podle vašeho zadání, šarže a EAN kód na každém balení."),
-                ("Široký sortiment", "Přes 490 výrobků od jednodruhového koření po sušenou zeleninu a houby.")],
-         cats=["koreni", "smesi", "zelenina", "houby"]),
+    dict(file="privatni-znacka.html", name="Private label a OEM", nav="Private label a OEM",
+         title="Private label a OEM – koření a směsi pod vaší značkou | J.K.FOOD",
+         desc="Private label a OEM spolupráce: vývoj receptur, optimalizace pro výrobu, standardizace a dlouhodobé dodávky koření a směsí pod značkou partnera.",
+         h1="Private label a OEM", tag="Vývoj a výroba na míru",
+         intro="Průmyslovým a obchodním partnerům nabízíme private label a OEM spolupráci. Zajišťujeme vývoj receptur, jejich optimalizaci pro výrobu a dlouhodobé dodávky.",
+         focus=["technické konzultace", "vývoj a úpravy složení", "standardizaci výroby", "logistickou podporu"],
+         focus_lead="Spolupráce zahrnuje:",
+         offer=[], cats=["koreni", "smesi", "zelenina", "houby"]),
 ]
-V2_FILES = ["index.html"] + [o["file"] for o in OBORY]
+V2_PAGES = ["prumysl.html", "vyzkum-a-vyvoj.html", "hotova-jidla.html"]
+V2_FILES = ["index.html"] + V2_PAGES + [o["file"] for o in OBORY]
 
 V2_EX = {
     "testoviny": "vřetena, kolínka, široké a řezané nudle",
@@ -837,22 +868,25 @@ def count_word(n):
     return "výrobek" if n == 1 else "výrobky" if 2 <= n <= 4 else "výrobků"
 
 
+def v2_row(href, count, name, ex):
+    return (f'<li><a href="{href}"><span class="vs-n">{count}</span><span class="vs-nm">{esc(name)}</span>'
+            f'<span class="vs-ex">{nbsp(esc(ex))}</span><span class="vs-go" aria-hidden="true"></span></a></li>')
+
+
 def v2_cat_rows(items, ids):
+    by_id = {c["id"]: (i, c) for i, c in enumerate(CATS)}
     rows = []
-    for i, c in enumerate(CATS):
-        if c["id"] not in ids:
-            continue
+    for cid in ids:
+        i, c = by_id[cid]
         n = sum(1 for p in items if p["g"] == i)
-        rows.append(f'<li><a href="{c["file"]}"><span class="vs-n">{n}&nbsp;{count_word(n)}</span>'
-                    f'<span class="vs-nm">{esc(c["name"])}</span><span class="vs-ex">{nbsp(esc(V2_EX[c["id"]]))}</span>'
-                    '<span class="vs-go" aria-hidden="true"></span></a></li>')
-    rows.sort(key=lambda r: [i for i, c in enumerate(ids) if f'>{esc(CATS[[x["id"] for x in CATS].index(c)]["name"])}<' in r][0])
+        rows.append(v2_row(c["file"], f"{n}&nbsp;{count_word(n)}", c["name"], V2_EX[cid]))
     return rows
 
 
 def v2_sortiment(items):
     """Sortiment pro verzi 2: místo pixly s ilustracemi fotka a přehledný seznam skupin."""
     rows = v2_cat_rows(items, [c["id"] for c in CATS])
+    rows.append(v2_row("hotova-jidla.html", "Vlastní značky", "Hotová jídla v kelímku CHUŤ a HOT&GO", "stačí zalít horkou vodou – kompletní jídlo za pár minut"))
     return f"""  <!-- SORTIMENT (verze 2) -->
   <section class="vsort" id="sortiment" aria-labelledby="sort-title">
     <div class="wrap">
@@ -873,15 +907,59 @@ def v2_sortiment(items):
 """
 
 
+def cards(items, cls=""):
+    return (f'<ol class="coop-list v2-cards {cls}">' + "".join(
+        f'<li><span class="coop-n" aria-hidden="true">{i + 1}</span><h4>{t}</h4><p>{x}</p></li>'
+        for i, (t, x) in enumerate(items)) + "</ol>")
+
+
+def steps5_html():
+    return ('<section class="obor-sec" aria-labelledby="ob-steps"><h2 class="obor-h" id="ob-steps">Jak spolupráce probíhá</h2>'
+            + cards(STEPS5, "five") + "</section>")
+
+
+def why_html(hid="ob-why"):
+    return (f'<section class="obor-sec" aria-labelledby="{hid}"><h2 class="obor-h" id="{hid}">Proč spolupracovat s&nbsp;J.K.FOOD</h2>'
+            + '<ul class="v2-why">' + "".join(f"<li><h3>{t}</h3><p>{x}</p></li>" for t, x in WHY) + "</ul></section>")
+
+
+def bullets(lead, pts):
+    return (f'<div class="v2-focus"><p>{lead}</p><ul>' + "".join(f"<li>{nbsp(esc(x))}</li>" for x in pts) + "</ul></div>")
+
+
+def form_link(obor, typ=None):
+    q = "index.html?obor=" + obor.replace(" ", "%20").replace("&", "%26")
+    return q + (f"&amp;typ={typ.replace(' ', '%20')}" if typ else "") + "#kontakt"
+
+
+def v2_page(file, title, desc, crumbs, h1, intro, body, cta):
+    f = "v2/" + file
+    simple_page(f, title, desc, crumbs, h1, intro, body, cta, [])
+    p = ROOT / f
+    p.write_text(v2_chrome(p.read_text(encoding="utf-8"), file), encoding="utf-8")
+
+
+def photo(src, alt, cls="v2-photo"):
+    return (f'<figure class="{cls}"><picture><source srcset="img/{src}-600.webp 600w, img/{src}-1000.webp 1000w" sizes="(max-width:900px) 92vw, 560px" type="image/webp">'
+            f'<img src="img/{src}.jpg" alt="{alt}" width="1000" height="800" loading="lazy" decoding="async"></picture></figure>')
+
 def v2_chrome(html, own):
     """Společné úpravy všech stránek verze 2: noindex, přepínač verzí, odkazy na obory, cesty o úroveň výš."""
     html = html.replace("<body>", '<body class="v2">', 1)
     html = re.sub(r'<meta name="robots" content="[^"]*">', '<meta name="robots" content="noindex, nofollow">', html)
     html = re.sub(r"<title>(.*?)</title>", r"<title>\1 · verze 2</title>", html, count=1)
     html = html.replace("</body>", '<a class="vswitch" href="../index.html">Verze 2 · přepnout na verzi 1</a>\n</body>', 1)
-    # patička: obory pod „Pro firmy“
-    obory = "".join(f'<li><a href="{o["file"]}">{esc(o["name"])}</a></li>' for o in OBORY)
-    html = re.sub(r'(<li><a href="(?:index\.html)?#firmy">Pro firmy</a></li>)', r"\1" + obory.replace("\\", "\\\\"), html, count=1)
+    # menu: Průmysl a Výzkum a vývoj vedou na vlastní stránky
+    html = re.sub(r'<a class="link" href="(?:index\.html)?#firmy">Pro firmy</a>', '<a class="link" href="prumysl.html">Průmysl</a>', html, count=1)
+    html = re.sub(r'<a class="link" href="(?:index\.html)?#na-miru">Vývoj na míru</a>', '<a class="link" href="vyzkum-a-vyvoj.html">Výzkum a vývoj</a>', html, count=1)
+    if own != "index.html":
+        html = html.replace(f'<a class="link" href="{own}">', f'<a class="link" href="{own}" aria-current="page">', 1)
+    # patička: sloupec Firma
+    firma = ('<li><a href="index.html#pribeh">O nás</a></li><li><a href="nas-tym.html">Náš tým</a></li>'
+             '<li><a href="prumysl.html">Průmysl</a></li>' + "".join(f'<li class="fsub"><a href="{o["file"]}">{esc(o["nav"])}</a></li>' for o in OBORY)
+             + '<li><a href="vyzkum-a-vyvoj.html">Výzkum a vývoj</a></li><li><a href="hotova-jidla.html">Hotová jídla CHUŤ a HOT&amp;GO</a></li>'
+             '<li><a href="kariera.html">Kariéra</a></li><li><a href="#">Ke stažení</a></li>')
+    html = re.sub(r"(<div><h3>Firma</h3><ul>).*?(</ul></div>)", lambda m: m.group(1) + firma + m.group(2), html, count=1, flags=re.S)
 
     def fix(m):
         attr, u = m.group(1), m.group(2)
@@ -913,21 +991,46 @@ def v2_index(items):
 </main>""", 1)
     # způsoby spolupráce: místo e-shopu privátní značka
     html = re.sub(r'<li><span class="coop-n" aria-hidden="true">3</span><h4>E-shop pro domácnosti</h4>.*?</li>',
-                  '<li><span class="coop-n" aria-hidden="true">3</span><h4>Výroba pod vaší značkou</h4><p>Koření a&nbsp;směsi vyrobíme a&nbsp;zabalíme pod značkou vašeho obchodu nebo firmy.</p><a href="privatni-znacka.html">Privátní značka <span class="i-next" aria-hidden="true"></span></a></li>',
+                  '<li><span class="coop-n" aria-hidden="true">3</span><h4>Výroba pod vaší značkou</h4><p>Koření a&nbsp;směsi vyrobíme a&nbsp;zabalíme pod značkou vašeho obchodu nebo firmy.</p><a href="privatni-znacka.html">Private label a OEM <span class="i-next" aria-hidden="true"></span></a></li>',
                   html, count=1, flags=re.S)
-    # záložky odběratelů: masný průmysl první, místo domácností obchod a privátní značka, odkazy na stránky oborů
-    seg = re.search(r"  const SEGS = \[\n(.*?)\n  \];", html, re.S)
-    objs = re.findall(r"    \{ id: '(\w+)'.*?\}(?=,\n    \{ id:|$)", seg.group(1), re.S)
-    blocks = dict(zip(objs, re.split(r",\n(?=    \{ id:)", seg.group(1))))
-    blocks.pop("domacnosti")
-    blocks["retail"] = ("    { id: 'retail', name: 'Obchod a privátní značka', title: 'Koření a směsi pod vaší značkou',\n"
-                        "      text: 'Pro obchodní řetězce, velkoobchody i výrobce vyrábíme a balíme koření a směsi pod jejich značkou.',\n"
-                        "      pts: ['Receptura podle zadání', 'Balení a značení podle vás', 'Stálá kvalita každé šarže'] }")
-    pages = {o["tab"]: o["file"] for o in OBORY}
-    pages["gastro"] = "gastro-a-jidelny.html"
-    order = ["maso", "pekarny", "jidelny", "gastro", "retail"]
-    seg_new = ",\n".join(blocks[k].replace(f"{{ id: '{k}',", f"{{ id: '{k}', page: '{pages[k]}',", 1) for k in order)
-    html = html.replace(seg.group(0), "  const SEGS = [\n" + seg_new + "\n  ];")
+    # záložky odběratelů podle oborů zákazníka, každá s odkazem na stránku oboru
+    seg = re.search(r"  const SEGS = \[\n.*?\n  \];", html, re.S)
+    S = [("maso", "masny-prumysl.html", "Masný průmysl", "Chuť, barva a konzistence pod kontrolou",
+          "Kořenicí a technologické směsi přizpůsobené masné výrobě. Největší část naší výroby.",
+          ["Stabilní chuť a barva", "Navážení na výrobní dávku", "Technologické postupy ke kombi směsím"]),
+         ("pekarstvi", "pekarstvi.html", "Pekařství", "Funkční suroviny pro pekařskou výrobu",
+          "Suroviny a směsi pro rovnoměrné rozložení chuti, stabilní strukturu a jednoduchou aplikaci.",
+          ["Koření a semínka do pečiva", "Stabilní receptury", "Opakovatelné výsledky"]),
+         ("mlekarny", "mlekarny.html", "Mlékárny", "Stabilní chuť v mléčných výrobcích",
+          "Suroviny a směsi tam, kde je důležitá jemnost chuti, stabilita při zpracování a kontrola složení.",
+          ["Pro různé teplotní režimy", "Konzistentní senzorický výsledek", "Sušená zelenina a bylinky"]),
+         ("snacky", "snacky-a-pochutiny.html", "Snacky a pochutiny", "Intenzivní chuť a efektivní aplikace",
+          "Směsi pro rychlou aplikaci a rovnoměrné ochucení snacků a pochutin.",
+          ["Efektivní výroba", "Stabilní chuťový profil", "Minimální rozdíly mezi šaržemi"]),
+         ("gastro", "gastro-a-jidelny.html", "Gastro a jídelny", "Spolehlivý dodavatel pro velké kuchyně",
+          "Bujóny, polévky, omáčky, koření a sušená zelenina v gastro baleních pro jídelny, restaurace i catering.",
+          ["Gastro balení", "Dodávky vlastní dopravou", "Obchodní zástupce ve vašem kraji"]),
+         ("retail", "privatni-znacka.html", "Private label a OEM", "Vývoj a výroba pod vaší značkou",
+          "Pro průmyslové a obchodní partnery vyvíjíme receptury, optimalizujeme je pro výrobu a dlouhodobě dodáváme.",
+          ["Technické konzultace", "Standardizace výroby", "Logistická podpora"])]
+    js = ",\n".join(f"    {{ id: '{a}', page: '{f}', name: '{n}', title: '{t}',\n      text: '{x}',\n      pts: [{', '.join(repr(q) for q in pts)}] }}"
+                    for a, f, n, t, x, pts in S)
+    html = html.replace(seg.group(0), "  const SEGS = [\n" + js + "\n  ];")
+    # odkazy z úvodu a pilířů na nové stránky
+    html = html.replace('<a class="btn btn-red" href="#firmy">Pro průmysl', '<a class="btn btn-red" href="prumysl.html">Pro průmysl', 1)
+    html = html.replace('<a class="pil has-img" href="#firmy">', '<a class="pil has-img" href="prumysl.html">', 1)
+    html = html.replace('<a class="pil has-img" href="#na-miru">', '<a class="pil has-img" href="vyzkum-a-vyvoj.html">', 1)
+    html = html.replace('<a href="#na-miru">Vývoj na míru <span', '<a href="vyzkum-a-vyvoj.html">Výzkum a vývoj <span', 1)
+    # vývoj na míru: postup v 5 krocích + odkaz na stránku, za ním „Proč s námi“
+    st = re.search(r'<ol class="steps">.*?</ol>', html, re.S)
+    html = html.replace(st.group(0), '<ol class="steps five">' + "".join(
+        f'<li><span class="n" aria-hidden="true">{k + 1}</span><h3>{t}</h3><p>{x}</p></li>' for k, (t, x) in enumerate(STEPS5)) + "</ol>")
+    html = html.replace('<a class="btn btn-red" href="#kontakt">Poptat vývoj směsi</a>',
+                        '<a class="btn btn-red" href="#kontakt">Poptat vývoj směsi</a>\n        <a class="btn btn-ghost" href="vyzkum-a-vyvoj.html">Výzkum a vývoj <span class="i-next" aria-hidden="true"></span></a>', 1)
+    why = ('  <!-- PROČ S NÁMI (verze 2) -->\n  <section class="vwhy" aria-labelledby="why-title">\n    <div class="wrap">\n'
+           '      <h2 class="h2" id="why-title">Proč spolupracovat s&nbsp;J.K.FOOD</h2>\n      <ul class="v2-why">'
+           + "".join(f"<li><h3>{t}</h3><p>{x}</p></li>" for t, x in WHY) + "</ul>\n    </div>\n  </section>\n\n")
+    html = html.replace("  <!-- SORTIMENT (verze 2) -->", why + "  <!-- SORTIMENT (verze 2) -->", 1)
     old_btn = "(s.shop ? `<a class=\"btn btn-red\" href=\"${ESHOP}\" target=\"_blank\" rel=\"noopener\">Nakoupit v e-shopu <span class=\"ext\" aria-hidden=\"true\"></span></a>`"
     assert old_btn in html
     html = html.replace(old_btn, "(s.page ? `<div class=\"panel-btns\"><a class=\"btn btn-red\" href=\"${s.page}\">Více pro váš obor <span class=\"i-next\" aria-hidden=\"true\"></span></a><a class=\"btn btn-line\" href=\"#kontakt\">Domluvit spolupráci</a></div>`")
@@ -935,40 +1038,109 @@ def v2_index(items):
 
 
 def v2_obor(o, items):
-    offer = "".join(f'<li><span class="coop-n" aria-hidden="true">{i + 1}</span><h4>{esc(t)}</h4><p>{nbsp(esc(x))}</p></li>'
-                    for i, (t, x) in enumerate(o["offer"]))
-    rows = v2_cat_rows(items, o["cats"])
-    q = "index.html?obor=" + o["name"].replace(" ", "%20")
-    body = (f'<section class="obor-sec" aria-labelledby="ob-offer"><h2 class="obor-h" id="ob-offer">Co pro vás uděláme</h2>'
-            f'<ol class="coop-list obor-offer">{offer}</ol></section>'
-            f'<section class="obor-sec" aria-labelledby="ob-cats"><div class="obor-cats-head"><h2 class="obor-h" id="ob-cats">Typický sortiment</h2>'
-            f'<a class="rail-mini" href="sortiment.html">Celý sortiment <span class="i-next" aria-hidden="true"></span></a></div>'
-            f'<ul class="vsort-list">{"".join(rows)}</ul></section>'
-            '<section class="obor-sec" aria-labelledby="ob-steps"><h2 class="obor-h" id="ob-steps">Jak spolupráce probíhá</h2>'
-            '<ol class="coop-list obor-steps">'
-            '<li><span class="coop-n" aria-hidden="true">1</span><h4>Poptávka</h4><p>Napíšete nebo zavoláte, co vyrábíte a&nbsp;co hledáte.</p></li>'
-            '<li><span class="coop-n" aria-hidden="true">2</span><h4>Vzorky</h4><p>Připravíme vzorky, které vyzkoušíte přímo ve své výrobě nebo kuchyni.</p></li>'
-            '<li><span class="coop-n" aria-hidden="true">3</span><h4>Doladění</h4><p>Podle vašich zkušeností směs nebo balení upravíme.</p></li>'
-            '<li><span class="coop-n" aria-hidden="true">4</span><h4>Pravidelné dodávky</h4><p>Vyrábíme a&nbsp;vozíme vlastní dopravou obvykle do 5&nbsp;pracovních dnů.</p></li>'
-            '</ol></section>')
+    parts = []
+    head = f'<p class="v2-tag">{esc(o["tag"])}</p>'
+    if o["focus"]:
+        parts.append(f'<section class="obor-sec" aria-labelledby="ob-focus">{head}<h2 class="sr" id="ob-focus">Na co klademe důraz</h2>'
+                     + bullets(o.get("focus_lead", "Důraz klademe na:"), o["focus"]) + "</section>")
+    else:
+        parts.append(f'<div class="obor-sec">{head}</div>')
+    if o["offer"]:
+        parts.append('<section class="obor-sec" aria-labelledby="ob-offer"><h2 class="obor-h" id="ob-offer">Co pro vás uděláme</h2>'
+                     + cards([(esc(t), nbsp(esc(x))) for t, x in o["offer"]]) + "</section>")
+    parts.append('<section class="obor-sec" aria-labelledby="ob-cats"><div class="obor-cats-head"><h2 class="obor-h" id="ob-cats">Typický sortiment</h2>'
+                 '<a class="rail-mini" href="sortiment.html">Celý sortiment <span class="i-next" aria-hidden="true"></span></a></div>'
+                 f'<ul class="vsort-list">{"".join(v2_cat_rows(items, o["cats"]))}</ul></section>')
+    parts.append(steps5_html())
+    others = "".join(f'<li><a href="{x["file"]}">{esc(x["nav"])}</a></li>' for x in OBORY if x is not o)
+    parts.append(f'<nav class="obor-sec v2-others" aria-label="Další obory"><h2 class="obor-h">Další obory</h2><ul>{others}</ul></nav>')
     cta = cta_band("obor-cta", "Pošleme vám vzorky", "Napište nám, co vyrábíte a co hledáte – připravíme vzorky i nabídku.",
-                   [("btn-white", f"{q}#kontakt", "Poptat spolupráci"), ("btn-ghost", f"{q}&amp;typ=Vzorky#kontakt", "Objednat vzorky")])
-    f = "v2/" + o["file"]
-    simple_page(f, o["title"], o["desc"], [("Úvod", ""), ("Pro firmy", "index.html#firmy"), (o["name"], o["file"])],
-                o["h1"], o["intro"], body, cta, [])
-    p = ROOT / f
-    html = p.read_text(encoding="utf-8")
-    html = html.replace('href="index.html"', 'href="index.html"')
-    p.write_text(v2_chrome(html, o["file"]), encoding="utf-8")
+                   [("btn-white", form_link(o["name"]), "Poptat spolupráci"), ("btn-ghost", form_link(o["name"], "Vzorky"), "Objednat vzorky")])
+    v2_page(o["file"], o["title"], o["desc"], [("Úvod", ""), ("Průmysl", "prumysl.html"), (o["nav"], o["file"])],
+            o["h1"], o["intro"], "".join(parts), cta)
+
+
+def v2_prumysl():
+    tiles = "".join(f'<li><a href="{o["file"]}"><span class="vs-nm">{esc(o["nav"])}</span><span class="vs-ex">{esc(o["tag"])}</span>'
+                    '<span class="vs-go" aria-hidden="true"></span></a></li>' for o in OBORY)
+    body = ('<section class="obor-sec v2-split" aria-labelledby="pr-dehy"><div><p class="v2-tag">Spolehlivý partner pro průmyslové aplikace</p>'
+            '<h2 class="obor-h" id="pr-dehy">Dehydratované suroviny a&nbsp;technologické směsi</h2>'
+            '<p class="v2-p">Pro průmyslové provozy dodáváme dehydratované suroviny, kořenicí a&nbsp;technologické směsi, které umožňují přesné dávkování, stabilní chuť a&nbsp;snadné zapojení do výrobních linek. Každé řešení přizpůsobujeme konkrétní technologii, výrobnímu procesu a&nbsp;požadovanému výsledku.</p>'
+            + bullets("Naše řešení pomáhají:", ["snížit závislost na sezónních surovinách", "zjednodušit výrobní procesy", "zajistit stejnou kvalitu napříč šaržemi"])
+            + "</div>" + photo("v2/pilir-prumysl", "Pracovnice obsluhuje průmyslový míchací stroj s kořenicí směsí") + "</section>"
+            '<section class="obor-sec" aria-labelledby="pr-obory"><h2 class="obor-h" id="pr-obory">Obory, kterým dodáváme</h2>'
+            f'<ul class="vsort-list v2-obory">{tiles}</ul></section>'
+            + why_html() + steps5_html())
+    cta = cta_band("pr-cta", "Kontakt pro průmyslové partnery",
+                   "Máte konkrétní požadavky nebo hledáte spolehlivého dodavatele pro výrobu? Rádi s&nbsp;vámi projdeme možnosti spolupráce.",
+                   [("btn-white", form_link("Průmysl"), "Poptat spolupráci"), ("btn-ghost", "tel:+420556310205", "+420 556 310 205")])
+    v2_page("prumysl.html", "Průmysl – suroviny a směsi pro potravinářské výrobce | J.K.FOOD",
+            "Dehydratované suroviny, kořenicí a technologické směsi pro potravinářský průmysl: masná výroba, pekařství, mlékárny, snacky, private label a OEM.",
+            [("Úvod", ""), ("Průmysl", "prumysl.html")], "Řešení pro potravinářské výrobce a zpracovatele",
+            "Dodáváme suroviny a směsi pro potravinářský průmysl, kde je klíčová stálá kvalita, opakovatelnost chuti a funkčnost ve výrobním procesu. Spolupracujeme s výrobci napříč obory potravinářství.",
+            body, cta)
+
+
+def v2_vyvoj():
+    body = ('<section class="obor-sec v2-split" aria-labelledby="rd-co"><div><p class="v2-tag">Stálá kvalita začíná u vývoje</p>'
+            '<h2 class="obor-h" id="rd-co">Co ve vývoji řešíme</h2>'
+            '<p class="v2-p">Každý výrobek vyvíjíme s&nbsp;ohledem na jeho skutečné použití – ve výrobě, gastronomii i&nbsp;retailu. Sledujeme technologické chování, senzoriku i&nbsp;opakovatelnost výsledku. Nevyvíjíme do šuplíku, ale pro výrobu.</p>'
+            + bullets("Zaměřujeme se zejména na:", ["chuť, vůni a stálost barvy", "homogenitu směsí a stabilitu šarží", "dávkování, sypkost a mísitelnost", "chování výrobku při zpracování a skladování"])
+            + "</div>" + photo("pilir-vyvoj", "Laboratoř: vzorek kořenicí směsi na laboratorní váze, zkumavky se vzorky koření") + "</section>"
+            '<section class="obor-sec" aria-labelledby="rd-help"><h2 class="obor-h" id="rd-help">Vývoj na míru a&nbsp;spolupráce</h2>'
+            '<p class="v2-p">Spolupracujeme s&nbsp;výrobci, gastronomií i&nbsp;partnery pro private label. Připravujeme nové výrobky a&nbsp;upravujeme stávající receptury podle konkrétního zadání, technologie a&nbsp;požadované ceny.</p>'
+            + cards([("Vývoj směsí na míru", "Nová chuť podle vašeho zadání a&nbsp;technologie."),
+                     ("Úpravy chuti a&nbsp;složení", "Doladíme stávající recepturu – chuť, složení i&nbsp;cenu."),
+                     ("Stálá kvalita při růstu", "Recepturu připravíme tak, aby fungovala i&nbsp;při vyšších objemech."),
+                     ("Zavedení do sériové výroby", "Pomůžeme s&nbsp;přechodem ze vzorku na pravidelnou výrobu.")])
+            + '<blockquote class="v2-quote">Nejsme jen dodavatel surovin. Jsme partner, který rozumí surovinám, technologii i&nbsp;provozu.</blockquote></section>'
+            + steps5_html())
+    cta = cta_band("rd-cta", "Máte konkrétní zadání?", "Rádi s&nbsp;vámi probereme váš projekt a&nbsp;připravíme vzorky k&nbsp;testování.",
+                   [("btn-white", form_link("Vývoj na míru", "Vývoj směsi na míru"), "Poptat vývoj"), ("btn-ghost", "tel:+420556310205", "+420 556 310 205")])
+    v2_page("vyzkum-a-vyvoj.html", "Výzkum a vývoj kořenicích směsí na míru | J.K.FOOD",
+            "Vlastní vývojové zázemí: receptury na míru, úpravy chuti a složení, stabilita šarží a zavedení do sériové výroby. Vzorky k testování.",
+            [("Úvod", ""), ("Výzkum a vývoj", "vyzkum-a-vyvoj.html")], "Výzkum a vývoj",
+            "Vývoj je přirozenou součástí J.K.FOOD. Ve vlastním vývojovém zázemí vyvíjíme a testujeme receptury tak, aby splňovaly nároky na chuť, funkčnost i dlouhodobou stabilitu.",
+            body, cta)
+
+
+def v2_jidla():
+    ph = "".join('<li class="v2-ph"><span class="v2-ph-ic" aria-hidden="true"></span><b>Foto kelímku</b><span>název · gramáž · příprava</span></li>' for _ in range(4))
+    body = ('<section class="obor-sec v2-split" aria-labelledby="hj-co"><div><p class="v2-tag">Spolehlivé řešení, když je čas rozhodující</p>'
+            '<h2 class="obor-h" id="hj-co">Kompletní jídlo za pár minut</h2>'
+            '<p class="v2-p">Řada hotových jídel v&nbsp;kelímku značek CHUŤ a&nbsp;HOT&amp;GO je určená pro rychlou a&nbsp;jednoduchou přípravu. Stačí zalít horkou vodou a&nbsp;za několik minut je jídlo připravené k&nbsp;podávání – doma, v&nbsp;práci i&nbsp;na cestách.</p>'
+            + bullets("Každý kelímek:", ["je kompletní hotové jídlo", "má jasný a jednoduchý způsob přípravy", "dává pokaždé stejný chuťový výsledek", "nepotřebuje další suroviny ani vybavení"])
+            + '</div><div class="v2-ph-hero" role="img" aria-label="Místo pro fotografii hotových jídel CHUŤ a HOT&amp;GO"><span class="v2-ph-ic" aria-hidden="true"></span><b>Fotka řady CHUŤ a HOT&amp;GO</b></div></section>'
+            '<section class="obor-sec" aria-labelledby="hj-druhy"><h2 class="obor-h" id="hj-druhy">Druhy a balení</h2>'
+            f'<ul class="v2-ph-grid">{ph}</ul></section>'
+            '<section class="obor-sec" aria-labelledby="hj-b2b"><h2 class="obor-h" id="hj-b2b">Pro obchodní partnery</h2>'
+            '<p class="v2-p">Hotová jídla v&nbsp;kelímku se snadno skladují, přenášejí i&nbsp;prodávají. Hodí se tam, kde zákazníci potřebují rychlé a&nbsp;spolehlivé jídlo – v&nbsp;kancelářích a&nbsp;pracovních provozech, pro studenty i&nbsp;na cestách.</p>'
+            + cards([("Rychlá příprava", "Bez vaření – stačí horká voda."),
+                     ("Žádné nádobí navíc", "Jídlo se připraví i&nbsp;podává přímo v&nbsp;kelímku."),
+                     ("Snadné skladování", "Kelímky se dobře skladují, přenášejí i&nbsp;vystavují."),
+                     ("Porce jako hotové jídlo", "Každý kelímek je plnohodnotná porce.")])
+            + "</section>")
+    cta = cta_band("hj-cta", "Hotová jídla do vašeho sortimentu", "Máte zájem o&nbsp;hotová jídla CHUŤ a&nbsp;HOT&amp;GO pro svůj obchod nebo provoz? Napište nám.",
+                   [("btn-white", form_link("Hotová jídla CHUŤ a HOT&GO"), "Poptat hotová jídla"), ("btn-ghost", form_link("Hotová jídla CHUŤ a HOT&GO", "Vzorky"), "Objednat vzorky")])
+    v2_page("hotova-jidla.html", "Hotová jídla v kelímku CHUŤ a HOT&GO | J.K.FOOD",
+            "Hotová jídla v kelímku značek CHUŤ a HOT&GO: stačí zalít horkou vodou. Pro obchody, kanceláře, pracovní provozy i cestování.",
+            [("Úvod", ""), ("Hotová jídla", "hotova-jidla.html")], "Hotová jídla v kelímku CHUŤ a HOT&GO",
+            "Vlastní řada hotových jídel pro rychlou a jednoduchou přípravu. Jistota chuti, pohodlí a stejný výsledek bez ohledu na místo nebo situaci.",
+            body, cta)
 
 
 def build_v2(items):
-    """Verze 2 k porovnání (více B2B): jiný úvod a sortiment, stránky pro obory, méně e-shopu.
+    """Verze 2 k porovnání (více B2B): jiný úvod a sortiment, Průmysl s obory, Výzkum a vývoj, Hotová jídla.
     Vzniká z hotové verze 1; ostatní odkazy vedou na stránky verze 1. noindex, mimo sitemap."""
     (ROOT / "v2").mkdir(exist_ok=True)
+    for old in (ROOT / "v2").glob("*.html"):
+        old.unlink()
     (ROOT / "v2" / "index.html").write_text(v2_index(items), encoding="utf-8")
     for o in OBORY:
         v2_obor(o, items)
+    v2_prumysl()
+    v2_vyvoj()
+    v2_jidla()
 
 
 def main():
