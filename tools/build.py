@@ -571,6 +571,8 @@ def build_en():
     def paths(html):
         def fix(m):
             attr, u = m.group(1), m.group(2)
+            if attr == "srcset":
+                return 'srcset="' + ", ".join("../" + c.strip() for c in u.split(",")) + '"'
             if re.match(r"(https?:|//|#|mailto:|tel:|data:|/|\.\./)", u):
                 return m.group(0)
             base, _, frag = u.partition("#")

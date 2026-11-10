@@ -2,28 +2,19 @@
 
 ## Galerie v úvodu (nahoře na stránce)
 
-| Soubor | Co na fotce |
-|---|---|
-| `hero-1.jpg` + `.webp` | Výroba kořenicích směsí (vložena, generovaná) |
-| `hero-2.jpg` | Koření a kořenicí směsi |
-| `hero-3.jpg` | Sušená zelenina a houby |
-| `hero-4.jpg` | Hotová jídla z našich surovin |
+| Snímek | Fotka | Popisek |
+|---|---|---|
+| 1 | `hero-1` | Výroba kořenicích směsí |
+| 2 | `hero-2` | Koření a kořenicí směsi |
+| 3 | `hero-3` | Sušená zelenina a houby |
+| 4 | `hero-4` | Balení pro průmysl a gastro |
 
-- **Formát:** JPG, ideálně čtverec cca 1600 × 1600 px, do 400 kB na fotku
-  (web fotku ořízne do tvaru bubliny z loga, střed zůstane vidět).
-- Dokud fotka chybí, zobrazí se zástupný rámeček s názvem souboru.
+Fotky jsou zatím **generované** – až budou skutečné fotky z výroby, nahraďte je.
 
-### Jak fotku zapojit
-
-1. Nahrajte fotku do této složky pod názvem z tabulky.
-2. V `index.html` najděte příslušný snímek (`<figure class="g-slide" … data-cap="…">`)
-   a hned za řádek `<figure …>` vložte:
-
-   ```html
-   <img src="img/hero-1.jpg" alt="Výroba ve Větřkovicích" width="1600" height="1600" decoding="async">
-   ```
-
-   U prvního snímku přidejte navíc `fetchpriority="high"`, u ostatních `loading="lazy"`.
+Každá fotka je uložená ve čtyřech souborech: `hero-N-700.webp`, `hero-N-900.webp`,
+`hero-N-1200.webp` (prohlížeč si vybere velikost podle displeje) a `hero-N.jpg` (pro staré prohlížeče).
+Při výměně fotky vytvořte stejné čtyři soubory (čtverec, WebP kvalita ~70, JPG ~76)
+a v `index.html` upravte popisek (`data-cap`) a popis obrázku (`alt`).
 
 Web fotky nenačítá „naslepo“, aby prohlížeč nehlásil chyby pro neexistující soubory.
 Popisky pod fotkami se upravují v atributu `data-cap`.
