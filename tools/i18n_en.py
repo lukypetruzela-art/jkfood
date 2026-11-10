@@ -110,7 +110,7 @@ INDEX = [
     # sortiment
     ("Přes 490 výrobků</h2>", "Over 490 products</h2>"),
     ("Celý sortiment <span", "Full product range <span"),
-    ('aria-label="Tvar loga J.K.FOOD vyplněný barevnými zrnky koření. Každé zrnko představuje jeden výrobek a barva jeho skupinu."',
+    ('aria-label="Obrys loga J.K.FOOD vyplněný ilustracemi výrobků z devíti skupin sortimentu."',
      'aria-label="The J.K.FOOD logo shape filled with illustrations of our products."'),
     ("Ochutnávka z&nbsp;našeho sortimentu.", "A taste of our product range."),
     # pro firmy

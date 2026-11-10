@@ -34,7 +34,7 @@
 <link rel="preload" href="assets/fonts/dmsans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/styles.css?v=89d3debb">
+<link rel="stylesheet" href="assets/styles.css?v=241b3f01">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -205,7 +205,7 @@
           </div>
         </div>
         <figure class="jar" id="jar">
-          <canvas id="grains" role="img" aria-label="Tvar loga J.K.FOOD vyplněný barevnými zrnky koření. Každé zrnko představuje jeden výrobek a barva jeho skupinu."></canvas>
+          <canvas id="grains" role="img" aria-label="Obrys loga J.K.FOOD vyplněný ilustracemi výrobků z devíti skupin sortimentu."></canvas>
           <figcaption>Ochutnávka z&nbsp;našeho sortimentu.</figcaption>
         </figure>
       </div>
@@ -362,7 +362,7 @@
   </div>
 </footer>
 
-<script src="assets/products.js?v=89d3debb"></script>
+<script src="assets/products.js?v=241b3f01"></script>
 <script>
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -737,146 +737,137 @@
 
   const initGrains = () => {
     if (!document.getElementById('grains')) return;     // stránka bez pixly (verze 2)
-  /* ---------- grains: pixla s víčkem ----------
-     1) vykreslí se spodek pixly (bez víčka)
-     2) nasype se koření (zrnka padají a skládají se odspodu)
-     3) linka pokračuje od pravého okraje přes vršek a dotáhne obrys loga */
+  /* ---------- pixla se sortimentem ----------
+     Kousky leží v pravidelné šestiúhelníkové mřížce uvnitř tvaru loga – nikdy se nepřekrývají.
+     1) vykreslí se spodek obrysu, 2) kousky padají řadu po řadě odspodu na svá místa,
+     3) linka dotáhne vršek. Najetí na skupinu: kousky se vlnou promění na výrobky dané skupiny. */
   const jar = document.getElementById('jar');
   const cv = document.getElementById('grains');
   const ctx = cv.getContext('2d');
-  const PER_CAT = 18;              // kousků na skupinu (počty nejsou podstatné, větší kousky jsou čitelnější)
-  const total = PER_CAT * CATS.length;
-  const PAD = 0.035;               // okraj (podíl šířky)
-  const STROKE = 0.018;            // tloušťka obrysu
-  const OY = 0;                    // volné místo nad tvarem (není potřeba)
-  const HR = 1 + OY;               // poměr výška / šířka plátna
-  const SPLIT = 0.27;              // výška řezu mezi víčkem a spodkem (v rámci tvaru)
-  const RED = '#A7110C';
+  const PAD = 0.035, STROKE = 0.018, SPLIT = 0.27, RED = '#A7110C';
+  const D = 0.08;                  // rozestup kousků (podíl šířky)
+  const U = D * 0.37;              // poloměr ilustrace; kresba sahá max. na 1,35 · U ≈ D / 2 → bez překryvu
+  const SPRITE_PAD = 1.35;
 
   // geometrie obrysu (jednotky = šířka plátna)
   const M = PAD + STROKE / 2, C = 0.5, R = 0.5 - M;
-  const ALPHA = Math.asin((C - SPLIT) / R);           // úhel řezu nad vodorovnou osou
-  const HX = C + R * Math.cos(ALPHA), HY = OY + SPLIT; // pravý konec řezu = pant víčka
+  const ALPHA = Math.asin((C - SPLIT) / R);
+  const HY = SPLIT;
   const BOTTOM_LEN = R * (2 * ALPHA + 2 + Math.PI / 2);
   const LID_LEN = R * (Math.PI - 2 * ALPHA);
-
-  // tvar loga: kruh + čtvercový levý dolní kvadrant
   const inside = (x, y, m) => {
-    y -= OY;
     const r = 0.5 - m, dx = x - C, dy = y - C;
     if (dx * dx + dy * dy <= r * r) return true;
     return x >= m && x <= C && y >= C && y <= 1 - m;
   };
 
-  // rozmístění zrnek (dart throwing)
-  const area = (Math.PI * 0.75 + 1) * Math.pow(0.5 - PAD - STROKE, 2);
-  const cell = Math.sqrt(area / total);
-  const minD = cell * 0.84, inset = PAD + STROKE + cell * 0.62;
+  // šestiúhelníková mřížka uvnitř tvaru (s odstupem od obrysu)
+  const inset = PAD + STROKE + U * SPRITE_PAD + 0.006;
+  const rowH = D * Math.sqrt(3) / 2;
   const pts = [];
-  for (let guard = 0; pts.length < total && guard < 200000; guard++) {
-    const x = Math.random(), y = OY + Math.random();
-    if (!inside(x, y, inset)) continue;
-    let ok = true;
-    for (let k = 0; k < pts.length; k++) {
-      const dx = pts[k].x - x, dy = pts[k].y - y;
-      if (dx * dx + dy * dy < minD * minD) { ok = false; break; }
+  for (let row = 0, y = 1 - inset; y >= inset; row++, y -= rowH) {
+    for (let x = inset + (row % 2 ? D / 2 : 0); x <= 1 - inset; x += D) {
+      if (inside(x, y, inset)) pts.push({ x, y, row });
     }
-    if (ok) pts.push({ x, y });
   }
-  while (pts.length < total) { const x = Math.random(), y = OY + Math.random(); if (inside(x, y, inset)) pts.push({ x, y }); }
-
-  const catOf = [];
-  CATS.forEach((c, i) => { for (let k = 0; k < PER_CAT; k++) catOf.push(i); });
+  // skupiny rovnoměrně a náhodně (každá skupina má stejně kousků ±1)
+  const catOf = pts.map((_, i) => i % CATS.length);
   for (let i = catOf.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [catOf[i], catOf[j]] = [catOf[j], catOf[i]]; }
 
-  // časování (ms od chvíle, kdy je pixla vidět)
-  const T_BOTTOM = 700;            // kreslení spodku
-  const T_POUR = 600, POUR = 1700; // sypání: začátek a délka
+  const maxRow = Math.max(...pts.map(p => p.row));
+  const T_BOTTOM = 650, T_POUR = 450, ROW_GAP = 70, FALL = 620;
   const G = pts.map((p, i) => ({
-    ux: p.x, uy: p.y, cat: catOf[i],
-    r: cell * (0.46 + Math.random() * 0.1),
-    rot: Math.random() * Math.PI,
-    spin: (Math.random() - .5) * 0.5,
-    delay: T_POUR + (1 - (p.y - OY)) * POUR + Math.random() * 450,
-    x: 0, y: 0, vx: 0, vy: 0, started: false, fall: false,
-    v: Math.floor(Math.random() * 6), show: catOf[i], sc: 1, sp: 0.16 + Math.random() * 0.18   // zobrazený výrobek, měřítko při proměně, rychlost
+    x: p.x, y: p.y, cat: catOf[i], show: catOf[i], v: Math.floor(Math.random() * 6),
+    tilt: (Math.random() - .5) * 0.5,                         // mírné natočení, žádné točení
+    delay: T_POUR + p.row * ROW_GAP + Math.random() * 160,    // spodní řady první
+    sc: 1, swapAt: 0, from: -1
   }));
-  const T_CLOSE = Math.max(...G.map(g => g.delay)) + 450, CLOSE = 750;
+  const T_CLOSE = T_POUR + maxRow * ROW_GAP + 160 + FALL + 100, CLOSE = 700;
 
-  let S = 0, dpr = 1, t0 = 0, mouse = null, active = -1, running = false, done = false, seen = false;
-  let bottom = 0, lid = 0, thudded = false;
+  let S = 0, dpr = 1, t0 = 0, running = false, done = false, seen = false;
+  let bottom = 0, lid = 0, active = -1, morphT0 = 0;
+  const easeOut = k => 1 - Math.pow(1 - k, 3);
+  const clamp01 = k => Math.max(0, Math.min(1, k));
+  // dopad s malým odrazem
+  const drop = k => k < .8 ? easeOut(k / .8) : 1 - Math.sin((k - .8) / .2 * Math.PI) * 0.035;
+
+  let sprites = {};
+  function buildSprites() {
+    const px = Math.ceil(2 * SPRITE_PAD * U * S * dpr);
+    sprites = {};
+    new Set(KINDS.flat()).forEach(kind => {
+      const c = document.createElement('canvas');
+      c.width = c.height = px;
+      const x = c.getContext('2d');
+      x.setTransform(U * S * dpr, 0, 0, U * S * dpr, px / 2, px / 2);
+      ICONS[kind](x);
+      sprites[kind] = c;
+    });
+  }
 
   function size() {
     const w = cv.clientWidth;
     if (!w) return;
     dpr = Math.min(2, devicePixelRatio || 1);
     S = w;
-    cv.width = Math.round(w * dpr); cv.height = Math.round(w * HR * dpr);
+    cv.width = Math.round(w * dpr); cv.height = Math.round(w * dpr);
     buildSprites();
-    if (reduce || done) G.forEach(g => { g.x = g.ux * S; g.y = g.uy * S; g.started = true; });
-    draw(); kick();
+    draw(done || reduce ? 1e9 : (t0 ? performance.now() - t0 : 0));
+    kick();
   }
-
-  const easeOut = k => 1 - Math.pow(1 - k, 3);
-  const clamp01 = k => Math.max(0, Math.min(1, k));
 
   function drawBottom() {
     if (bottom <= 0) return;
-    const s = S, c = C * s, cy = (OY + C) * s, r = R * s, lo = M * s, hi = (OY + 1 - M) * s;
+    const s = S, c = C * s, r = R * s, lo = M * s, hi = (1 - M) * s;
     ctx.beginPath();
     ctx.moveTo(c - r * Math.cos(ALPHA), HY * s);
-    ctx.arc(c, cy, r, Math.PI + ALPHA, Math.PI, true);   // levý bok dolů
-    ctx.lineTo(lo, hi);                                  // levá hrana
-    ctx.lineTo(c, hi);                                   // dno
-    ctx.arc(c, cy, r, Math.PI / 2, -ALPHA, true);        // pravý bok nahoru k pantu
+    ctx.arc(c, c, r, Math.PI + ALPHA, Math.PI, true);
+    ctx.lineTo(lo, hi);
+    ctx.lineTo(c, hi);
+    ctx.arc(c, c, r, Math.PI / 2, -ALPHA, true);
     const per = BOTTOM_LEN * s;
     ctx.setLineDash([per * bottom, per]);
     ctx.stroke();
     ctx.setLineDash([]);
   }
-
-  // vršek obrysu: dokreslí se jako pokračování linky od pravého okraje přes vršek doleva
   function drawLid() {
     if (lid <= 0) return;
     const s = S, per = LID_LEN * s;
     ctx.beginPath();
-    ctx.arc(C * s, (OY + C) * s, R * s, -ALPHA, -Math.PI + ALPHA, true);
+    ctx.arc(C * s, C * s, R * s, -ALPHA, -Math.PI + ALPHA, true);
     ctx.setLineDash([per * lid, per]);
     ctx.stroke();
     ctx.setLineDash([]);
   }
 
-  /* každý druh výrobku se vykreslí jen jednou do vlastního plátna (sprite),
-     v animaci se pak jen kopíruje – kreslení stínovaných cest 144× za snímek by bylo pomalé */
-  const SPRITE_PAD = 1.35;                       // ilustrace přesahují jednotkový kruh (nať, pára, provázky)
-  const K_SCALE = 1.1;                           // poloměr ilustrace vůči velikosti kousku
-  let sprites = {}, KMAX = 1;
-  function buildSprites() {
-    KMAX = cell * 0.56 * S * K_SCALE;            // největší možný kousek (r ≤ 0.56 · cell)
-    const px = Math.ceil(2 * SPRITE_PAD * KMAX * dpr);
-    sprites = {};
-    new Set(KINDS.flat()).forEach(kind => {
-      const c = document.createElement('canvas');
-      c.width = c.height = px;
-      const x = c.getContext('2d');
-      x.setTransform(KMAX * dpr, 0, 0, KMAX * dpr, px / 2, px / 2);
-      ICONS[kind](x);
-      sprites[kind] = c;
-    });
+  // proměna při najetí na skupinu: vlna zleva doprava, kousek se zmenší, vymění a naroste
+  const MORPH = 260, WAVE = 380;
+  function morphScale(g, now) {
+    if (g.from < 0) return 1;
+    const k = clamp01((now - g.swapAt) / (2 * MORPH));
+    if (k >= .5 && g.show === g.from) g.show = g.to;
+    if (k >= 1) { g.from = -1; return 1; }
+    return k < .5 ? 1 - easeOut(k * 2) : easeOut((k - .5) * 2);
   }
 
-  function draw() {
+  function draw(t, now = performance.now()) {
     if (!S) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, S, S * HR);
-    const W = 2 * SPRITE_PAD * KMAX;
+    ctx.clearRect(0, 0, S, S);
+    const W = 2 * SPRITE_PAD * U * S;
+    let busy = false;
     for (const g of G) {
-      if (!g.started || g.sc < 0.02) continue;
-      const kind = kindOf(g.show, g.v), up = UPRIGHT[kind];   // miska, houba, mrkev zůstávají zhruba nastojato
-      const a = up !== undefined ? (g.rot / Math.PI - .5) * 2 * up : g.rot * 2;
-      const m = g.r * S * K_SCALE * g.sc / KMAX * dpr;
-      const cs = Math.cos(a) * m, sn = Math.sin(a) * m;
-      ctx.setTransform(cs, sn, -sn, cs, g.x * dpr, g.y * dpr);
+      const k = clamp01((t - g.delay) / FALL);
+      if (k <= 0) { busy = true; continue; }
+      if (k < 1) busy = true;
+      const y = (-0.08 + (g.y + 0.08) * drop(k)) * S;   // pád shora na své místo
+      const sc = morphScale(g, now);
+      if (g.from >= 0) busy = true;
+      if (sc < 0.02) continue;
+      const kind = kindOf(g.show, g.v), up = UPRIGHT[kind];
+      const a = up !== undefined ? g.tilt * up : g.tilt * 2;
+      const cs = Math.cos(a) * sc * dpr, sn = Math.sin(a) * sc * dpr;
+      ctx.setTransform(cs, sn, -sn, cs, g.x * S * dpr, y * dpr);
       ctx.drawImage(sprites[kind], -W / 2, -W / 2, W, W);
     }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -884,87 +875,48 @@
     ctx.strokeStyle = RED;
     ctx.lineJoin = 'miter';
     ctx.lineCap = 'butt';
+    bottom = easeOut(clamp01(t / T_BOTTOM));
+    const lk = clamp01((t - T_CLOSE) / CLOSE);
+    lid = lk < .5 ? 4 * lk * lk * lk : 1 - Math.pow(-2 * lk + 2, 3) / 2;
     drawBottom();
     drawLid();
+    return busy || lk < 1;
   }
 
   function step(now) {
     if (!t0) t0 = now;
-    const t = now - t0;
-    bottom = easeOut(clamp01(t / T_BOTTOM));
-    const lk = clamp01((t - T_CLOSE) / CLOSE);
-    lid = lk < .5 ? 4 * lk * lk * lk : 1 - Math.pow(-2 * lk + 2, 3) / 2;   // ease-in-out
-
-    // obrys se uzavřel: zrnka se jemně usadí
-    if (lid >= 1 && !thudded) {
-      thudded = true;
-      G.forEach(g => { g.vy += S * (0.001 + Math.random() * 0.002); g.vx += S * (Math.random() - .5) * 0.002; });
+    const t = done ? 1e9 : now - t0;
+    const busy = draw(t, now);
+    if (!busy) {
+      running = false;
+      if (!done) { done = true; jar.classList.add('settled'); }
+      return;
     }
-
-    let energy = 0;
-    for (const g of G) {
-      const tx = g.ux * S, ty = g.uy * S;
-      if (!g.started) {
-        if (t < g.delay) { energy += 1; continue; }
-        g.started = true; g.fall = true;
-        g.x = tx + (Math.random() - .5) * S * 0.1;
-        g.y = -S * (0.02 + Math.random() * 0.12);
-        g.vy = S * 0.006; g.vx = 0;
-      }
-      if (g.fall) {
-        // volný pád do pixly
-        g.vy += S * 0.0026;
-        g.vx += (tx - g.x) * 0.03; g.vx *= 0.9;
-        g.x += g.vx; g.y += g.vy;
-        g.rot += g.spin * 0.25;
-        if (g.y >= ty) { g.y = ty; g.fall = false; g.vy *= -0.18; }
-        energy += 1;
-        continue;
-      }
-      if (mouse) {
-        const dx = g.x - mouse.x, dy = g.y - mouse.y, Rr = S * 0.11;
-        const d2 = dx * dx + dy * dy;
-        if (d2 < Rr * Rr) {
-          const d = Math.sqrt(d2) || 1, f = (1 - d / Rr) * S * 0.006;
-          g.vx += dx / d * f; g.vy += dy / d * f;
-        }
-      }
-      g.vx += (tx - g.x) * 0.045; g.vy += (ty - g.y) * 0.045;
-      g.vx *= 0.8; g.vy *= 0.8;
-      g.x += g.vx; g.y += g.vy;
-      g.rot += g.spin * Math.min(1, Math.abs(g.vx) + Math.abs(g.vy)) * 0.1;
-      // proměna: kousek se zmenší, vymění výrobek a zase naroste
-      const want = active < 0 ? g.cat : active;
-      const tsc = g.show === want ? 1 : 0;
-      g.sc += (tsc - g.sc) * g.sp;
-      if (g.show !== want && g.sc < 0.06) { g.show = want; g.rot = Math.random() * Math.PI; }
-      energy += Math.abs(g.vx) + Math.abs(g.vy) + Math.abs(tsc - g.sc) * 10;
-    }
-    draw();
-    if (thudded && energy < 0.4 && !mouse) { running = false; done = true; jar.classList.add('settled'); return; }
     requestAnimationFrame(step);
   }
-  function kick() { if (!running && !reduce && seen) { running = true; requestAnimationFrame(step); } }
+  function kick() { if (!running && seen && !reduce) { running = true; requestAnimationFrame(step); } }
 
-  function reducedUpdate() {
-    G.forEach(g => { g.show = active < 0 ? g.cat : active; g.sc = 1; });
-    draw();
+  function setActive(i) {
+    if (i === active) return;
+    active = i;
+    const want = g => (active < 0 ? g.cat : active);
+    if (reduce || !done) { G.forEach(g => { g.show = want(g); g.from = -1; }); if (reduce || done) draw(1e9); return; }
+    const now = performance.now();
+    G.forEach(g => {
+      const target = want(g);
+      if (g.show === target && g.from < 0) return;
+      g.from = g.show; g.to = target;
+      g.swapAt = now + g.x * WAVE;
+    });
+    kick();
   }
 
-  if (reduce) { bottom = 1; lid = 1; thudded = true; jar.classList.add('settled'); }
+  if (reduce) { done = true; jar.classList.add('settled'); }
   new ResizeObserver(size).observe(cv);
   new IntersectionObserver((es, io) => {
     if (es.some(e => e.isIntersecting)) { seen = true; io.disconnect(); kick(); }
   }, { threshold: 0.3 }).observe(cv);
 
-  cv.addEventListener('pointermove', e => {
-    if (reduce || e.pointerType === 'touch' || !done) return;
-    const r = cv.getBoundingClientRect();
-    mouse = { x: (e.clientX - r.left) * S / r.width, y: (e.clientY - r.top) * S / r.width };
-    kick();
-  });
-  cv.addEventListener('pointerleave', () => { if (mouse) { mouse = null; kick(); } });
-  const setActive = i => { active = i; reduce ? reducedUpdate() : (done ? kick() : null); };
   catsEl.addEventListener('pointerover', e => { const a = e.target.closest('[data-cat]'); if (a) setActive(+a.dataset.cat); });
   catsEl.addEventListener('pointerleave', () => setActive(-1));
   catsEl.addEventListener('focusin', e => { const a = e.target.closest('[data-cat]'); if (a) setActive(+a.dataset.cat); });

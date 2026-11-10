@@ -108,7 +108,7 @@ button{font:inherit;color:inherit}
 @keyframes rise{to{opacity:1;transform:none}}
 
 .jar{width:100%;max-width:560px;justify-self:end}
-.jar canvas{width:100%;aspect-ratio:1;touch-action:pan-y;cursor:crosshair}
+.jar canvas{width:100%;aspect-ratio:1;touch-action:pan-y}
 .jar figcaption{margin-top:0;padding-left:3.5%;font-size:15px;color:var(--muted);max-width:34ch;opacity:0;transition:opacity .8s}
 .jar.settled figcaption{opacity:1}
 
