@@ -679,6 +679,7 @@
     const cap = document.getElementById('gCap');
     const gal = document.getElementById('gallery');
     const playBtn = document.getElementById('gPlay');
+    if (!gal) return;                                   // stránka bez galerie (verze 2)
     let cur = 0, timer = null;
     // důvody pozastavení se sčítají: myš nad galerií, fokus uvnitř, skrytá záložka, mimo obrazovku, ručně
     const hold = new Set(reduce ? ['user'] : []);

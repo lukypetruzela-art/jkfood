@@ -76,3 +76,7 @@ Při spuštění:
 
 Co AI viditelnost posune nejvíc dlouhodobě: konkrétní popisy výrobků, zmínky o firmě na jiných
 webech (oborové katalogy, Firmy.cz, články, reference odběratelů) a aktuální Časté dotazy.
+
+## Verze 2 (návrh podle zákazníka) – složka `v2/`
+- Generuje ji `python3 tools/build.py` z hotových stránek verze 1 + `tools/v2_home.html` a `assets/v2.css`.
+- Má `noindex` (návrh k porovnání). Pokud se zvolí jako hlavní, přesune se do kořene a `noindex` se odstraní.
