@@ -756,13 +756,13 @@ def build_ai(items):
 # ---------------------------------------------------------------- verze 2 (návrh zákazníka) – složka v2/
 def v2_img(name, alt, cls, loading):
     """Fotka verze 2: img/v2/<name>.jpg (nebo .webp), když existuje; jinak zástupná plocha s názvem souboru.
-    Úvodní fotka má dočasnou náhradu z návrhu zákazníka."""
+"""
     for ext in ("webp", "jpg"):
         f = ROOT / "img" / "v2" / f"{name}.{ext}"
         if f.exists():
             break
     else:
-        f = ROOT / "img" / "v2" / "hero-docasne.jpg" if name == "hero" else None
+        f = None
     if f:
         prio = ' fetchpriority="high"' if loading == "eager" else ' loading="lazy"'
         return f'<img class="{cls}" src="img/v2/{f.name}" alt="{esc(alt)}"{prio} decoding="async">'
