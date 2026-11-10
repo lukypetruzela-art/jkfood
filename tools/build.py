@@ -946,6 +946,8 @@ def photo(src, alt, cls="v2-photo"):
 def v2_chrome(html, own):
     """Společné úpravy všech stránek verze 2: noindex, přepínač verzí, odkazy na obory, cesty o úroveň výš."""
     html = html.replace("<body>", '<body class="v2">', 1)
+    # adresa /v2 bez lomítka by posílala relativní odkazy do kořene webu → doplnit lomítko
+    html = html.replace("<head>", "<head>\n<script>if(/\\/v2$/.test(location.pathname))location.replace(location.pathname+'/'+location.search+location.hash)</script>", 1)
     html = re.sub(r'<meta name="robots" content="[^"]*">', '<meta name="robots" content="noindex, nofollow">', html)
     html = re.sub(r"<title>(.*?)</title>", r"<title>\1 · verze 2</title>", html, count=1)
     html = html.replace("</body>", '<a class="vswitch" href="../index.html">Verze 2 · přepnout na verzi 1</a>\n</body>', 1)
