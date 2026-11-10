@@ -753,72 +753,6 @@ def build_ai(items):
     (ROOT / "llms-full.txt").write_text("".join(full), encoding="utf-8")
 
 
-# ---------------------------------------------------------------- verze 2 (návrh zákazníka) – složka v2/
-def v2_img(name, alt, cls, loading):
-    """Fotka verze 2: img/v2/<name>.jpg (nebo .webp), když existuje; jinak zástupná plocha s názvem souboru.
-"""
-    for ext in ("webp", "jpg"):
-        f = ROOT / "img" / "v2" / f"{name}.{ext}"
-        if f.exists():
-            break
-    else:
-        f = None
-    if f:
-        prio = ' fetchpriority="high"' if loading == "eager" else ' loading="lazy"'
-        return f'<img class="{cls}" src="img/v2/{f.name}" alt="{esc(alt)}"{prio} decoding="async">'
-    return f'<span class="{cls} ph-empty" role="img" aria-label="{esc(alt)} – připravujeme fotografii" data-f="img/v2/{name}.jpg"></span>'
-
-
-def build_v2(v):
-    """Druhá vizuální verze webu podle návrhu zákazníka. Vzniká z hotových stránek verze 1
-    (obsah, katalog, formulář, data zůstávají společné) + nová úvodní sekce (tools/v2_home.html)
-    a styl assets/v2.css. Stránky mají noindex – jde o návrh k porovnání."""
-    out = ROOT / "v2"
-    out.mkdir(exist_ok=True)
-    files = ["index.html", "sortiment.html", "nas-tym.html", "kariera.html"] + [c["file"] for c in CATS]
-    css_v = hashlib.sha1((ROOT / "assets" / "v2.css").read_bytes()).hexdigest()[:8]
-
-    def relink(html):
-        def fix(m):
-            attr, u = m.group(1), m.group(2)
-            if re.match(r"(https?:|//|#|mailto:|tel:|data:|/|\.\./)", u):
-                return m.group(0)
-            base = u.split("#")[0].split("?")[0]
-            if "${" in u or base in files:
-                return m.group(0)
-            return f'{attr}="../{u}"'
-        return re.sub(r'\b(href|src|action)="([^"]*)"', fix, html)
-
-    def chrome(html, file):
-        html = html.replace("<body>", '<body class="v2">', 1)
-        html = re.sub(r'(<link rel="stylesheet" href="assets/styles\.css\?v=\w+">)',
-                      rf'\1\n<link rel="stylesheet" href="assets/v2.css?v={css_v}">', html, count=1)
-        html = re.sub(r'<meta name="robots" content="[^"]*">', '<meta name="robots" content="noindex, nofollow">', html)
-        html = re.sub(r'<title>(.*?)</title>', r'<title>\1 · verze 2</title>', html, count=1)
-        head, rest = html.split("</header>", 1)
-        head = head.replace('<a class="btn btn-red" href="https://eshop.kostera.cz/" target="_blank" rel="noopener">E-shop <span class="ext" aria-hidden="true"></span></a>',
-                            '<a class="btn btn-red" href="https://chut.kostera.cz/" target="_blank" rel="noopener">E-shop Chuť <span class="cart" aria-hidden="true"></span></a>')
-        html = head + "</header>" + rest
-        # přepínač verzí pro porovnání
-        html = html.replace("</body>", f'<a class="vswitch" href="../{file}">Verze 2 · přepnout na verzi 1</a>\n</body>', 1)
-        return relink(html)
-
-    for f in files:
-        html = (ROOT / f).read_text(encoding="utf-8")
-        if f == "index.html":
-            video = re.search(r"  <!-- VIDEO.*?</section>\n", html, re.S).group(0)
-            home = (ROOT / "tools" / "v2_home.html").read_text(encoding="utf-8")
-            tiles = "\n".join(
-                f'<li><a class="grain" href="{c["file"]}">{v2_img("kat-" + c["id"], c["name"], "ph", "lazy")}'
-                f'<span class="nm">{esc(c["name"])}</span><span class="arr" aria-hidden="true"></span></a></li>' for c in CATS)
-            home = re.sub(r"<!-- V2TILES:START -->.*?<!-- V2TILES:END -->", lambda m: tiles, home, flags=re.S)
-            home = re.sub(r"\{\{IMG:([\w-]+)\|([^|]*)\|([^|]*)\|(\w+)\}\}", lambda m: v2_img(*m.groups()), home)
-            a, b = html.index("  <!-- HERO + GALERIE -->"), html.index("  <!-- PRO FIRMY -->")
-            html = html[:a] + home + video + "\n" + html[b:]
-        (out / f).write_text(chrome(html, f), encoding="utf-8")
-    return files
-
-
 def build_sitemap(pages):
     urls = [("", "1.0")] + pages
     pairs = {"": "en/", "sortiment.html": "en/products.html", "nas-tym.html": "en/team.html"}
@@ -845,7 +779,6 @@ def main():
     pages += build_career(v)
     pages += build_en()
     build_ai(items)
-    build_v2(v)
     build_sitemap(pages)
     print(f"hotovo: {len(items)} výrobků, {len(pages)} stránek (sortiment, tým, kariéra), verze stylů {v}")
 
