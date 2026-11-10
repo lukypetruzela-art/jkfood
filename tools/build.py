@@ -754,6 +754,21 @@ def build_ai(items):
 
 
 # ---------------------------------------------------------------- verze 2 (návrh zákazníka) – složka v2/
+def v2_img(name, alt, cls, loading):
+    """Fotka verze 2: img/v2/<name>.jpg (nebo .webp), když existuje; jinak zástupná plocha s názvem souboru.
+    Úvodní fotka má dočasnou náhradu z návrhu zákazníka."""
+    for ext in ("webp", "jpg"):
+        f = ROOT / "img" / "v2" / f"{name}.{ext}"
+        if f.exists():
+            break
+    else:
+        f = ROOT / "img" / "v2" / "hero-docasne.jpg" if name == "hero" else None
+    if f:
+        prio = ' fetchpriority="high"' if loading == "eager" else ' loading="lazy"'
+        return f'<img class="{cls}" src="img/v2/{f.name}" alt="{esc(alt)}"{prio} decoding="async">'
+    return f'<span class="{cls} ph-empty" role="img" aria-label="{esc(alt)} – připravujeme fotografii" data-f="img/v2/{name}.jpg"></span>'
+
+
 def build_v2(v):
     """Druhá vizuální verze webu podle návrhu zákazníka. Vzniká z hotových stránek verze 1
     (obsah, katalog, formulář, data zůstávají společné) + nová úvodní sekce (tools/v2_home.html)
@@ -794,9 +809,10 @@ def build_v2(v):
             video = re.search(r"  <!-- VIDEO.*?</section>\n", html, re.S).group(0)
             home = (ROOT / "tools" / "v2_home.html").read_text(encoding="utf-8")
             tiles = "\n".join(
-                f'<li><a href="{c["file"]}" data-cat="{i}"><canvas data-ic="{i}" width="96" height="96" aria-hidden="true"></canvas>'
-                f'<span class="nm">{esc(c["name"])}</span><span class="arr" aria-hidden="true"></span></a></li>' for i, c in enumerate(CATS))
+                f'<li><a class="grain" href="{c["file"]}">{v2_img("kat-" + c["id"], c["name"], "ph", "lazy")}'
+                f'<span class="nm">{esc(c["name"])}</span><span class="arr" aria-hidden="true"></span></a></li>' for c in CATS)
             home = re.sub(r"<!-- V2TILES:START -->.*?<!-- V2TILES:END -->", lambda m: tiles, home, flags=re.S)
+            home = re.sub(r"\{\{IMG:([\w-]+)\|([^|]*)\|([^|]*)\|(\w+)\}\}", lambda m: v2_img(*m.groups()), home)
             a, b = html.index("  <!-- HERO + GALERIE -->"), html.index("  <!-- PRO FIRMY -->")
             html = html[:a] + home + video + "\n" + html[b:]
         (out / f).write_text(chrome(html, f), encoding="utf-8")

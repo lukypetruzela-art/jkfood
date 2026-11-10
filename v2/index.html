@@ -35,7 +35,7 @@
 <link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/styles.css?v=606851d2">
-<link rel="stylesheet" href="../assets/v2.css?v=3ab12a18">
+<link rel="stylesheet" href="../assets/v2.css?v=ec86719c">
 </head>
 <body class="v2">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -67,8 +67,8 @@
 
 <main id="obsah">
   <!-- V2: HERO -->
-  <section class="v2-hero" aria-labelledby="hero-title">
-    <div class="v2-hero-photo" role="img" aria-label="Výroba koření – ilustrační fotografie"></div>
+  <section class="v2-hero grain" aria-labelledby="hero-title">
+    <img class="v2-hero-photo" src="../img/v2/hero-docasne.jpg" alt="Výroba koření ve Větřkovicích" fetchpriority="high" decoding="async">
     <div class="wrap v2-hero-in">
       <p class="v2-kicker lift">Dáváme jídlu chuť. Od roku&nbsp;1996.</p>
       <h1 id="hero-title" class="v2-h1 lift d1"><span>Vyvíjíme.</span> <span>Vyrábíme.</span> <span class="red">Dodáváme.</span></h1>
@@ -85,14 +85,17 @@
     <div class="wrap">
       <ul class="pillars">
         <li><a class="pillar p-ind" href="#firmy">
+          <span class="ph ph-empty" role="img" aria-label="Výrobní hala – připravujeme fotografii" data-f="img/v2/pilir-prumysl.jpg"></span>
           <span class="p-ic" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M4 27V14l7 4v-4l7 4v-4l7 4V6h3v21z M4 27h24 M9 22h2 M14 22h2 M19 22h2 M24 22h2"/><path d="M25 6c0-2 1-3 2-4"/></svg></span>
           <h2>Průmysl</h2><p>Kořenicí, kombi a&nbsp;technologické směsi pro masnou, pekárenskou i&nbsp;mlékárenskou výrobu.</p>
           <span class="p-go arr" aria-hidden="true"></span></a></li>
         <li><a class="pillar p-dev" href="#na-miru">
+          <span class="ph ph-empty" role="img" aria-label="Vývoj kořenicích směsí – připravujeme fotografii" data-f="img/v2/pilir-vyvoj.jpg"></span>
           <span class="p-ic" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M12 3h8 M13 3v9L6 25a2 2 0 0 0 2 3h16a2 2 0 0 0 2-3l-7-13V3"/><path d="M9 20h14"/><circle cx="14" cy="24" r="1"/><circle cx="19" cy="23" r="1.2"/></svg></span>
           <h2>Vývoj na míru</h2><p>Od nápadu přes recepturu a&nbsp;zkoušku ve vaší výrobě až po pravidelné dodávky.</p>
           <span class="p-go arr" aria-hidden="true"></span></a></li>
         <li><a class="pillar p-own" href="sortiment.html">
+          <span class="ph ph-empty" role="img" aria-label="Výrobky J.K.FOOD – připravujeme fotografii" data-f="img/v2/pilir-produkty.jpg"></span>
           <span class="p-ic" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M6 26C6 12 16 5 27 5c0 11-7 21-21 21z"/><path d="M6 26 19 13"/></svg></span>
           <h2>Vlastní produkty</h2><p>Koření, směsi, sušená zelenina, bujóny i&nbsp;bramborové výrobky pro gastro, jídelny i&nbsp;domácnosti.</p>
           <span class="p-go arr" aria-hidden="true"></span></a></li>
@@ -111,26 +114,35 @@
   <section class="v2-cats" id="sortiment" aria-labelledby="sort-title">
     <div class="wrap">
       <h2 class="v2-title" id="sort-title">Naše produktové kategorie</h2>
-      <p class="v2-sub">Přes 490 výrobků v&nbsp;devíti skupinách. Najeďte na skupinu a&nbsp;pixla se naplní jejími výrobky.</p>
-      <div class="v2-cats-grid">
-        <ul class="tiles" id="cats">
-<li><a href="sortiment-testoviny.html" data-cat="0"><canvas data-ic="0" width="96" height="96" aria-hidden="true"></canvas><span class="nm">Těstoviny</span><span class="arr" aria-hidden="true"></span></a></li>
-<li><a href="sortiment-koreni-jednodruhove.html" data-cat="1"><canvas data-ic="1" width="96" height="96" aria-hidden="true"></canvas><span class="nm">Koření jednodruhové</span><span class="arr" aria-hidden="true"></span></a></li>
-<li><a href="sortiment-korenici-smesi.html" data-cat="2"><canvas data-ic="2" width="96" height="96" aria-hidden="true"></canvas><span class="nm">Kořenicí směsi</span><span class="arr" aria-hidden="true"></span></a></li>
-<li><a href="sortiment-susena-zelenina.html" data-cat="3"><canvas data-ic="3" width="96" height="96" aria-hidden="true"></canvas><span class="nm">Sušená zelenina</span><span class="arr" aria-hidden="true"></span></a></li>
-<li><a href="sortiment-smesi-pro-masny-prumysl.html" data-cat="4"><canvas data-ic="4" width="96" height="96" aria-hidden="true"></canvas><span class="nm">Směsi pro masný průmysl</span><span class="arr" aria-hidden="true"></span></a></li>
-<li><a href="sortiment-susene-houby-a-plody.html" data-cat="5"><canvas data-ic="5" width="96" height="96" aria-hidden="true"></canvas><span class="nm">Sušené houby a plody</span><span class="arr" aria-hidden="true"></span></a></li>
-<li><a href="sortiment-bujony-polevky-omacky.html" data-cat="6"><canvas data-ic="6" width="96" height="96" aria-hidden="true"></canvas><span class="nm">Bujóny, polévky, omáčky</span><span class="arr" aria-hidden="true"></span></a></li>
-<li><a href="sortiment-bramborove-vyrobky.html" data-cat="7"><canvas data-ic="7" width="96" height="96" aria-hidden="true"></canvas><span class="nm">Bramborové výrobky</span><span class="arr" aria-hidden="true"></span></a></li>
-<li><a href="sortiment-skroby-a-dalsi.html" data-cat="8"><canvas data-ic="8" width="96" height="96" aria-hidden="true"></canvas><span class="nm">Škroby a další</span><span class="arr" aria-hidden="true"></span></a></li>
-        </ul>
-        <div class="v2-jar">
-          <figure class="jar" id="jar">
-            <canvas id="grains" role="img" aria-label="Tvar loga J.K.FOOD vyplněný ilustracemi našich výrobků."></canvas>
-            <figcaption>Ochutnávka z&nbsp;našeho sortimentu.</figcaption>
-          </figure>
-          <a class="btn btn-red v2-all" href="sortiment.html">Celý sortiment <span class="arr" aria-hidden="true"></span></a>
-        </div>
+      <p class="v2-sub">Přes 490 výrobků v&nbsp;devíti skupinách – pro průmysl, jídelny, gastro i&nbsp;domácnosti.</p>
+      <ul class="tiles">
+<li><a class="grain" href="sortiment-testoviny.html"><span class="ph ph-empty" role="img" aria-label="Těstoviny – připravujeme fotografii" data-f="img/v2/kat-testoviny.jpg"></span><span class="nm">Těstoviny</span><span class="arr" aria-hidden="true"></span></a></li>
+<li><a class="grain" href="sortiment-koreni-jednodruhove.html"><span class="ph ph-empty" role="img" aria-label="Koření jednodruhové – připravujeme fotografii" data-f="img/v2/kat-koreni.jpg"></span><span class="nm">Koření jednodruhové</span><span class="arr" aria-hidden="true"></span></a></li>
+<li><a class="grain" href="sortiment-korenici-smesi.html"><span class="ph ph-empty" role="img" aria-label="Kořenicí směsi – připravujeme fotografii" data-f="img/v2/kat-smesi.jpg"></span><span class="nm">Kořenicí směsi</span><span class="arr" aria-hidden="true"></span></a></li>
+<li><a class="grain" href="sortiment-susena-zelenina.html"><span class="ph ph-empty" role="img" aria-label="Sušená zelenina – připravujeme fotografii" data-f="img/v2/kat-zelenina.jpg"></span><span class="nm">Sušená zelenina</span><span class="arr" aria-hidden="true"></span></a></li>
+<li><a class="grain" href="sortiment-smesi-pro-masny-prumysl.html"><span class="ph ph-empty" role="img" aria-label="Směsi pro masný průmysl – připravujeme fotografii" data-f="img/v2/kat-maso.jpg"></span><span class="nm">Směsi pro masný průmysl</span><span class="arr" aria-hidden="true"></span></a></li>
+<li><a class="grain" href="sortiment-susene-houby-a-plody.html"><span class="ph ph-empty" role="img" aria-label="Sušené houby a plody – připravujeme fotografii" data-f="img/v2/kat-houby.jpg"></span><span class="nm">Sušené houby a plody</span><span class="arr" aria-hidden="true"></span></a></li>
+<li><a class="grain" href="sortiment-bujony-polevky-omacky.html"><span class="ph ph-empty" role="img" aria-label="Bujóny, polévky, omáčky – připravujeme fotografii" data-f="img/v2/kat-polevky.jpg"></span><span class="nm">Bujóny, polévky, omáčky</span><span class="arr" aria-hidden="true"></span></a></li>
+<li><a class="grain" href="sortiment-bramborove-vyrobky.html"><span class="ph ph-empty" role="img" aria-label="Bramborové výrobky – připravujeme fotografii" data-f="img/v2/kat-brambory.jpg"></span><span class="nm">Bramborové výrobky</span><span class="arr" aria-hidden="true"></span></a></li>
+<li><a class="grain" href="sortiment-skroby-a-dalsi.html"><span class="ph ph-empty" role="img" aria-label="Škroby a další – připravujeme fotografii" data-f="img/v2/kat-skroby.jpg"></span><span class="nm">Škroby a další</span><span class="arr" aria-hidden="true"></span></a></li>
+      </ul>
+      <div class="v2-all-wrap"><a class="btn btn-red" href="sortiment.html">Celý sortiment <span class="arr" aria-hidden="true"></span></a></div>
+    </div>
+  </section>
+
+  <!-- V2: VÝROBA – fotomozaika -->
+  <section class="v2-work" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="work-head">
+        <h2 class="v2-title left" id="work-title">Poctivá práce ve Větřkovicích</h2>
+        <p>Suroviny přebíráme, melem, mícháme, balíme a&nbsp;rozvážíme sami. Žádní prostředníci – za každou várkou stojí naši lidé.</p>
+      </div>
+      <div class="work-grid">
+        <figure class="w1 grain"><span class="ph ph-empty" role="img" aria-label="Míchání kořenicích směsí – připravujeme fotografii" data-f="img/v2/vyroba-1.jpg"></span><figcaption>Míchání směsí</figcaption></figure>
+        <figure class="w2 grain"><span class="ph ph-empty" role="img" aria-label="Příjem a kontrola surovin – připravujeme fotografii" data-f="img/v2/vyroba-2.jpg"></span><figcaption>Příjem surovin</figcaption></figure>
+        <figure class="w3 grain"><span class="ph ph-empty" role="img" aria-label="Balení ve velkém – připravujeme fotografii" data-f="img/v2/vyroba-3.jpg"></span><figcaption>Balení</figcaption></figure>
+        <figure class="w4 grain"><span class="ph ph-empty" role="img" aria-label="Sklad a expedice – připravujeme fotografii" data-f="img/v2/vyroba-4.jpg"></span><figcaption>Sklad a&nbsp;expedice</figcaption></figure>
+        <figure class="w5 grain"><span class="ph ph-empty" role="img" aria-label="Rozvoz vlastní dopravou – připravujeme fotografii" data-f="img/v2/vyroba-5.jpg"></span><figcaption>Vlastní doprava</figcaption></figure>
       </div>
     </div>
   </section>
@@ -390,7 +402,7 @@
 
   /* ---------- category rail + footer ---------- */
   // odkazy na skupiny jsou přímo v HTML (kvůli vyhledávačům), tady se jen vykreslí ikonky
-  const catsEl = document.getElementById('cats');
+  const catsEl = document.getElementById('cats') || document.createElement('ul');   // verze 2 legendu nemá
   catsEl.querySelectorAll('canvas[data-ic]').forEach(cv => {
     const px = cv.width, d = Math.min(2, devicePixelRatio || 1);
     cv.style.width = cv.style.height = px + 'px';
@@ -727,6 +739,7 @@
   })();
 
   const initGrains = () => {
+    if (!document.getElementById('grains')) return;     // stránka bez pixly (verze 2)
   /* ---------- grains: pixla s víčkem ----------
      1) vykreslí se spodek pixly (bez víčka)
      2) nasype se koření (zrnka padají a skládají se odspodu)

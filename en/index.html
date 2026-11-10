@@ -379,7 +379,7 @@
 
   /* ---------- category rail + footer ---------- */
   // odkazy na skupiny jsou přímo v HTML (kvůli vyhledávačům), tady se jen vykreslí ikonky
-  const catsEl = document.getElementById('cats');
+  const catsEl = document.getElementById('cats') || document.createElement('ul');   // verze 2 legendu nemá
   catsEl.querySelectorAll('canvas[data-ic]').forEach(cv => {
     const px = cv.width, d = Math.min(2, devicePixelRatio || 1);
     cv.style.width = cv.style.height = px + 'px';
@@ -716,6 +716,7 @@
   })();
 
   const initGrains = () => {
+    if (!document.getElementById('grains')) return;     // stránka bez pixly (verze 2)
   /* ---------- grains: pixla s víčkem ----------
      1) vykreslí se spodek pixly (bez víčka)
      2) nasype se koření (zrnka padají a skládají se odspodu)
