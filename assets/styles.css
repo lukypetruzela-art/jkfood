@@ -650,8 +650,8 @@ form.q[hidden],.q-done[hidden]{display:none}
 .vhero-lead{margin-top:clamp(20px,2vw,28px);max-width:54ch;font-size:clamp(17px,1.35vw,20px);color:rgba(255,255,255,.78)}
 .vhero-lead strong{display:block;margin-bottom:6px;color:#fff;font-weight:600;font-size:1.08em}
 .vhero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(28px,3vw,40px)}
-.btn-ghost{border-color:rgba(255,255,255,.7);color:#fff}
-.btn-ghost:hover{background:#fff;color:var(--ink);border-color:#fff}
+.vhero .btn-ghost{border-color:rgba(255,255,255,.7)}
+.vhero .btn-ghost:hover{color:var(--ink);border-color:#fff}
 /* karty pilířů najedou do fotky */
 .v2 .pillars{position:relative;z-index:2;margin-top:clamp(-120px,-9vw,-72px)}
 .v2 .pil{box-shadow:0 24px 48px -24px rgba(0,0,0,.45)}
@@ -667,3 +667,38 @@ form.q[hidden],.q-done[hidden]{display:none}
   .v2 .pillars{margin-top:-72px}
 }
 @media (prefers-reduced-motion:reduce){.vhero-bg img{animation:none}}
+/* verze 2: sortiment bez ilustrací */
+.vsort{padding:clamp(88px,11vw,160px) 0}
+.vsort-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(40px,6vw,104px);align-items:start}
+.vsort-side .btn{margin-top:32px}
+.vsort-ph{margin-top:clamp(40px,4vw,56px);max-width:520px;aspect-ratio:1;border-radius:50% 50% 50% 0;overflow:hidden;background:var(--blush)}
+.vsort-ph img{width:100%;height:100%;object-fit:cover}
+.vsort-list{border-top:1px solid var(--ink)}
+.vsort-list a{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"nm go" "ex go" "n go";column-gap:24px;padding:22px 4px;border-bottom:1px solid var(--line);text-decoration:none;transition:background-color .25s,padding .35s var(--ease)}
+.vs-nm{grid-area:nm;font-family:var(--font-head);font-size:clamp(22px,2vw,28px);font-weight:600;letter-spacing:-.02em;line-height:1.15;transition:color .2s}
+.vs-ex{grid-area:ex;margin-top:4px;font-size:16px;color:var(--muted)}
+.vs-n{grid-area:n;margin-top:8px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red)}
+.vs-go{grid-area:go;align-self:center;width:44px;height:44px;border-radius:var(--drop);border:1.5px solid var(--line);position:relative;transition:background-color .25s,border-color .25s,transform .35s var(--ease)}
+.vs-go::after{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:translate(-65%,-50%) rotate(45deg)}
+.vsort-list a:hover{background:var(--blush);padding-left:16px;padding-right:16px}
+.vsort-list a:hover .vs-nm{color:var(--red)}
+.vsort-list a:hover .vs-go{background:var(--red);border-color:var(--red);color:#fff;transform:translateX(4px)}
+@media (max-width:900px){.vsort-grid{grid-template-columns:1fr}.vsort-ph{display:none}.vsort-side{position:static}}
+@media (prefers-reduced-motion:reduce){.vsort-list a,.vs-go{transition:none}}
+.vsort-side{position:sticky;top:110px}
+/* verze 2: záložky s odkazem na obor, e-shop nenápadně, stránky oborů */
+.panel-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.panel-btns .btn{margin-top:0}
+.vshop{border-top:1px solid var(--line)}
+.vshop .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding-top:28px;padding-bottom:28px}
+.vshop p{font-size:16px;color:var(--muted)}
+.vshop b{color:var(--ink);font-weight:600}
+.vshop a{font-weight:600;color:var(--red);text-decoration:none;white-space:nowrap}
+.vshop a:hover{text-decoration:underline;text-underline-offset:4px}
+.obor-sec{margin-top:clamp(48px,6vw,80px)}
+.obor-sec:first-child{margin-top:0}
+.obor-h{font-size:clamp(26px,2.6vw,36px);line-height:1.1;font-weight:600;letter-spacing:-.02em;margin-bottom:24px}
+.obor-offer li,.obor-steps li{background:var(--blush)}
+.obor-cats-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.rail-mini{font-weight:600;color:var(--red);text-decoration:none}
+.rail-mini:hover{text-decoration:underline;text-underline-offset:4px}
