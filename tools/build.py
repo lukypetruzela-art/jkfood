@@ -587,7 +587,7 @@ def build_en():
             else:
                 new = "../" + u
             return f'{attr}="{new}"'
-        return re.sub(r'\b(href|src|action)="([^"]*)"', fix, html)
+        return re.sub(r'\b(href|src|srcset|action)="([^"]*)"', fix, html)
 
     def meta(html, title, desc, path_en, path_cs, graph):
         html = re.sub(r"<title>.*?</title>\n?", "", html, flags=re.S)

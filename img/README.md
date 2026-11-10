@@ -4,7 +4,7 @@
 
 | Soubor | Co na fotce |
 |---|---|
-| `hero-1.jpg` | Výroba ve Větřkovicích |
+| `hero-1.jpg` + `.webp` | Výroba kořenicích směsí (vložena, generovaná) |
 | `hero-2.jpg` | Koření a kořenicí směsi |
 | `hero-3.jpg` | Sušená zelenina a houby |
 | `hero-4.jpg` | Hotová jídla z našich surovin |
