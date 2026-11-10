@@ -628,3 +628,42 @@ form.q[hidden],.q-done[hidden]{display:none}
 .pil.has-img:hover .pil-bg{transform:scale(1.05)}
 .pil.has-img p{color:rgba(255,255,255,.9)}
 @media (prefers-reduced-motion:reduce){.pil-bg{transition:none}.pil.has-img:hover .pil-bg{transform:none}}
+
+/* ---------- VERZE 2: velká úvodní fotka ---------- */
+.vhero{position:relative;isolation:isolate;overflow:hidden;background:#140F0E;color:#fff;min-height:min(calc(100svh - 84px),860px);display:flex;align-items:center;padding:clamp(56px,6vw,96px) 0 clamp(140px,12vw,180px)}
+.vhero-bg{position:absolute;inset:0;z-index:-3}
+.vhero-bg img{width:100%;height:100%;object-fit:cover;object-position:70% 55%;animation:vzoom 14s var(--ease) both}
+@keyframes vzoom{from{transform:scale(1.08)}to{transform:scale(1)}}
+/* rozmazání jen pod textem – postupně do ztracena */
+.vhero-blur{position:absolute;inset:0;z-index:-2;-webkit-backdrop-filter:blur(9px) saturate(.8);backdrop-filter:blur(9px) saturate(.8);
+  -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 32%,transparent 62%);mask-image:linear-gradient(90deg,#000 0%,#000 32%,transparent 62%)}
+/* ztmavení: vlevo kvůli čitelnosti, vpravo do tmava, dole přechod pod karty */
+.vhero-shade{position:absolute;inset:0;z-index:-1;background:
+  linear-gradient(90deg,rgba(18,12,11,.86) 0%,rgba(18,12,11,.66) 38%,rgba(18,12,11,.34) 62%,rgba(18,12,11,.62) 100%),
+  linear-gradient(180deg,rgba(18,12,11,.25) 0%,rgba(18,12,11,0) 35%,rgba(18,12,11,.75) 100%)}
+.vhero-in{width:100%}
+.vhero-eyebrow{display:flex;align-items:center;gap:12px;font-family:var(--font-head);font-weight:600;font-size:clamp(14px,1.1vw,16px);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.85)}
+.vhero-eyebrow svg{width:28px;height:28px;color:#fff;flex:none}
+.vhero h1{margin-top:clamp(16px,1.6vw,24px);font-size:clamp(44px,7vw,108px);line-height:1.02;font-weight:700;letter-spacing:-.035em;text-transform:uppercase}
+.vhero h1 span{display:block}
+.vhero h1 .accent{color:#E3231B}
+.vhero-lead{margin-top:clamp(20px,2vw,28px);max-width:54ch;font-size:clamp(17px,1.35vw,20px);color:rgba(255,255,255,.78)}
+.vhero-lead strong{display:block;margin-bottom:6px;color:#fff;font-weight:600;font-size:1.08em}
+.vhero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(28px,3vw,40px)}
+.btn-ghost{border-color:rgba(255,255,255,.7);color:#fff}
+.btn-ghost:hover{background:#fff;color:var(--ink);border-color:#fff}
+/* karty pilířů najedou do fotky */
+.v2 .pillars{position:relative;z-index:2;margin-top:clamp(-120px,-9vw,-72px)}
+.v2 .pil{box-shadow:0 24px 48px -24px rgba(0,0,0,.45)}
+.vswitch{position:fixed;right:16px;bottom:16px;z-index:60;padding:10px 16px;border-radius:var(--drop);background:var(--ink);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.vswitch:hover{background:var(--red)}
+@media (max-width:760px){
+  .vhero{min-height:0;padding:56px 0 120px;align-items:flex-end}
+  .vhero-bg img{object-position:78% 50%}
+  .vhero-blur{-webkit-mask-image:linear-gradient(0deg,#000 0%,#000 55%,transparent 85%);mask-image:linear-gradient(0deg,#000 0%,#000 55%,transparent 85%)}
+  .vhero-shade{background:linear-gradient(180deg,rgba(18,12,11,.35) 0%,rgba(18,12,11,.7) 45%,rgba(18,12,11,.9) 100%)}
+  .vhero h1{font-size:clamp(40px,12vw,60px)}
+  .vswitch{font-size:12px;padding:8px 12px}
+  .v2 .pillars{margin-top:-72px}
+}
+@media (prefers-reduced-motion:reduce){.vhero-bg img{animation:none}}

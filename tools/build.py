@@ -774,6 +774,32 @@ def build_sitemap(pages):
     (ROOT / "sitemap.xml").write_text("\n".join(xml) + "\n", encoding="utf-8")
 
 
+def build_v2():
+    """Verze 2 k porovnání: liší se jen úvodní sekcí (tools/v2_hero.html) – jedna velká fotka.
+    Vzniká z hotové index.html; ostatní odkazy vedou na stránky verze 1. Má noindex a není v sitemap."""
+    out = ROOT / "v2"
+    out.mkdir(exist_ok=True)
+    html = (ROOT / "index.html").read_text(encoding="utf-8")
+    a, b = html.index("  <!-- HERO + GALERIE -->"), html.index("  <!-- PILÍŘE -->")
+    html = html[:a] + (ROOT / "tools" / "v2_hero.html").read_text(encoding="utf-8") + html[b:]
+    # Průmysl v pilířích: jiná fotka, aby se neopakovala hala z úvodu
+    html = html.replace("img/pilir-prumysl", "img/v2/pilir-prumysl")
+    html = html.replace("<body>", '<body class="v2">', 1)
+    html = re.sub(r'<meta name="robots" content="[^"]*">', '<meta name="robots" content="noindex, nofollow">', html)
+    html = re.sub(r"<title>(.*?)</title>", r"<title>\1 · verze 2</title>", html, count=1)
+    html = html.replace("</body>", '<a class="vswitch" href="../index.html">Verze 2 · přepnout na verzi 1</a>\n</body>', 1)
+
+    def fix(m):
+        attr, u = m.group(1), m.group(2)
+        if re.match(r"(https?:|//|#|mailto:|tel:|data:|/|\.\./|\$\{)", u):
+            return m.group(0)
+        if attr == "srcset":
+            return 'srcset="' + ", ".join("../" + c.strip() for c in u.split(",")) + '"'
+        return f'{attr}="../{u}"'
+    html = re.sub(r'\b(href|src|srcset|action)="([^"]*)"', fix, html)
+    (out / "index.html").write_text(html, encoding="utf-8")
+
+
 def main():
     v = asset_version()
     items = load_items()
@@ -784,6 +810,7 @@ def main():
     pages += build_en()
     build_ai(items)
     build_sitemap(pages)
+    build_v2()
     print(f"hotovo: {len(items)} výrobků, {len(pages)} stránek (sortiment, tým, kariéra), verze stylů {v}")
 
 
