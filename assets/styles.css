@@ -590,6 +590,7 @@ form.q[hidden],.q-done[hidden]{display:none}
 .pil:hover::after{transform:scale(1.25);opacity:.35}
 .pil-grid li:nth-child(2) .pil{background:var(--red-deep)}
 .pil-grid li:nth-child(2) .pil::after{background:#fff;opacity:.08}
+.pil-grid li:nth-child(2) .pil.has-img::before{background:linear-gradient(180deg,rgba(60,6,4,.3) 0%,rgba(80,8,6,.55) 45%,rgba(90,9,6,.93) 100%)}
 .pil-ic{display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:#fff;color:var(--red)}
 .pil-ic svg{width:32px;height:32px}
 .pil h3{margin-top:auto;padding-top:28px;font-size:clamp(24px,2.2vw,30px);line-height:1.1;font-weight:600;letter-spacing:-.02em;text-transform:uppercase}
