@@ -794,7 +794,7 @@ OBORY = [
          title="Kořenicí a kombi směsi pro masný průmysl | J.K.FOOD",
          desc="Kořenicí a technologické směsi pro řeznictví a masnou výrobu: uzeniny, salámy, párky, šunky. Stabilní chuť a barva, přesné dávkování, navážení na výrobní dávku.",
          h1="Řeznictví a masný průmysl", tag="Chuť, barva a konzistence pod kontrolou",
-         intro="Pro řeznické a masné provozy dodáváme kořenicí a technologické směsi přizpůsobené specifickým požadavkům masné výroby. Je to největší část naší výroby.",
+         intro="Pro řeznické a masné provozy dodáváme kořenicí a technologické směsi přizpůsobené specifickým požadavkům masné výroby.",
          focus=["stabilitu chuti a barvy", "kompatibilitu s výrobními technologiemi", "jednoduché a přesné dávkování"],
          offer=[("Směsi podle vaší receptury", "Vyvineme směs na míru, nebo převezmeme vaši recepturu a vyrábíme ji ve stálé kvalitě."),
                 ("Navážení na výrobní dávku", "Koření, škroby i technologické přípravky namícháme přímo na vaši kutrovací dávku. Odpadá vážení a pracoviště se nepráší."),
@@ -996,7 +996,7 @@ def v2_index(items):
     # záložky odběratelů podle oborů zákazníka, každá s odkazem na stránku oboru
     seg = re.search(r"  const SEGS = \[\n.*?\n  \];", html, re.S)
     S = [("maso", "masny-prumysl.html", "Masný průmysl", "Chuť, barva a konzistence pod kontrolou",
-          "Kořenicí a technologické směsi přizpůsobené masné výrobě. Největší část naší výroby.",
+          "Kořenicí a technologické směsi přizpůsobené masné výrobě a vaší technologii.",
           ["Stabilní chuť a barva", "Navážení na výrobní dávku", "Technologické postupy ke kombi směsím"]),
          ("pekarstvi", "pekarstvi.html", "Pekařství", "Funkční suroviny pro pekařskou výrobu",
           "Suroviny a směsi pro rovnoměrné rozložení chuti, stabilní strukturu a jednoduchou aplikaci.",

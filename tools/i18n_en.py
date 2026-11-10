@@ -137,8 +137,8 @@ INDEX = [
     ("Jak k&nbsp;nám <span", "How to find us <span"),
     # záložky (JS)
     ("name: 'Masný průmysl', title: 'Kořenicí směsi pro uzeniny, salámy i marinády'", "name: 'Meat industry', title: 'Seasoning blends for sausages, salami and marinades'"),
-    ("text: 'Největší část naší výroby. Směsi ladíme podle vaší technologie a receptury, aby chuť byla stejná v každé várce.'",
-     "text: 'The largest part of our production. We tune blends to your technology and recipe so every batch tastes the same.'"),
+    ("text: 'Směsi ladíme podle vaší technologie a receptury, aby chuť byla stejná v každé várce.'",
+     "text: 'We tune blends to your technology and recipe so every batch tastes the same.'"),
     ("pts: ['Směsi na míru podle vaší receptury', 'Stálá kvalita mezi dodávkami', 'Technologická podpora při zavádění']",
      "pts: ['Blends tailored to your recipe', 'Consistent quality between deliveries', 'Technological support during roll-out']"),
     ("name: 'Pekárny a mlékárny', title: 'Koření a sušená zelenina do pečiva a pomazánek'", "name: 'Bakeries and dairies', title: 'Spices and dried vegetables for bakery products and spreads'"),
