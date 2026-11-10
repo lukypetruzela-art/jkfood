@@ -943,9 +943,41 @@ def photo(src, alt, cls="v2-photo"):
     return (f'<figure class="{cls}"><picture><source srcset="img/{src}-600.webp 600w, img/{src}-800.webp 800w, img/{src}-1000.webp 1000w" sizes="(max-width:900px) 92vw, 560px" type="image/webp">'
             f'<img src="img/{src}.jpg" alt="{alt}" width="1000" height="800" fetchpriority="high" decoding="async"></picture></figure>')
 
+V2_CSS_V = ""
+SPECULATION = ('<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},'
+               '{"not":{"href_matches":"/api/*"}},{"not":{"selector_matches":"[target=_blank], [href^=\'tel:\'], [href^=\'mailto:\']"}}]},'
+               '"eagerness":"moderate"}]}</script>')
+AVIF_SRC = ["img/v2/hero-m-600", "img/v2/hero-900", "img/v2/hero-1536", "img/hero-2-700", "img/hero-2-900"] + [
+    f"img/{n}-{w}" for n in ("pilir-prumysl", "pilir-vyvoj", "pilir-produkty", "v2/pilir-prumysl") for w in (600, 800, 1000)]
+
+
+def make_avif():
+    """AVIF verze fotek pro verzi 2 (vytvoří se z WebP, jen když chybí nebo je WebP novější)."""
+    from PIL import Image
+    for f in AVIF_SRC:
+        src, dst = ROOT / f"{f}.webp", ROOT / f"{f}.avif"
+        if src.exists() and (not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime):
+            Image.open(src).convert("RGB").save(dst, quality=45, speed=4)
+
+
 def v2_chrome(html, own):
     """Společné úpravy všech stránek verze 2: noindex, přepínač verzí, odkazy na obory, cesty o úroveň výš."""
     html = html.replace("<body>", '<body class="v2">', 1)
+    # rychlost: zúžená písma (jen české/anglické znaky) a styly, které je používají
+    html = html.replace('href="assets/fonts/', 'href="assets/fonts/v2/')
+    html = re.sub(r'href="assets/styles\.css\?v=\w+"', f'href="assets/v2.css?v={V2_CSS_V}"', html)
+    # fotky: AVIF (menší) s WebP jako zálohou
+    def avif(m):
+        tag = m.group(0)
+        files = re.findall(r'(img/[\w/-]+)\.webp', tag)
+        if not files or not all((ROOT / f"{f}.avif").exists() for f in files):
+            return tag
+        return tag.replace(".webp", ".avif").replace('type="image/webp"', 'type="image/avif"') + tag
+    html = re.sub(r'<source [^>]*type="image/webp">', avif, html)
+    html = re.sub(r'<link rel="preload" as="image"[^>]*>', lambda m: m.group(0).replace(".webp", ".avif").replace('type="image/webp"', 'type="image/avif"')
+                  if all((ROOT / f"{f}.avif").exists() for f in re.findall(r'(img/[\w/-]+)\.webp', m.group(0))) else m.group(0), html)
+    # okamžité přechody: stránka se připraví už při najetí myší na odkaz (Chrome/Edge)
+    html = html.replace("</body>", SPECULATION + "\n</body>", 1)
     # adresa /v2 bez lomítka by posílala relativní odkazy do kořene webu → doplnit lomítko
     html = html.replace("<head>", "<head>\n<script>if(/\\/v2$/.test(location.pathname))location.replace(location.pathname+'/'+location.search+location.hash)</script>", 1)
     html = re.sub(r'<meta name="robots" content="[^"]*">', '<meta name="robots" content="noindex, nofollow">', html)
@@ -1041,7 +1073,7 @@ def v2_index(items):
            '<link rel="preload" as="image" href="img/v2/hero-1536.webp" imagesrcset="img/v2/hero-900.webp 900w, img/v2/hero-1536.webp 1536w" '
            'imagesizes="100vw" media="(min-width:761px)" type="image/webp" fetchpriority="high">\n')
     html = html.replace('<link rel="preload" href="assets/fonts/', pre + '<link rel="preload" href="assets/fonts/', 1)
-    css = (ROOT / "assets" / "styles.css").read_text(encoding="utf-8").replace("url(fonts/", "url(../assets/fonts/")
+    css = (ROOT / "assets" / "v2.css").read_text(encoding="utf-8").replace("url(fonts/", "url(../assets/fonts/")
     html = re.sub(r'<link rel="stylesheet" href="assets/styles\.css\?v=\w+">', lambda m: "<style>" + css + "</style>", html, count=1)
     return v2_chrome(html, "index.html")
 
@@ -1141,6 +1173,11 @@ def v2_jidla():
 def build_v2(items):
     """Verze 2 k porovnání (více B2B): jiný úvod a sortiment, Průmysl s obory, Výzkum a vývoj, Hotová jídla.
     Vzniká z hotové verze 1; ostatní odkazy vedou na stránky verze 1. noindex, mimo sitemap."""
+    global V2_CSS_V
+    css = (ROOT / "assets" / "styles.css").read_text(encoding="utf-8").replace("url(fonts/", "url(fonts/v2/")
+    (ROOT / "assets" / "v2.css").write_text(css, encoding="utf-8")
+    V2_CSS_V = hashlib.sha1(css.encode()).hexdigest()[:8]
+    make_avif()
     (ROOT / "v2").mkdir(exist_ok=True)
     for old in (ROOT / "v2").glob("*.html"):
         old.unlink()

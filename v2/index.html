@@ -31,19 +31,19 @@
 <!-- META:END -->
 <meta name="theme-color" content="#A7110C">
 <meta name="color-scheme" content="light">
-<link rel="preload" as="image" href="../img/v2/hero-m-600.webp" media="(max-width:760px)" type="image/webp" fetchpriority="high">
-<link rel="preload" as="image" href="../img/v2/hero-1536.webp" imagesrcset="../img/v2/hero-900.webp 900w, ../img/v2/hero-1536.webp 1536w" imagesizes="100vw" media="(min-width:761px)" type="image/webp" fetchpriority="high">
-<link rel="preload" href="../assets/fonts/dmsans-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../assets/fonts/dmsans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../assets/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="../img/v2/hero-m-600.avif" media="(max-width:760px)" type="image/avif" fetchpriority="high">
+<link rel="preload" as="image" href="../img/v2/hero-1536.avif" imagesrcset="../img/v2/hero-900.avif 900w, ../img/v2/hero-1536.avif 1536w" imagesizes="100vw" media="(min-width:761px)" type="image/avif" fetchpriority="high">
+<link rel="preload" href="../assets/fonts/v2/dmsans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/v2/dmsans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/v2/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/v2/inter-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <style>/* Sdílené styly webu J.K.FOOD (index.html, sortiment.html) */
 /* Písma jako na e-shopu chut.kostera.cz: DM Sans (nadpisy) + Inter (text).
    Obě SIL OFL 1.1 (viz fonts/OFL-*.txt), hostováno lokálně, oříznuto na latinku + češtinu a tloušťky 400–700. */
-@font-face{font-family:"DM Sans";src:url(../assets/fonts/dmsans-latin.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0020-007E,U+00A0-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2013-2014,U+2018-201E,U+2022,U+2026,U+2039-203A,U+20AC,U+2122,U+2190-2193,U+2197,U+2212}
-@font-face{font-family:"DM Sans";src:url(../assets/fonts/dmsans-latin-ext.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0100-017F,U+02C7,U+02D8-02DD}
-@font-face{font-family:"Inter";src:url(../assets/fonts/inter-latin.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0020-007E,U+00A0-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2013-2014,U+2018-201E,U+2022,U+2026,U+2039-203A,U+20AC,U+2122,U+2190-2193,U+2197,U+2212}
-@font-face{font-family:"Inter";src:url(../assets/fonts/inter-latin-ext.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0100-017F,U+02C7,U+02D8-02DD}
+@font-face{font-family:"DM Sans";src:url(../assets/fonts/v2/dmsans-latin.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0020-007E,U+00A0-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2013-2014,U+2018-201E,U+2022,U+2026,U+2039-203A,U+20AC,U+2122,U+2190-2193,U+2197,U+2212}
+@font-face{font-family:"DM Sans";src:url(../assets/fonts/v2/dmsans-latin-ext.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0100-017F,U+02C7,U+02D8-02DD}
+@font-face{font-family:"Inter";src:url(../assets/fonts/v2/inter-latin.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0020-007E,U+00A0-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2013-2014,U+2018-201E,U+2022,U+2026,U+2039-203A,U+20AC,U+2122,U+2190-2193,U+2197,U+2212}
+@font-face{font-family:"Inter";src:url(../assets/fonts/v2/inter-latin-ext.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0100-017F,U+02C7,U+02D8-02DD}
 :root{
   --red:#A7110C;
   --red-deep:#7C0B08;
@@ -806,7 +806,7 @@ form.q[hidden],.q-done[hidden]{display:none}
 <main id="obsah">
   <!-- HERO (verze 2): jedna velká fotka; rozmazání pod textem je předpočítané přímo ve fotce (img/v2/hero-*), ne živým filtrem -->
   <section class="vhero" aria-labelledby="hero-title">
-    <picture class="vhero-bg"><source media="(max-width:760px)" srcset="../img/v2/hero-m-600.webp" type="image/webp"><source srcset="../img/v2/hero-900.webp 900w, ../img/v2/hero-1536.webp 1536w" sizes="100vw" type="image/webp"><img src="../img/v2/hero.jpg" alt="Proud kořenicí směsi se sype z nerezové násypky do průmyslového míchacího stroje" width="1536" height="1024" fetchpriority="high" decoding="async"></picture>
+    <picture class="vhero-bg"><source media="(max-width:760px)" srcset="../img/v2/hero-m-600.avif" type="image/avif"><source media="(max-width:760px)" srcset="../img/v2/hero-m-600.webp" type="image/webp"><source srcset="../img/v2/hero-900.avif 900w, ../img/v2/hero-1536.avif 1536w" sizes="100vw" type="image/avif"><source srcset="../img/v2/hero-900.webp 900w, ../img/v2/hero-1536.webp 1536w" sizes="100vw" type="image/webp"><img src="../img/v2/hero.jpg" alt="Proud kořenicí směsi se sype z nerezové násypky do průmyslového míchacího stroje" width="1536" height="1024" fetchpriority="high" decoding="async"></picture>
     <div class="vhero-shade" aria-hidden="true"></div>
     <div class="wrap vhero-in">
       <p class="vhero-eyebrow lift"><svg viewBox="0 0 97.6 97.6" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg>Dáváme jídlu chuť. Od roku&nbsp;1996.</p>
@@ -824,9 +824,9 @@ form.q[hidden],.q-done[hidden]{display:none}
     <div class="wrap">
       <h2 class="sr" id="pil-title">Co děláme</h2>
       <ul class="pil-grid">
-        <li class="reveal d1"><a class="pil has-img" href="prumysl.html"><picture><source srcset="../img/v2/pilir-prumysl-600.webp 600w, ../img/v2/pilir-prumysl-800.webp 800w, ../img/v2/pilir-prumysl-1000.webp 1000w" sizes="(max-width:760px) 92vw, 420px" type="image/webp"><img class="pil-bg" src="../img/v2/pilir-prumysl.jpg" alt="" width="1000" height="800" loading="lazy" decoding="async"></picture><span class="pil-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 21h19"/><path d="M4 21V11l5 3v-3l5 3V8l4 2.2V3h2.5v18"/><path d="M7.5 17.5h1.5M11.5 17.5H13M15.5 17.5H17"/></svg></span><h3>Průmysl</h3><p>Ingredience, směsi a&nbsp;technologická řešení pro potravinářskou výrobu.</p><span class="pil-go" aria-hidden="true"></span></a></li>
-        <li class="reveal d2"><a class="pil has-img" href="vyzkum-a-vyvoj.html"><picture><source srcset="../img/pilir-vyvoj-600.webp 600w, ../img/pilir-vyvoj-800.webp 800w, ../img/pilir-vyvoj-1000.webp 1000w" sizes="(max-width:760px) 92vw, 420px" type="image/webp"><img class="pil-bg" src="../img/pilir-vyvoj.jpg" alt="" width="1000" height="800" loading="lazy" decoding="async"></picture><span class="pil-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 18.4A1.8 1.8 0 0 0 6.2 21h11.6a1.8 1.8 0 0 0 1.6-2.6L14 9.2V3"/><path d="M7.2 15h9.6"/></svg></span><h3>Vývoj na míru</h3><p>Od nápadu přes recepturu, testování a&nbsp;optimalizaci až po výrobu.</p><span class="pil-go" aria-hidden="true"></span></a></li>
-        <li class="reveal d3"><a class="pil has-img" href="#sortiment"><picture><source srcset="../img/pilir-produkty-600.webp 600w, ../img/pilir-produkty-800.webp 800w, ../img/pilir-produkty-1000.webp 1000w" sizes="(max-width:760px) 92vw, 420px" type="image/webp"><img class="pil-bg" src="../img/pilir-produkty.jpg" alt="" width="1000" height="800" loading="lazy" decoding="async"></picture><span class="pil-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19.5C5 11 10 5.5 20 4.5c0 9.5-5.5 15-15 15z"/><path d="M5 19.5l8.5-8.5"/></svg></span><h3>Vlastní produkty</h3><p>Koření, směsi, dehydratované potraviny a&nbsp;hotová jídla pro retail i&nbsp;gastro.</p><span class="pil-go" aria-hidden="true"></span></a></li>
+        <li class="reveal d1"><a class="pil has-img" href="prumysl.html"><picture><source srcset="../img/v2/pilir-prumysl-600.avif 600w, ../img/v2/pilir-prumysl-800.avif 800w, ../img/v2/pilir-prumysl-1000.avif 1000w" sizes="(max-width:760px) 92vw, 420px" type="image/avif"><source srcset="../img/v2/pilir-prumysl-600.webp 600w, ../img/v2/pilir-prumysl-800.webp 800w, ../img/v2/pilir-prumysl-1000.webp 1000w" sizes="(max-width:760px) 92vw, 420px" type="image/webp"><img class="pil-bg" src="../img/v2/pilir-prumysl.jpg" alt="" width="1000" height="800" loading="lazy" decoding="async"></picture><span class="pil-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 21h19"/><path d="M4 21V11l5 3v-3l5 3V8l4 2.2V3h2.5v18"/><path d="M7.5 17.5h1.5M11.5 17.5H13M15.5 17.5H17"/></svg></span><h3>Průmysl</h3><p>Ingredience, směsi a&nbsp;technologická řešení pro potravinářskou výrobu.</p><span class="pil-go" aria-hidden="true"></span></a></li>
+        <li class="reveal d2"><a class="pil has-img" href="vyzkum-a-vyvoj.html"><picture><source srcset="../img/pilir-vyvoj-600.avif 600w, ../img/pilir-vyvoj-800.avif 800w, ../img/pilir-vyvoj-1000.avif 1000w" sizes="(max-width:760px) 92vw, 420px" type="image/avif"><source srcset="../img/pilir-vyvoj-600.webp 600w, ../img/pilir-vyvoj-800.webp 800w, ../img/pilir-vyvoj-1000.webp 1000w" sizes="(max-width:760px) 92vw, 420px" type="image/webp"><img class="pil-bg" src="../img/pilir-vyvoj.jpg" alt="" width="1000" height="800" loading="lazy" decoding="async"></picture><span class="pil-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 18.4A1.8 1.8 0 0 0 6.2 21h11.6a1.8 1.8 0 0 0 1.6-2.6L14 9.2V3"/><path d="M7.2 15h9.6"/></svg></span><h3>Vývoj na míru</h3><p>Od nápadu přes recepturu, testování a&nbsp;optimalizaci až po výrobu.</p><span class="pil-go" aria-hidden="true"></span></a></li>
+        <li class="reveal d3"><a class="pil has-img" href="#sortiment"><picture><source srcset="../img/pilir-produkty-600.avif 600w, ../img/pilir-produkty-800.avif 800w, ../img/pilir-produkty-1000.avif 1000w" sizes="(max-width:760px) 92vw, 420px" type="image/avif"><source srcset="../img/pilir-produkty-600.webp 600w, ../img/pilir-produkty-800.webp 800w, ../img/pilir-produkty-1000.webp 1000w" sizes="(max-width:760px) 92vw, 420px" type="image/webp"><img class="pil-bg" src="../img/pilir-produkty.jpg" alt="" width="1000" height="800" loading="lazy" decoding="async"></picture><span class="pil-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19.5C5 11 10 5.5 20 4.5c0 9.5-5.5 15-15 15z"/><path d="M5 19.5l8.5-8.5"/></svg></span><h3>Vlastní produkty</h3><p>Koření, směsi, dehydratované potraviny a&nbsp;hotová jídla pro retail i&nbsp;gastro.</p><span class="pil-go" aria-hidden="true"></span></a></li>
       </ul>
       <ul class="stats reveal">
         <li><span class="st-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4M8 14h2M14 14h2M8 17h2"/></svg></span><b>1996</b><span>Tradice a&nbsp;zkušenosti od roku&nbsp;1996</span></li>
@@ -907,7 +907,7 @@ form.q[hidden],.q-done[hidden]{display:none}
           <h2 class="h2" id="sort-title">Přes 490 výrobků</h2>
           <p class="intro">Suroviny pro výrobu i&nbsp;velké kuchyně. Balení a&nbsp;množství podle vaší spotřeby, vzorky na vyžádání.</p>
           <a class="btn btn-red" href="../sortiment.html">Celý sortiment <span class="i-next" aria-hidden="true"></span></a>
-          <figure class="vsort-ph"><picture><source srcset="../img/hero-2-700.webp 700w, ../img/hero-2-900.webp 900w" sizes="(max-width:900px) 92vw, 520px" type="image/webp"><img src="../img/hero-2.jpg" alt="Misky s mletou paprikou, kurkumou, pepřem, kmínem, majoránkou, česnekem, chilli a kořenicími směsmi" width="1200" height="1200" loading="lazy" decoding="async"></picture></figure>
+          <figure class="vsort-ph"><picture><source srcset="../img/hero-2-700.avif 700w, ../img/hero-2-900.avif 900w" sizes="(max-width:900px) 92vw, 520px" type="image/avif"><source srcset="../img/hero-2-700.webp 700w, ../img/hero-2-900.webp 900w" sizes="(max-width:900px) 92vw, 520px" type="image/webp"><img src="../img/hero-2.jpg" alt="Misky s mletou paprikou, kurkumou, pepřem, kmínem, majoránkou, česnekem, chilli a kořenicími směsmi" width="1200" height="1200" loading="lazy" decoding="async"></picture></figure>
         </div>
         <ul class="vsort-list">
           <li><a href="../sortiment-testoviny.html"><span class="vs-n">7&nbsp;výrobků</span><span class="vs-nm">Těstoviny</span><span class="vs-ex">vřetena, kolínka, široké a&nbsp;řezané nudle</span><span class="vs-go" aria-hidden="true"></span></a></li>
@@ -1657,6 +1657,7 @@ form.q[hidden],.q-done[hidden]{display:none}
 
 })();
 </script>
+<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/api/*"}},{"not":{"selector_matches":"[target=_blank], [href^='tel:'], [href^='mailto:']"}}]},"eagerness":"moderate"}]}</script>
 <a class="vswitch" href="../index.html">Verze 2 · přepnout na verzi 1</a>
 </body>
 </html>
