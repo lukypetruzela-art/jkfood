@@ -581,59 +581,80 @@
   })();
 
   /* ---------- video: YouTube (nocookie) ----------
-     Spustí se samo bez zvuku, až když k němu návštěvník doscrolluje (YouTube se do té doby
-     nenačítá vůbec). Mimo obrazovku se pozastaví. Při omezení animací / úspoře dat jen po kliknutí. */
+     Přehrávač se připraví předem (po načtení stránky, když se k videu blíží), takže ve chvíli,
+     kdy k němu návštěvník dojede, se jen pustí bez zvuku – nic se nestahuje během posouvání.
+     Mimo obrazovku se pozastaví. Při omezení animací / úspoře dat jen po kliknutí. */
   (() => {
     const box = document.getElementById('yt');
     const poster = box.querySelector('.yt-poster');
     const saveData = navigator.connection && navigator.connection.saveData;
     const auto = !reduce && !saveData && 'IntersectionObserver' in window;
-    let frame = null, warmed = false;
+    const YT = 'https://www.youtube-nocookie.com';
+    let frame = null, warmed = false, ready = false, wantPlay = false, visible = false;
 
     const warm = () => {
       if (warmed) return; warmed = true;
-      ['https://www.youtube-nocookie.com', 'https://i.ytimg.com', 'https://www.google.com'].forEach(h => {
+      [YT, 'https://i.ytimg.com', 'https://www.google.com'].forEach(h => {
         const l = document.createElement('link'); l.rel = 'preconnect'; l.href = h; document.head.appendChild(l);
       });
     };
+    // ovládání přehrávače přes YouTube IFrame API (postMessage)
+    const post = msg => frame && frame.contentWindow && frame.contentWindow.postMessage(JSON.stringify(msg), YT);
+    const cmd = func => post({ event: 'command', func, args: [] });
+    const play = () => { wantPlay = true; if (ready) cmd('playVideo'); };
+    const pause = () => { wantPlay = false; if (ready) cmd('pauseVideo'); };
+    addEventListener('message', e => {
+      if (e.origin !== YT || !frame || e.source !== frame.contentWindow || ready) return;
+      ready = true;                                   // přehrávač odpověděl → je připravený
+      if (wantPlay) cmd('playVideo');
+    });
+
     // YouTube vyžaduje adresu webu (Referer/origin) – u souboru otevřeného z disku (file://) přehrávač
     // hlásí chybu 153, proto se tam video otevře rovnou na YouTube
     const local = !/^https?:$/.test(location.protocol);
-    const load = (muted, focus) => {
+    const load = (muted, autoplay, focus) => {
       if (frame) return;
       if (local) { if (!muted) window.open(poster.href, '_blank', 'noopener'); return; }
       frame = document.createElement('iframe');
-      frame.src = 'https://www.youtube-nocookie.com/embed/' + box.dataset.id +
-        '?autoplay=1&rel=0&playsinline=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin) +
+      frame.src = YT + '/embed/' + box.dataset.id +
+        '?rel=0&playsinline=1&enablejsapi=1&origin=' + encodeURIComponent(location.origin) +
+        (autoplay ? '&autoplay=1' : '') +
         (muted ? '&mute=1&loop=1&playlist=' + box.dataset.id : '');   // smyčka u jednoho videa potřebuje playlist=ID
       frame.title = 'Video J.K.FOOD – Seznamte se s námi (YouTube)';
       frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
       frame.allowFullscreen = true;
       frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      // přihlásit se k událostem přehrávače (opakovaně, dokud neodpoví)
+      frame.addEventListener('load', () => {
+        let n = 0;
+        const t = setInterval(() => { if (ready || ++n > 40) return clearInterval(t); post({ event: 'listening', id: 1, channel: 'widget' }); }, 250);
+      });
       poster.replaceWith(frame);
       if (focus) frame.focus();
     };
-    // ovládání přehrávače přes YouTube IFrame API (postMessage)
-    const cmd = func => frame && frame.contentWindow &&
-      frame.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args: [] }), '*');
 
     poster.addEventListener('pointerenter', warm, { once: true });
     poster.addEventListener('focus', warm, { once: true });
     poster.addEventListener('click', e => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;   // nová karta = otevřít na YouTube
       e.preventDefault();
-      load(false, true);
+      load(false, true, true);
     });
 
     if (auto) {
+      // přehrávač připravit předem: až je stránka načtená a video je do ~1,5 obrazovky
+      const prepare = () => new IntersectionObserver((es, io) => {
+        if (es[0].isIntersecting) { io.disconnect(); warm(); load(true, false, false); if (visible) play(); }
+      }, { rootMargin: '150% 0px' }).observe(box);
+      const idle = cb => ('requestIdleCallback' in window ? requestIdleCallback(cb, { timeout: 2500 }) : setTimeout(cb, 1200));
+      if (document.readyState === 'complete') idle(prepare); else addEventListener('load', () => idle(prepare), { once: true });
+      // na obrazovce: pustit (bez zvuku), mimo obrazovku: pozastavit
       new IntersectionObserver(es => {
         const e = es[0];
-        if (e.isIntersecting && e.intersectionRatio >= 0.5) load(true, false);   // poprvé: načíst a pustit bez zvuku
-        else if (frame && !e.isIntersecting) cmd('pauseVideo');                  // pryč z obrazovky: pozastavit
+        visible = e.isIntersecting && e.intersectionRatio >= 0.5;
+        if (visible) { if (!frame) { warm(); load(true, false, false); } play(); }
+        else if (!e.isIntersecting && wantPlay) pause();
       }, { threshold: [0, 0.5] }).observe(box);
-      // těsně před příjezdem k videu předem navázat spojení
-      new IntersectionObserver((es, io) => { if (es[0].isIntersecting) { warm(); io.disconnect(); } },
-        { rootMargin: '400px 0px' }).observe(box);
     }
   })();
 
