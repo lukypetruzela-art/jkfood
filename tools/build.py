@@ -1108,12 +1108,40 @@ AVIF_RE = re.compile(r'(img/[\w/-]+)\.webp')
 
 
 def finalize_html():
-    """Po vygenerování všech stránek: fotky AVIF (s WebP jako zálohou) a okamžité přechody mezi stránkami."""
+    """Po vygenerování všech stránek: zmenšené styly (jen použitá pravidla), fotky AVIF (s WebP jako zálohou)
+    a okamžité přechody mezi stránkami."""
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    import cssmin
     make_avif()
-    pages = [p for p in list(ROOT.glob("*.html")) + list((ROOT / "en").glob("*.html")) if p.name != "404.html"]
-    for p in pages:
+    allpages = list(ROOT.glob("*.html")) + list((ROOT / "en").glob("*.html"))
+    src = (ROOT / "assets" / "styles.css").read_text(encoding="utf-8")
+    js = set()
+    for f in (ROOT / "assets").glob("*.js"):
+        js |= set(re.findall(r"[A-Za-z_][\w-]*", f.read_text(encoding="utf-8")))
+    tokens = set(js)
+    for p in allpages:
+        tokens |= cssmin.tokens_from_html(p.read_text(encoding="utf-8"))
+    # písma mají v adrese otisk obsahu → mohou se v prohlížeči ukládat natrvalo, a přesto se po změně stáhnou znovu
+    fver = {f.name: hashlib.sha1(f.read_bytes()).hexdigest()[:8] for f in (ROOT / "assets" / "fonts").glob("*.woff2")}
+    fonts = lambda css: re.sub(r"url\((fonts/)([\w-]+\.woff2)\)", lambda m: f"url({m.group(1)}{m.group(2)}?v={fver.get(m.group(2), '')})", css)
+    src = fonts(src)
+    mincss = cssmin.minify(src, tokens)
+    (ROOT / "assets" / "site.min.css").write_text(mincss, encoding="utf-8")
+    cver = hashlib.sha1(mincss.encode()).hexdigest()[:8]
+    for p in allpages:
         html = p.read_text(encoding="utf-8")
         orig = html
+        html = re.sub(r'(/?(?:\.\./)?assets/)(?:styles|site\.min)\.css\?v=\w+', rf"\1site.min.css?v={cver}", html)
+        html = re.sub(r'(assets/fonts/)([\w-]+\.woff2)(?:\?v=\w+)?"', lambda m: f'{m.group(1)}{m.group(2)}?v={fver.get(m.group(2), "")}"', html)
+        if "<!-- HOME:START -->" in html:     # úvodní stránka: ve stránce jen styly, které sama používá
+            pre = "../" if p.parent.name == "en" else ""
+            css = cssmin.minify(src, cssmin.tokens_from_html(html)).replace("url(fonts/", f"url({pre}assets/fonts/")
+            html = re.sub(r"(<!-- HOME:START -->.*?)<style>.*?</style>", lambda m: m.group(1) + "<style>" + css + "</style>", html, flags=re.S)
+        if p.name == "404.html":
+            if html != orig:
+                p.write_text(html, encoding="utf-8")
+            continue
         html = re.sub(r'<source [^>]*type="image/avif">', "", html)          # idempotentní: nejdřív staré AVIF pryč
 
         def avif(m):

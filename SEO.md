@@ -52,6 +52,9 @@ python3 tools/build.py
 ```
 
 Skript znovu vygeneruje stránky sortimentu, metadata, `sitemap.xml` a verze stylů pro prohlížeče.
+Styly se upravují v `assets/styles.css`; web používá z nich vygenerovaný zmenšený `assets/site.min.css`
+(jen pravidla, která stránky opravdu používají) a úvodní stránka má své styly přímo v sobě.
+Po úpravě stylů proto vždy spusťte `python3 tools/build.py`.
 Pokud by se změnila adresa webu, upravte `SITE` v `tools/build.py` a adresu v `robots.txt`.
 
 ## Vyhledávání přes AI (ChatGPT, Claude, Gemini, Perplexity, Copilot)
