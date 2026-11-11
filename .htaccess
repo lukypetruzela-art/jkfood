@@ -32,6 +32,10 @@ ErrorDocument 404 /404.html
     RewriteRule ^en/index\.html$ /en/ [R=301,L]
 
     # --- 2) adresy ze starého webu (kategorie i všechny výrobky v nich) ---
+    # zkušební verze 2 (náhled) – adresy vedou na hlavní web
+    RewriteRule ^v2/?$          / [R=301,L]
+    RewriteRule ^v2/(.+)$       /$1 [R=301,L]
+
     RewriteRule ^nabidka/koreni-jednodruhove_c2(/.*)?$                 /sortiment-koreni-jednodruhove.html [R=301,L,NC]
     RewriteRule ^nabidka/korenici-smesi_c3(/.*)?$                      /sortiment-korenici-smesi.html [R=301,L,NC]
     RewriteRule ^nabidka/susena-zelenina_c4(/.*)?$                     /sortiment-susena-zelenina.html [R=301,L,NC]

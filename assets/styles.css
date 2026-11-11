@@ -650,17 +650,14 @@ form.q[hidden],.q-done[hidden]{display:none}
 .vhero .btn-ghost{border-color:rgba(255,255,255,.7)}
 .vhero .btn-ghost:hover{color:var(--ink);border-color:#fff}
 /* karty pilířů najedou do fotky */
-.v2 .pillars{position:relative;z-index:2;margin-top:clamp(-120px,-9vw,-72px)}
-.v2 .pil{box-shadow:0 24px 48px -24px rgba(0,0,0,.45)}
-.vswitch{position:fixed;right:16px;bottom:16px;z-index:60;padding:10px 16px;border-radius:var(--drop);background:var(--ink);color:#fff;font-size:14px;font-weight:600;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.25)}
-.vswitch:hover{background:var(--red)}
+.home .pillars{position:relative;z-index:2;margin-top:clamp(-120px,-9vw,-72px)}
+.home .pil{box-shadow:0 24px 48px -24px rgba(0,0,0,.45)}
 @media (max-width:760px){
   .vhero{min-height:0;padding:56px 0 120px;align-items:flex-end}
   .vhero-bg img{object-position:50% 30%}
   .vhero-shade{background:linear-gradient(180deg,rgba(18,12,11,.35) 0%,rgba(18,12,11,.7) 45%,rgba(18,12,11,.9) 100%)}
   .vhero h1{font-size:clamp(40px,12vw,60px)}
-  .vswitch{font-size:12px;padding:8px 12px}
-  .v2 .pillars{margin-top:-72px}
+  .home .pillars{margin-top:-72px}
 }
 @media (prefers-reduced-motion:reduce){.vhero-bg img{animation:none}}
 /* verze 2: sortiment bez ilustrací */

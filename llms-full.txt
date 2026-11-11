@@ -23,10 +23,19 @@
 - Jazyky: čeština, angličtina
 
 ## Hlavní stránky
-- [Úvod](https://www.kostera.cz/): kdo jsme, pro koho vyrábíme, výroba na míru, kontakt
+- [Úvod](https://www.kostera.cz/): vyvíjíme, vyrábíme, dodáváme – průmysl, vývoj na míru, vlastní produkty, kontakt
 - [Sortiment](https://www.kostera.cz/sortiment.html): kompletní seznam výrobků s možností poptávky
 - [Náš tým](https://www.kostera.cz/nas-tym.html): vedení firmy, obchod, výroba
 - [Kariéra](https://www.kostera.cz/kariera.html): volné pozice
+- [Průmysl](https://www.kostera.cz/prumysl.html): suroviny a směsi pro potravinářské výrobce, obory, postup spolupráce
+- [Řeznictví a masný průmysl](https://www.kostera.cz/masny-prumysl.html): Chuť, barva a konzistence pod kontrolou
+- [Pekařství](https://www.kostera.cz/pekarstvi.html): Funkční suroviny pro pekařskou výrobu
+- [Mlékárenský průmysl](https://www.kostera.cz/mlekarny.html): Stabilní chuť a funkčnost v mléčných výrobcích
+- [Snacky a pochutiny](https://www.kostera.cz/snacky-a-pochutiny.html): Intenzivní chuť a efektivní aplikace
+- [Gastro a jídelny](https://www.kostera.cz/gastro-a-jidelny.html): Spolehlivý dodavatel pro velké kuchyně
+- [Private label a OEM](https://www.kostera.cz/privatni-znacka.html): Vývoj a výroba na míru
+- [Výzkum a vývoj](https://www.kostera.cz/vyzkum-a-vyvoj.html): vývoj receptur na míru, vzorky k testování
+- [Hotová jídla CHUŤ a HOT&GO](https://www.kostera.cz/hotova-jidla.html): hotová jídla v kelímku vlastních značek
 - [English version](https://www.kostera.cz/en/): company overview and product range in English
 
 ## Skupiny sortimentu

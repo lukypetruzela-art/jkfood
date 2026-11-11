@@ -266,6 +266,9 @@ def build_catalog(items, v):
                 .replace("{{COUNT}}", f"Celkem {len(shown)} {plural(len(shown))}")
                 .replace("{{FOOTCATS}}", footcats).replace("{{LEGACY}}", legacy if active is None else ""))
         assert "{{" not in page, re.findall(r"\{\{\w+\}\}", page)
+        hd, ft = site_chrome("sortiment.html", "products.html")
+        page = re.sub(r'<header class="top".*?</header>', lambda m: hd, page, count=1, flags=re.S)
+        page = re.sub(r'<footer class="foot">.*?</footer>', lambda m: ft, page, count=1, flags=re.S)
         (ROOT / file).write_text(page, encoding="utf-8")
     return [("sortiment.html", "0.9")] + [(c["file"], "0.8") for c in CATS]
 
@@ -355,6 +358,17 @@ def build_index(v):
     s = re.sub(r"<!-- FAQ:START -->.*?<!-- FAQ:END -->", lambda m: f"<!-- FAQ:START -->\n{render_faq('cs')}\n<!-- FAQ:END -->", s, flags=re.S)
     s = re.sub(r"<!-- REFERENCE:START -->.*?<!-- REFERENCE:END -->", lambda m: f"<!-- REFERENCE:START -->\n{render_refs()}\n<!-- REFERENCE:END -->", s, flags=re.S)
     s = re.sub(r'(assets/(?:styles\.css|products\.js))\?v=\w+', rf"\1?v={v}", s)
+    # rychlost: úvodní fotka se začne stahovat hned a styly jsou přímo ve stránce (odpadá blokující požadavek)
+    css = (ROOT / "assets" / "styles.css").read_text(encoding="utf-8").replace("url(fonts/", "url(assets/fonts/")
+    home = ('<link rel="preload" as="image" href="img/uvod-m-600.avif" media="(max-width:760px)" type="image/avif" fetchpriority="high">\n'
+            '<link rel="preload" as="image" href="img/uvod-1536.avif" imagesrcset="img/uvod-900.avif 900w, img/uvod-1536.avif 1536w" '
+            'imagesizes="100vw" media="(min-width:761px)" type="image/avif" fetchpriority="high">\n'
+            f"<style>{css}</style>")
+    s = re.sub(r"<!-- HOME:START -->.*?<!-- HOME:END -->", lambda m: f"<!-- HOME:START -->\n{home}\n<!-- HOME:END -->", s, flags=re.S)
+    rows = v2_cat_rows(load_items(), [c["id"] for c in CATS]) + [v2_row(
+        "hotova-jidla.html", "Vlastní značky", "Hotová jídla v kelímku CHUŤ a HOT&GO", "stačí zalít horkou vodou – kompletní jídlo za pár minut")]
+    s = re.sub(r"<!-- SORTLIST:START -->.*?<!-- SORTLIST:END -->",
+               lambda m: "<!-- SORTLIST:START -->\n" + "\n".join("          " + r for r in rows) + "\n<!-- SORTLIST:END -->", s, flags=re.S)
     p.write_text(s, encoding="utf-8")
 
     # stránka 404 (zobrazuje se na libovolné adrese, proto absolutní cesty)
@@ -364,7 +378,31 @@ def build_index(v):
         foot404 = "".join(f'<li><a href="/{c["file"]}">{esc(c["name"])}</a></li>' for c in CATS)
         t = re.sub(r"<!-- FOOTCATS:START -->.*?<!-- FOOTCATS:END -->", lambda m: f"<!-- FOOTCATS:START -->{foot404}<!-- FOOTCATS:END -->", t, flags=re.S)
         t = re.sub(r'(assets/styles\.css)\?v=\w+', rf"\1?v={v}", t)
+        hd, ft = site_chrome(absolute=True)
+        t = re.sub(r'<header class="top".*?</header>', lambda m: hd, t, count=1, flags=re.S)
+        t = re.sub(r'<footer class="foot">.*?</footer>', lambda m: ft, t, count=1, flags=re.S)
         p404.write_text(t, encoding="utf-8")
+
+
+def site_chrome(nav_current=None, en_file=None, absolute=False):
+    """Hlavička a patička z úvodní stránky pro podstránky (jedno místo pravdy pro menu a patičku)."""
+    idx = (ROOT / "index.html").read_text(encoding="utf-8")
+    header = idx[idx.index('<header class="top"'): idx.index("</header>") + 9]
+    footer = idx[idx.index('<footer class="foot">'): idx.index("</footer>") + 9]
+
+    def relink(x):
+        x = re.sub(r'href="#(?!logo|mark|obsah")([\w-]+)"', r'href="index.html#\1"', x)
+        x = x.replace('<a class="brand" href="#"', '<a class="brand" href="index.html"').replace('<a href="index.html#">', '<a href="#">')
+        if absolute:    # stránka 404 se zobrazuje na libovolné adrese
+            x = re.sub(r'href="(?!https?:|#|mailto:|tel:|/)([^"]*)"', r'href="/\1"', x)
+        return x
+    header, footer = relink(header), relink(footer)
+    lang = ("/" if absolute else "") + f'en/{en_file or "index.html"}'
+    header = re.sub(r'<a class="link lang" href="[^"]*"', f'<a class="link lang" href="{lang}"', header, count=1)
+    if nav_current:
+        cur = ("/" if absolute else "") + nav_current
+        header = header.replace(f'<a class="link" href="{cur}">', f'<a class="link" href="{cur}" aria-current="page">')
+    return header, footer
 
 
 def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_current=None, en_file=None):
@@ -372,17 +410,10 @@ def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_curr
     idx = (ROOT / "index.html").read_text(encoding="utf-8")
     head_start = idx[: idx.index("<!-- META:START -->")]
     head_rest = idx[idx.index("<!-- META:END -->") + len("<!-- META:END -->"): idx.index("</head>")]
+    head_rest = re.sub(r"<!-- HOME:START -->.*?<!-- HOME:END -->",
+                       lambda m: f'<link rel="stylesheet" href="assets/styles.css?v={asset_version()}">', head_rest, flags=re.S)
     symbols = idx[idx.index('<svg width="0"'): idx.index("</svg>", idx.index('<svg width="0"')) + 6]
-    header = idx[idx.index('<header class="top"'): idx.index("</header>") + 9]
-    footer = idx[idx.index('<footer class="foot">'): idx.index("</footer>") + 9]
-
-    def relink(x):
-        x = re.sub(r'href="#(?!logo|mark|obsah")([\w-]+)"', r'href="index.html#\1"', x)
-        return x.replace('<a class="brand" href="#"', '<a class="brand" href="index.html"')
-    header, footer = relink(header), relink(footer)
-    header = header.replace('<a class="link lang" href="en/index.html"', f'<a class="link lang" href="en/{en_file or "index.html"}"')
-    if nav_current:
-        header = header.replace(f'<a class="link" href="{nav_current}">', f'<a class="link" href="{nav_current}" aria-current="page">')
+    header, footer = site_chrome(nav_current, en_file)
 
     meta = "\n".join([f"<title>{esc(title)}</title>", f'<meta name="description" content="{esc(desc)}">',
                       head_common(title, desc, file, alternates={"cs": file, "en": f"en/{en_file}"} if en_file else None),
@@ -604,7 +635,7 @@ def build_en():
         def fix(m):
             attr, u = m.group(1), m.group(2)
             if attr in ("srcset", "imagesrcset"):
-                return 'srcset="' + ", ".join("../" + c.strip() for c in u.split(",")) + '"'
+                return f'{attr}="' + ", ".join("../" + c.strip() for c in u.split(",")) + '"'
             if re.match(r"(https?:|//|#|mailto:|tel:|data:|/|\.\./)", u):
                 return m.group(0)
             base, _, frag = u.partition("#")
@@ -621,7 +652,8 @@ def build_en():
             else:
                 new = "../" + u
             return f'{attr}="{new}"'
-        return re.sub(r'\b(href|src|srcset|action)="([^"]*)"', fix, html)
+        html = html.replace("url(assets/", "url(../assets/")
+        return re.sub(r'\b(href|src|srcset|imagesrcset|action)="([^"]*)"', fix, html)
 
     def meta(html, title, desc, path_en, path_cs, graph):
         html = re.sub(r"<title>.*?</title>\n?", "", html, flags=re.S)
@@ -646,6 +678,7 @@ def build_en():
     html = (ROOT / "index.html").read_text(encoding="utf-8")
     html = re.sub(r"<!-- FAQ:START -->.*?<!-- FAQ:END -->", lambda m: f"<!-- FAQ:START -->\n{render_faq('en')}\n<!-- FAQ:END -->", html, flags=re.S)
     html = names(tr(html, T.COMMON + T.INDEX, "index"))
+    html = re.sub(r"(\d+)&nbsp;výrob(?:ek|ky|ků)", r"\1&nbsp;products", html)
     html = meta(html, "J.K.FOOD – Czech producer of spices and seasoning blends",
                 "Family company from Větřkovice, Czech Republic. Since 1996 we have produced spices, seasoning blends, dried vegetables "
                 "and dehydrated foods for food manufacturers and catering.", "", "",
@@ -706,7 +739,7 @@ def build_en():
     # --- kontrola: nepřeložené dvojice a zbytky češtiny
     if missing:
         raise SystemExit("Nepřeložené texty (upravte tools/i18n_en.py):\n  " + "\n  ".join(missing))
-    allowed = {"Větřkovice", "Galčanová", "Kostera", "Větřkovic", "Česká verze", "CZ – česká verze", "Má chuť", "pepř, guláš"}
+    allowed = {"CHUŤ", "halušky", "Větřkovice", "Galčanová", "Kostera", "Větřkovic", "Česká verze", "CZ – česká verze", "Má chuť", "pepř, guláš"}
     leftovers = []
     for f in ["index.html", "products.html", "team.html"]:
         h = (ROOT / "en" / f).read_text(encoding="utf-8")
@@ -764,10 +797,13 @@ def build_ai(items):
 - Jazyky: čeština, angličtina
 
 ## Hlavní stránky
-- [Úvod]({SITE}/): kdo jsme, pro koho vyrábíme, výroba na míru, kontakt
+- [Úvod]({SITE}/): vyvíjíme, vyrábíme, dodáváme – průmysl, vývoj na míru, vlastní produkty, kontakt
 - [Sortiment]({SITE}/sortiment.html): kompletní seznam výrobků s možností poptávky
 - [Náš tým]({SITE}/nas-tym.html): vedení firmy, obchod, výroba
 - [Kariéra]({SITE}/kariera.html): volné pozice
+- [Průmysl]({SITE}/prumysl.html): suroviny a směsi pro potravinářské výrobce, obory, postup spolupráce
+""" + "".join(f"- [{o['nav']}]({SITE}/{o['file']}): {o['tag']}\n" for o in OBORY) + f"""- [Výzkum a vývoj]({SITE}/vyzkum-a-vyvoj.html): vývoj receptur na míru, vzorky k testování
+- [Hotová jídla CHUŤ a HOT&GO]({SITE}/hotova-jidla.html): hotová jídla v kelímku vlastních značek
 - [English version]({SITE}/en/): company overview and product range in English
 
 ## Skupiny sortimentu
@@ -880,8 +916,6 @@ OBORY = [
          focus_lead="Spolupráce zahrnuje:",
          offer=[], cats=["koreni", "smesi", "zelenina", "houby"]),
 ]
-V2_PAGES = ["prumysl.html", "vyzkum-a-vyvoj.html", "hotova-jidla.html"]
-V2_FILES = ["index.html"] + V2_PAGES + [o["file"] for o in OBORY]
 
 V2_EX = {
     "testoviny": "vřetena, kolínka, široké a řezané nudle",
@@ -915,30 +949,6 @@ def v2_cat_rows(items, ids):
     return rows
 
 
-def v2_sortiment(items):
-    """Sortiment pro verzi 2: místo pixly s ilustracemi fotka a přehledný seznam skupin."""
-    rows = v2_cat_rows(items, [c["id"] for c in CATS])
-    rows.append(v2_row("hotova-jidla.html", "Vlastní značky", "Hotová jídla v kelímku CHUŤ a HOT&GO", "stačí zalít horkou vodou – kompletní jídlo za pár minut"))
-    return f"""  <!-- SORTIMENT (verze 2) -->
-  <section class="vsort" id="sortiment" aria-labelledby="sort-title">
-    <div class="wrap">
-      <div class="vsort-grid">
-        <div class="vsort-side">
-          <h2 class="h2" id="sort-title">Přes {len(items) // 10 * 10} výrobků</h2>
-          <p class="intro">Suroviny pro výrobu i&nbsp;velké kuchyně. Balení a&nbsp;množství podle vaší spotřeby, vzorky na vyžádání.</p>
-          <a class="btn btn-red" href="sortiment.html">Celý sortiment <span class="i-next" aria-hidden="true"></span></a>
-          <figure class="vsort-ph"><picture><source srcset="img/hero-2-700.webp 700w, img/hero-2-900.webp 900w" sizes="(max-width:900px) 92vw, 520px" type="image/webp"><img src="img/hero-2.jpg" alt="Misky s mletou paprikou, kurkumou, pepřem, kmínem, majoránkou, česnekem, chilli a kořenicími směsmi" width="1200" height="1200" loading="lazy" decoding="async"></picture></figure>
-        </div>
-        <ul class="vsort-list">
-{chr(10).join("          " + r for r in rows)}
-        </ul>
-      </div>
-    </div>
-  </section>
-
-"""
-
-
 def cards(items, cls=""):
     return (f'<ol class="coop-list v2-cards {cls}">' + "".join(
         f'<li><span class="coop-n" aria-hidden="true">{i + 1}</span><h3>{t}</h3><p>{x}</p></li>'
@@ -965,22 +975,22 @@ def form_link(obor, typ=None):
 
 
 def v2_page(file, title, desc, crumbs, h1, intro, body, cta):
-    f = "v2/" + file
-    simple_page(f, title, desc, crumbs, h1, intro, body, cta, [])
-    p = ROOT / f
-    p.write_text(v2_chrome(p.read_text(encoding="utf-8"), file), encoding="utf-8")
-
+    graph = [{"@type": "WebPage", "@id": f"{SITE}/{file}#stranka", "url": f"{SITE}/{file}", "name": h1,
+              "description": desc, "inLanguage": "cs", "about": {"@id": f"{SITE}/#firma"}}]
+    nav = {"prumysl.html": "prumysl.html", "vyzkum-a-vyvoj.html": "vyzkum-a-vyvoj.html"}.get(file)
+    if file in {o["file"] for o in OBORY}:
+        nav = "prumysl.html"
+    simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_current=nav)
 
 def photo(src, alt, cls="v2-photo"):
     return (f'<figure class="{cls}"><picture><source srcset="img/{src}-600.webp 600w, img/{src}-800.webp 800w, img/{src}-1000.webp 1000w" sizes="(max-width:900px) 92vw, 560px" type="image/webp">'
             f'<img src="img/{src}.jpg" alt="{alt}" width="1000" height="800" fetchpriority="high" decoding="async"></picture></figure>')
 
-V2_CSS_V = ""
 SPECULATION = ('<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},'
                '{"not":{"href_matches":"/api/*"}},{"not":{"selector_matches":"[target=_blank], [href^=\'tel:\'], [href^=\'mailto:\']"}}]},'
                '"eagerness":"moderate"}]}</script>')
-AVIF_SRC = ["img/v2/hero-m-600", "img/v2/hero-900", "img/v2/hero-1536", "img/hero-2-700", "img/hero-2-900"] + [
-    f"img/{n}-{w}" for n in ("pilir-prumysl", "pilir-vyvoj", "pilir-produkty", "v2/pilir-prumysl") for w in (600, 800, 1000)]
+AVIF_SRC = ["img/uvod-m-600", "img/uvod-900", "img/uvod-1536", "img/hero-2-700", "img/hero-2-900"] + [
+    f"img/{n}-{w}" for n in ("pilir-prumysl", "pilir-vyvoj", "pilir-produkty") for w in (600, 800, 1000)]
 
 
 def make_avif():
@@ -990,124 +1000,6 @@ def make_avif():
         src, dst = ROOT / f"{f}.webp", ROOT / f"{f}.avif"
         if src.exists() and (not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime):
             Image.open(src).convert("RGB").save(dst, quality=45, speed=4)
-
-
-def v2_chrome(html, own):
-    """Společné úpravy všech stránek verze 2: noindex, přepínač verzí, odkazy na obory, cesty o úroveň výš."""
-    html = html.replace("<body>", '<body class="v2">', 1)
-    # rychlost: zúžená písma (jen české/anglické znaky) a styly, které je používají
-    html = html.replace('href="assets/fonts/', 'href="assets/fonts/v2/')
-    html = re.sub(r'href="assets/styles\.css\?v=\w+"', f'href="assets/v2.css?v={V2_CSS_V}"', html)
-    # fotky: AVIF (menší) s WebP jako zálohou
-    def avif(m):
-        tag = m.group(0)
-        files = re.findall(r'(img/[\w/-]+)\.webp', tag)
-        if not files or not all((ROOT / f"{f}.avif").exists() for f in files):
-            return tag
-        return tag.replace(".webp", ".avif").replace('type="image/webp"', 'type="image/avif"') + tag
-    html = re.sub(r'<source [^>]*type="image/webp">', avif, html)
-    html = re.sub(r'<link rel="preload" as="image"[^>]*>', lambda m: m.group(0).replace(".webp", ".avif").replace('type="image/webp"', 'type="image/avif"')
-                  if all((ROOT / f"{f}.avif").exists() for f in re.findall(r'(img/[\w/-]+)\.webp', m.group(0))) else m.group(0), html)
-    # okamžité přechody: stránka se připraví už při najetí myší na odkaz (Chrome/Edge)
-    html = html.replace("</body>", SPECULATION + "\n</body>", 1)
-    # adresa /v2 bez lomítka by posílala relativní odkazy do kořene webu → doplnit lomítko
-    html = html.replace("<head>", "<head>\n<script>if(/\\/v2$/.test(location.pathname))location.replace(location.pathname+'/'+location.search+location.hash)</script>", 1)
-    html = re.sub(r'<meta name="robots" content="[^"]*">', '<meta name="robots" content="noindex, nofollow">', html)
-    html = re.sub(r"<title>(.*?)</title>", r"<title>\1 · verze 2</title>", html, count=1)
-    html = html.replace("</body>", '<a class="vswitch" href="../index.html">Verze 2 · přepnout na verzi 1</a>\n</body>', 1)
-    # menu: Průmysl a Výzkum a vývoj vedou na vlastní stránky
-    html = re.sub(r'<a class="link" href="(?:index\.html)?#firmy">Pro firmy</a>', '<a class="link" href="prumysl.html">Průmysl</a>', html, count=1)
-    html = re.sub(r'<a class="link" href="(?:index\.html)?#na-miru">Vývoj na míru</a>', '<a class="link" href="vyzkum-a-vyvoj.html">Výzkum a vývoj</a>', html, count=1)
-    if own != "index.html":
-        html = html.replace(f'<a class="link" href="{own}">', f'<a class="link" href="{own}" aria-current="page">', 1)
-    # patička: sloupec Firma
-    firma = ('<li><a href="index.html#pribeh">O nás</a></li><li><a href="nas-tym.html">Náš tým</a></li>'
-             '<li><a href="prumysl.html">Průmysl</a></li>' + "".join(f'<li class="fsub"><a href="{o["file"]}">{esc(o["nav"])}</a></li>' for o in OBORY)
-             + '<li><a href="vyzkum-a-vyvoj.html">Výzkum a vývoj</a></li><li><a href="hotova-jidla.html">Hotová jídla CHUŤ a HOT&amp;GO</a></li>'
-             '<li><a href="kariera.html">Kariéra</a></li><li><a href="#">Ke stažení</a></li>')
-    html = re.sub(r"(<div><h3>Firma</h3><ul>).*?(</ul></div>)", lambda m: m.group(1) + firma + m.group(2), html, count=1, flags=re.S)
-
-    def fix(m):
-        attr, u = m.group(1), m.group(2)
-        if re.match(r"(https?:|//|#|mailto:|tel:|data:|/|\.\./|\$\{)", u):
-            return m.group(0)
-        if attr in ("srcset", "imagesrcset"):
-            return f'{attr}="' + ", ".join("../" + c.strip() for c in u.split(",")) + '"'
-        if u.split("#")[0].split("?")[0] in V2_FILES:
-            return m.group(0)
-        return f'{attr}="../{u}"'
-    return re.sub(r'\b(href|src|srcset|imagesrcset|action)="([^"]*)"', fix, html)
-
-
-def v2_index(items):
-    html = (ROOT / "index.html").read_text(encoding="utf-8")
-    a, b = html.index("  <!-- HERO + GALERIE -->"), html.index("  <!-- PILÍŘE -->")
-    html = html[:a] + (ROOT / "tools" / "v2_hero.html").read_text(encoding="utf-8") + html[b:]
-    m = re.search(r"  <!-- SORTIMENT -->.*?</section>\n\n", html, re.S)
-    html = html.replace(m.group(0), v2_sortiment(items))
-    # Průmysl v pilířích: jiná fotka, aby se neopakovala hala z úvodu
-    html = html.replace("img/pilir-prumysl", "img/v2/pilir-prumysl")
-    # B2C méně: velký červený pruh e-shopu nahradí nenápadný řádek až za kontaktem
-    m = re.search(r"  <!-- E-SHOP -->.*?</section>\n\n", html, re.S)
-    html = html.replace(m.group(0), "")
-    html = html.replace("</main>", """  <aside class="vshop" aria-label="E-shop pro domácnosti">
-    <div class="wrap"><p><b>Nakupujete pro domácnost?</b> Naše koření a&nbsp;směsi v&nbsp;menších baleních najdete v&nbsp;e-shopu.</p>
-      <a href="https://eshop.kostera.cz/" target="_blank" rel="noopener">Do e-shopu <span class="ext" aria-hidden="true"></span></a></div>
-  </aside>
-</main>""", 1)
-    # způsoby spolupráce: místo e-shopu privátní značka
-    html = re.sub(r'<li><span class="coop-n" aria-hidden="true">3</span><h4>E-shop pro domácnosti</h4>.*?</li>',
-                  '<li><span class="coop-n" aria-hidden="true">3</span><h4>Výroba pod vaší značkou</h4><p>Koření a&nbsp;směsi vyrobíme a&nbsp;zabalíme pod značkou vašeho obchodu nebo firmy.</p><a href="privatni-znacka.html">Private label a OEM <span class="i-next" aria-hidden="true"></span></a></li>',
-                  html, count=1, flags=re.S)
-    # záložky odběratelů podle oborů zákazníka, každá s odkazem na stránku oboru
-    seg = re.search(r"  const SEGS = \[\n.*?\n  \];", html, re.S)
-    S = [("maso", "masny-prumysl.html", "Masný průmysl", "Chuť, barva a konzistence pod kontrolou",
-          "Kořenicí a technologické směsi přizpůsobené masné výrobě a vaší technologii.",
-          ["Stabilní chuť a barva", "Navážení na výrobní dávku", "Technologické postupy ke kombi směsím"]),
-         ("pekarstvi", "pekarstvi.html", "Pekařství", "Funkční suroviny pro pekařskou výrobu",
-          "Suroviny a směsi pro rovnoměrné rozložení chuti, stabilní strukturu a jednoduchou aplikaci.",
-          ["Koření a semínka do pečiva", "Stabilní receptury", "Opakovatelné výsledky"]),
-         ("mlekarny", "mlekarny.html", "Mlékárny", "Stabilní chuť v mléčných výrobcích",
-          "Suroviny a směsi tam, kde je důležitá jemnost chuti, stabilita při zpracování a kontrola složení.",
-          ["Pro různé teplotní režimy", "Konzistentní senzorický výsledek", "Sušená zelenina a bylinky"]),
-         ("snacky", "snacky-a-pochutiny.html", "Snacky a pochutiny", "Intenzivní chuť a efektivní aplikace",
-          "Směsi pro rychlou aplikaci a rovnoměrné ochucení snacků a pochutin.",
-          ["Efektivní výroba", "Stabilní chuťový profil", "Minimální rozdíly mezi šaržemi"]),
-         ("gastro", "gastro-a-jidelny.html", "Gastro a jídelny", "Spolehlivý dodavatel pro velké kuchyně",
-          "Bujóny, polévky, omáčky, koření a sušená zelenina v gastro baleních pro jídelny, restaurace i catering.",
-          ["Gastro balení", "Dodávky vlastní dopravou", "Obchodní zástupce ve vašem kraji"]),
-         ("retail", "privatni-znacka.html", "Private label a OEM", "Vývoj a výroba pod vaší značkou",
-          "Pro průmyslové a obchodní partnery vyvíjíme receptury, optimalizujeme je pro výrobu a dlouhodobě dodáváme.",
-          ["Technické konzultace", "Standardizace výroby", "Logistická podpora"])]
-    js = ",\n".join(f"    {{ id: '{a}', page: '{f}', name: '{n}', title: '{t}',\n      text: '{x}',\n      pts: [{', '.join(repr(q) for q in pts)}] }}"
-                    for a, f, n, t, x, pts in S)
-    html = html.replace(seg.group(0), "  const SEGS = [\n" + js + "\n  ];")
-    # odkazy z úvodu a pilířů na nové stránky
-    html = html.replace('<a class="btn btn-red" href="#firmy">Pro průmysl', '<a class="btn btn-red" href="prumysl.html">Pro průmysl', 1)
-    html = html.replace('<a class="pil has-img" href="#firmy">', '<a class="pil has-img" href="prumysl.html">', 1)
-    html = html.replace('<a class="pil has-img" href="#na-miru">', '<a class="pil has-img" href="vyzkum-a-vyvoj.html">', 1)
-    html = html.replace('<a href="#na-miru">Vývoj na míru <span', '<a href="vyzkum-a-vyvoj.html">Výzkum a vývoj <span', 1)
-    # vývoj na míru: postup v 5 krocích + odkaz na stránku, za ním „Proč s námi“
-    st = re.search(r'<ol class="steps">.*?</ol>', html, re.S)
-    html = html.replace(st.group(0), '<ol class="steps five">' + "".join(
-        f'<li><span class="n" aria-hidden="true">{k + 1}</span><h3>{t}</h3><p>{x}</p></li>' for k, (t, x) in enumerate(STEPS5)) + "</ol>")
-    html = html.replace('<a class="btn btn-red" href="#kontakt">Poptat vývoj směsi</a>',
-                        '<a class="btn btn-red" href="#kontakt">Poptat vývoj směsi</a>\n        <a class="btn btn-ghost" href="vyzkum-a-vyvoj.html">Výzkum a vývoj <span class="i-next" aria-hidden="true"></span></a>', 1)
-    why = ('  <!-- PROČ S NÁMI (verze 2) -->\n  <section class="vwhy" aria-labelledby="why-title">\n    <div class="wrap">\n'
-           '      <h2 class="h2" id="why-title">Proč spolupracovat s&nbsp;J.K.FOOD</h2>\n      <ul class="v2-why">'
-           + "".join(f"<li><h3>{t}</h3><p>{x}</p></li>" for t, x in WHY) + "</ul>\n    </div>\n  </section>\n\n")
-    html = html.replace("  <!-- SORTIMENT (verze 2) -->", why + "  <!-- SORTIMENT (verze 2) -->", 1)
-    old_btn = "(s.shop ? `<a class=\"btn btn-red\" href=\"${ESHOP}\" target=\"_blank\" rel=\"noopener\">Nakoupit v e-shopu <span class=\"ext\" aria-hidden=\"true\"></span></a>`"
-    assert old_btn in html
-    html = html.replace(old_btn, "(s.page ? `<div class=\"panel-btns\"><a class=\"btn btn-red\" href=\"${s.page}\">Více pro váš obor <span class=\"i-next\" aria-hidden=\"true\"></span></a><a class=\"btn btn-line\" href=\"#kontakt\">Domluvit spolupráci</a></div>`")
-    # rychlost: úvodní fotka se začne stahovat hned, CSS je přímo ve stránce (odpadá blokující požadavek)
-    pre = ('<link rel="preload" as="image" href="img/v2/hero-m-600.webp" media="(max-width:760px)" type="image/webp" fetchpriority="high">\n'
-           '<link rel="preload" as="image" href="img/v2/hero-1536.webp" imagesrcset="img/v2/hero-900.webp 900w, img/v2/hero-1536.webp 1536w" '
-           'imagesizes="100vw" media="(min-width:761px)" type="image/webp" fetchpriority="high">\n')
-    html = html.replace('<link rel="preload" href="assets/fonts/', pre + '<link rel="preload" href="assets/fonts/', 1)
-    css = (ROOT / "assets" / "v2.css").read_text(encoding="utf-8").replace("url(fonts/", "url(../assets/fonts/")
-    html = re.sub(r'<link rel="stylesheet" href="assets/styles\.css\?v=\w+">', lambda m: "<style>" + css + "</style>", html, count=1)
-    return v2_chrome(html, "index.html")
 
 
 def v2_obor(o, items):
@@ -1140,7 +1032,7 @@ def v2_prumysl():
             '<h2 class="obor-h" id="pr-dehy">Dehydratované suroviny a&nbsp;technologické směsi</h2>'
             '<p class="v2-p">Pro průmyslové provozy dodáváme dehydratované suroviny, kořenicí a&nbsp;technologické směsi, které umožňují přesné dávkování, stabilní chuť a&nbsp;snadné zapojení do výrobních linek. Každé řešení přizpůsobujeme konkrétní technologii, výrobnímu procesu a&nbsp;požadovanému výsledku.</p>'
             + bullets("Naše řešení pomáhají:", ["snížit závislost na sezónních surovinách", "zjednodušit výrobní procesy", "zajistit stejnou kvalitu napříč šaržemi"])
-            + "</div>" + photo("v2/pilir-prumysl", "Pracovnice obsluhuje průmyslový míchací stroj s kořenicí směsí") + "</section>"
+            + "</div>" + photo("pilir-prumysl", "Pracovnice obsluhuje průmyslový míchací stroj s kořenicí směsí") + "</section>"
             '<section class="obor-sec" aria-labelledby="pr-obory"><h2 class="obor-h" id="pr-obory">Obory, kterým dodáváme</h2>'
             f'<ul class="vsort-list v2-obory">{tiles}</ul></section>'
             + why_html() + steps5_html())
@@ -1202,23 +1094,39 @@ def v2_jidla():
             body, cta)
 
 
-def build_v2(items):
-    """Verze 2 k porovnání (více B2B): jiný úvod a sortiment, Průmysl s obory, Výzkum a vývoj, Hotová jídla.
-    Vzniká z hotové verze 1; ostatní odkazy vedou na stránky verze 1. noindex, mimo sitemap."""
-    global V2_CSS_V
-    css = (ROOT / "assets" / "styles.css").read_text(encoding="utf-8").replace("url(fonts/", "url(fonts/v2/")
-    (ROOT / "assets" / "v2.css").write_text(css, encoding="utf-8")
-    V2_CSS_V = hashlib.sha1(css.encode()).hexdigest()[:8]
-    make_avif()
-    (ROOT / "v2").mkdir(exist_ok=True)
-    for old in (ROOT / "v2").glob("*.html"):
-        old.unlink()
-    (ROOT / "v2" / "index.html").write_text(v2_index(items), encoding="utf-8")
+def build_b2b(items):
+    """Stránky pro firmy: Průmysl, šest oborů, Výzkum a vývoj, Hotová jídla."""
     for o in OBORY:
         v2_obor(o, items)
     v2_prumysl()
     v2_vyvoj()
     v2_jidla()
+    return [("prumysl.html", "0.9"), ("vyzkum-a-vyvoj.html", "0.8"), ("hotova-jidla.html", "0.8")] + [(o["file"], "0.8") for o in OBORY]
+
+
+AVIF_RE = re.compile(r'(img/[\w/-]+)\.webp')
+
+
+def finalize_html():
+    """Po vygenerování všech stránek: fotky AVIF (s WebP jako zálohou) a okamžité přechody mezi stránkami."""
+    make_avif()
+    pages = [p for p in list(ROOT.glob("*.html")) + list((ROOT / "en").glob("*.html")) if p.name != "404.html"]
+    for p in pages:
+        html = p.read_text(encoding="utf-8")
+        orig = html
+        html = re.sub(r'<source [^>]*type="image/avif">', "", html)          # idempotentní: nejdřív staré AVIF pryč
+
+        def avif(m):
+            tag = m.group(0)
+            files = AVIF_RE.findall(tag)
+            if not files or not all((ROOT / f"{f}.avif").exists() for f in files):
+                return tag
+            return tag.replace(".webp", ".avif").replace('type="image/webp"', 'type="image/avif"') + tag
+        html = re.sub(r'<source [^>]*type="image/webp">', avif, html)
+        if 'type="speculationrules"' not in html:
+            html = html.replace("</body>", SPECULATION + "\n</body>", 1)
+        if html != orig:
+            p.write_text(html, encoding="utf-8")
 
 
 def main():
@@ -1228,11 +1136,12 @@ def main():
     build_index(v)
     pages += build_team(v)
     pages += build_career(v)
+    pages += build_b2b(items)
     pages += build_en()
+    finalize_html()
     build_ai(items)
     build_sitemap(pages)
-    build_v2(items)
-    print(f"hotovo: {len(items)} výrobků, {len(pages)} stránek (sortiment, tým, kariéra), verze stylů {v}")
+    print(f"hotovo: {len(items)} výrobků, {len(pages)} stránek, verze stylů {v}")
 
 
 if __name__ == "__main__":
