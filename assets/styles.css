@@ -697,3 +697,24 @@ form.q[hidden],.q-done[hidden]{display:none}
 .tabs.acc .panel-btns{margin-top:24px}
 .tabs.acc .panel-btns .btn{flex:1 1 100%;justify-content:center}
 .tabs.acc .tab{font-size:22px;padding:18px 4px}
+
+.q-gdpr a{color:inherit}
+/* ochrana osobních údajů, cookies */
+.legal{max-width:76ch}
+.legal-sec{margin-top:clamp(36px,4vw,52px)}
+.legal-sec:first-child{margin-top:0}
+.legal h2{font-size:clamp(22px,2.2vw,28px);line-height:1.2;font-weight:600;letter-spacing:-.01em;margin-bottom:12px}
+.legal h3{font-size:18px;font-weight:600;margin:22px 0 6px}
+.legal p,.legal li{color:var(--muted)}
+.legal p+p{margin-top:10px}
+.legal ul{margin-top:8px;display:grid;gap:6px;padding-left:20px;list-style:disc}
+.legal b{color:var(--ink)}
+.legal a{color:var(--red)}
+.legal .btn{margin-top:4px}
+.legal-ok{display:inline-block;margin:8px 0 0 8px;font-weight:600;color:#1E6B3A}
+.legal-note{margin-top:40px;font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+.legal-table{overflow-x:auto;margin-top:8px}
+.legal-table table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+.legal-table th,.legal-table td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.legal-table th{font-weight:600;color:var(--ink);background:var(--blush)}
+mark.fill{background:#FFF3C4;color:#7A5A00;padding:0 4px;border-radius:4px}

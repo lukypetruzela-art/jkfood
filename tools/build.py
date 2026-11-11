@@ -764,7 +764,8 @@ def build_en():
     # --- stránky pro firmy (Průmysl, obory, Výzkum a vývoj, Hotová jídla): obsah z anglických dat, menu a patička překladem
     items = load_items()
     b2b = [("prumysl.html", lambda: page_prumysl("en")), ("vyzkum-a-vyvoj.html", lambda: page_vyvoj("en")),
-           ("hotova-jidla.html", lambda: page_jidla("en"))] + [(o["file"], lambda o=o: page_obor(o, items, "en")) for o in OBORY]
+           ("hotova-jidla.html", lambda: page_jidla("en"))] + [(o["file"], lambda o=o: page_obor(o, items, "en")) for o in OBORY] \
+        + [(f, lambda k=k: page_legal(k, "en")) for k, f in LEGAL_FILES.items()]
     b2b_pages = []
     for cz, render in b2b:
         en = T.B2B_FILES[cz]
@@ -774,7 +775,7 @@ def build_en():
         title = re.search(r"<title>(.*?)</title>", html).group(1)
         desc = re.search(r'<meta name="description" content="([^"]*)"', html).group(1)
         h1 = re.search(r'<h1[^>]*>(.*?)</h1>', html, re.S).group(1)
-        crumbs = [("Home", "en/")] + ([("Industry", "en/industry.html")] if cz not in ("prumysl.html", "vyzkum-a-vyvoj.html", "hotova-jidla.html") else []) \
+        crumbs = [("Home", "en/")] + ([("Industry", "en/industry.html")] if cz in {o["file"] for o in OBORY} else []) \
             + [(html_unescape(h1), f"en/{en}")]
         graph = [org, breadcrumbs_ld(crumbs), {"@type": "WebPage", "url": f"{SITE}/en/{en}", "name": html_unescape(h1), "inLanguage": "en",
                                                "description": html_unescape(desc), "about": {"@id": f"{SITE}/#firma"}}]
@@ -1213,6 +1214,102 @@ def page_jidla(lang="cs"):
 
 
 
+# ---------------------------------------------------------------- ochrana osobních údajů a cookies
+FILL = '<mark class="fill">[doplnit: {}]</mark>'
+
+
+def legal_texts(lang):
+    """Texty stránek Ochrana osobních údajů a Cookies. Místa [doplnit] musí firma doplnit/ověřit."""
+    if lang == "en":
+        return _en().LEGAL_EN
+    f = FILL.format
+    ctrl = ("Jaroslav Kostera, J.K.FOOD s.r.o., Větřkovice 243, 747 43 Větřkovice, IČ 27780384, "
+            "zapsaná v obchodním rejstříku u Krajského soudu v Ostravě, sp. zn. C 51605")
+    return {
+        "privacy": dict(
+            title="Ochrana osobních údajů | J.K.FOOD",
+            desc="Jak J.K.FOOD zpracovává osobní údaje z poptávkového formuláře, e-mailu a životopisů a jaká máte práva.",
+            h1="Ochrana osobních údajů",
+            intro="Jak na webu kostera.cz zpracováváme vaše osobní údaje a jaká máte práva.",
+            body=[
+                ("Správce osobních údajů", f"<p>{ctrl}.</p><p>Kontakt ve věcech osobních údajů: "
+                 '<a href="mailto:kostera@kostera.cz">kostera@kostera.cz</a>, <a href="tel:+420556310205">+420 556 310 205</a>.</p>'),
+                ("Jaké údaje zpracováváme a proč",
+                 "<h3>Poptávkový formulář a přímý kontakt</h3>"
+                 "<p>Jméno a příjmení, název firmy, e-mail, telefon, text zprávy, případně výrobek nebo obor, o který máte zájem.</p>"
+                 "<ul><li><b>Účel:</b> vyřízení poptávky, příprava nabídky a navazující komunikace.</li>"
+                 "<li><b>Právní základ:</b> jednání o smlouvě na vaši žádost (čl. 6 odst. 1 písm. b) GDPR) a oprávněný zájem "
+                 "odpovědět na váš dotaz (čl. 6 odst. 1 písm. f) GDPR).</li></ul>"
+                 "<h3>Životopisy a zájem o práci</h3>"
+                 "<p>Údaje, které nám pošlete v životopisu nebo e-mailu.</p>"
+                 "<ul><li><b>Účel:</b> výběrové řízení na volnou pozici.</li>"
+                 "<li><b>Právní základ:</b> jednání o pracovní smlouvě (čl. 6 odst. 1 písm. b) GDPR); delší uchování jen s vaším souhlasem.</li></ul>"
+                 "<h3>Technické údaje</h3>"
+                 "<p>Při návštěvě webu server zaznamenává technické údaje (IP adresa, čas, zobrazená stránka, typ prohlížeče). "
+                 "Pro ochranu formuláře proti zneužití dočasně (10&nbsp;minut) uchováváme otisk IP adresy.</p>"
+                 "<ul><li><b>Účel:</b> provoz a bezpečnost webu.</li><li><b>Právní základ:</b> oprávněný zájem (čl. 6 odst. 1 písm. f) GDPR).</li></ul>"),
+                ("Jak dlouho údaje uchováváme",
+                 f"<ul><li>Poptávky a komunikace: {f('např. 3 roky od poslední komunikace')}; pokud uzavřeme smlouvu, po dobu stanovenou zákonem (účetní a daňové předpisy).</li>"
+                 f"<li>Životopisy: do konce výběrového řízení, se souhlasem {f('např. 1 rok')}.</li>"
+                 f"<li>Záznamy serveru: {f('podle nastavení hostingu, obvykle 30–90 dní')}.</li></ul>"),
+                ("Komu údaje předáváme",
+                 f"<p>Údaje neprodáváme ani je nepředáváme k marketingu. Zpracovávají je jen naši zaměstnanci a dodavatelé, kteří pro nás zajišťují "
+                 f"provoz webu a e-mailu ({f('název poskytovatele hostingu a e-mailu')}).</p>"
+                 "<p>Video na úvodní stránce se načítá ze služby YouTube (Google Ireland Limited) – podrobnosti "
+                 'najdete na stránce <a href="cookies.html">Cookies</a>. Google může údaje předávat do USA v rámci EU-US Data Privacy Framework.</p>'),
+                ("Vaše práva",
+                 "<p>Máte právo na přístup ke svým údajům, jejich opravu nebo výmaz, omezení zpracování, přenositelnost, "
+                 "vznést námitku proti zpracování na základě oprávněného zájmu a odvolat souhlas, pokud byl udělen. "
+                 'Stačí napsat na <a href="mailto:kostera@kostera.cz">kostera@kostera.cz</a>.</p>'
+                 '<p>Pokud se domníváte, že údaje zpracováváme v rozporu s předpisy, můžete podat stížnost u Úřadu pro ochranu osobních údajů '
+                 '(<a href="https://uoou.gov.cz" target="_blank" rel="noopener">uoou.gov.cz</a>).</p>'),
+            ],
+            note=f"Účinné od {f('datum')}. Tento text je vzor připravený pro web – před spuštěním ho firma ověří, případně s právníkem."),
+        "cookies": dict(
+            title="Cookies | J.K.FOOD",
+            desc="Jaké cookies a úložiště v prohlížeči web kostera.cz používá. Bez reklamních a analytických cookies.",
+            h1="Cookies",
+            intro="Web kostera.cz nepoužívá reklamní ani analytické cookies a neměří vaši návštěvnost.",
+            body=[
+                ("Co web ukládá ve vašem prohlížeči",
+                 '<div class="legal-table"><table><thead><tr><th>Název</th><th>K čemu slouží</th><th>Jak dlouho</th></tr></thead><tbody>'
+                 "<tr><td><code>jkadmin</code></td><td>Přihlášení do administrace – jen pro správce webu.</td><td>do zavření prohlížeče</td></tr>"
+                 "</tbody></table></div>"
+                 "<p>Jinak web do vašeho prohlížeče nic neukládá.</p>"),
+                ("Video z YouTube",
+                 "<p>Na úvodní stránce je video ze služby YouTube (Google). Načte se, až stránku začnete procházet, a když k němu dojedete, "
+                 "spustí se samo bez zvuku. Přehrává se z adresy youtube-nocookie.com (režim se zvýšenou ochranou soukromí), YouTube ale "
+                 "může do vašeho prohlížeče ukládat cookies a obdobná data a zpracovávat vaši IP adresu – podle "
+                 '<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">zásad ochrany soukromí Google</a>.</p>'
+                 "<p>Pokud si to nepřejete, můžete si v prohlížeči zablokovat obsah třetích stran nebo video sledovat přímo na YouTube.</p>"),
+                ("Jak cookies smazat",
+                 "<p>Cookies a data webu můžete kdykoli smazat v nastavení prohlížeče (obvykle Nastavení → Soukromí → Vymazat údaje o prohlížení).</p>"
+                 '<p>Více o zpracování osobních údajů najdete na stránce <a href="ochrana-osobnich-udaju.html">Ochrana osobních údajů</a>.</p>'),
+            ],
+            note=""),
+    }
+
+
+LEGAL_FILES = {"privacy": "ochrana-osobnich-udaju.html", "cookies": "cookies.html"}
+
+def page_legal(kind, lang="cs"):
+    T = legal_texts(lang)[kind]
+    file = LEGAL_FILES[kind]
+    body = '<div class="legal">' + "".join(f'<section class="legal-sec"><h2>{h}</h2>{t}</section>' for h, t in T["body"]) \
+        + (f'<p class="legal-note">{T["note"]}</p>' if T["note"] else "") + "</div>"
+    graph = [{"@type": "WebPage", "url": f"{SITE}/{file}" if lang == "cs" else f"{SITE}/en/{_en().B2B_FILES[file]}",
+              "name": T["h1"], "inLanguage": lang, "about": {"@id": f"{SITE}/#firma"}}]
+    home = "Úvod" if lang == "cs" else "Home"
+    return simple_page(file, T["title"], T["desc"], [(home, ""), (T["h1"], file)], T["h1"], T["intro"], body, "", graph,
+                       en_file=_en().B2B_FILES[file], write=lang == "cs")
+
+
+def build_legal():
+    for k in LEGAL_FILES:
+        page_legal(k)
+    return [(f, "0.2") for f in LEGAL_FILES.values()]
+
+
 def build_b2b(items):
     """Stránky pro firmy: Průmysl, šest oborů, Výzkum a vývoj, Hotová jídla."""
     for o in OBORY:
@@ -1285,6 +1382,7 @@ def main():
     pages += build_team(v)
     pages += build_career(v)
     pages += build_b2b(items)
+    pages += build_legal()
     pages += build_en()
     finalize_html()
     build_ai(items)

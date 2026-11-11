@@ -175,8 +175,8 @@ INDEX = [
     ('<label for="f-web">Nevyplňujte</label>', '<label for="f-web">Leave empty</label>'),
     ('<input type="hidden" name="produkt" id="f-prod">', '<input type="hidden" name="produkt" id="f-prod">\n          <input type="hidden" name="lang" value="en">'),
     ('<span class="lbl">Odeslat poptávku</span>', '<span class="lbl">Send enquiry</span>'),
-    ("Pole s&nbsp;<span class=\"req\">*</span> jsou povinná. Údaje použijeme jen k&nbsp;vyřízení vaší poptávky.",
-     "Fields marked <span class=\"req\">*</span> are required. We use your details only to handle your enquiry."),
+    ("Pole s&nbsp;<span class=\"req\">*</span> jsou povinná. Údaje použijeme jen k&nbsp;vyřízení vaší poptávky (<a href=\"ochrana-osobnich-udaju.html\">ochrana osobních údajů</a>).",
+     "Fields marked <span class=\"req\">*</span> are required. We use your details only to handle your enquiry (<a href=\"ochrana-osobnich-udaju.html\">privacy policy</a>)."),
     ("<h3>Děkujeme, poptávka odešla.</h3>", "<h3>Thank you, your enquiry has been sent.</h3>"),
     ("Ozveme se vám co nejdříve, obvykle do jednoho pracovního dne. Potvrzení jsme poslali na váš e-mail.",
      "We will get back to you as soon as possible, usually within one working day. A confirmation has been sent to your e-mail."),
@@ -439,3 +439,73 @@ JIDLA_EN = dict(
            ("Easy storage", "The cups are easy to store, carry and display."), ("A full meal portion", "Every cup is a full portion.")],
     cta_title="Ready meals for your range", cta_text="Interested in CHUŤ and HOT&amp;GO ready meals for your shop or business? Write to us.",
     cta_btn="Enquire about ready meals", obor="CHUŤ and HOT&GO ready meals")
+
+# ---------------------------------------------------------------- ochrana osobních údajů a cookies
+B2B_FILES.update({"ochrana-osobnich-udaju.html": "privacy.html", "cookies.html": "cookies.html"})
+
+_FILL = '<mark class="fill">[to be completed: {}]</mark>'
+_CTRL = ("Jaroslav Kostera, J.K.FOOD s.r.o., Větřkovice 243, 747 43 Větřkovice, Czech Republic, Company ID 27780384, "
+         "registered in the Commercial Register kept by the Regional Court in Ostrava, file C 51605")
+LEGAL_EN = {
+    "privacy": dict(
+        title="Privacy policy | J.K.FOOD",
+        desc="How J.K.FOOD processes personal data from the enquiry form, e-mail and CVs, and what your rights are.",
+        h1="Privacy policy",
+        intro="How we process your personal data on kostera.cz and what rights you have.",
+        body=[
+            ("Data controller", f"<p>{_CTRL}.</p><p>Contact for personal data matters: "
+             '<a href="mailto:kostera@kostera.cz">kostera@kostera.cz</a>, <a href="tel:+420556310205">+420 556 310 205</a>.</p>'),
+            ("What data we process and why",
+             "<h3>Enquiry form and direct contact</h3>"
+             "<p>Name, company, e-mail, phone, your message and, where relevant, the product or sector you are interested in.</p>"
+             "<ul><li><b>Purpose:</b> handling your enquiry, preparing an offer and follow-up communication.</li>"
+             "<li><b>Legal basis:</b> steps prior to entering into a contract at your request (Art. 6(1)(b) GDPR) and our legitimate "
+             "interest in answering your question (Art. 6(1)(f) GDPR).</li></ul>"
+             "<h3>CVs and job applications</h3>"
+             "<p>Data you send us in your CV or e-mail.</p>"
+             "<ul><li><b>Purpose:</b> recruitment for a vacancy.</li>"
+             "<li><b>Legal basis:</b> steps prior to entering into an employment contract (Art. 6(1)(b) GDPR); longer retention only with your consent.</li></ul>"
+             "<h3>Technical data</h3>"
+             "<p>When you visit the website, the server records technical data (IP address, time, page viewed, browser type). "
+             "To protect the form against abuse we keep a hash of your IP address for 10 minutes.</p>"
+             "<ul><li><b>Purpose:</b> operation and security of the website.</li><li><b>Legal basis:</b> legitimate interest (Art. 6(1)(f) GDPR).</li></ul>"),
+            ("How long we keep data",
+             f"<ul><li>Enquiries and communication: {_FILL.format('e.g. 3 years from the last contact')}; if we conclude a contract, for the period required by law.</li>"
+             f"<li>CVs: until the end of the recruitment process, with your consent {_FILL.format('e.g. 1 year')}.</li>"
+             f"<li>Server logs: {_FILL.format('according to hosting settings, usually 30–90 days')}.</li></ul>"),
+            ("Who we share data with",
+             f"<p>We do not sell your data or pass it on for marketing. It is processed only by our employees and by suppliers who run "
+             f"our website and e-mail ({_FILL.format('name of the hosting and e-mail provider')}).</p>"
+             "<p>The video on the home page is loaded from YouTube (Google Ireland Limited) – see "
+             '<a href="cookies.html">Cookies</a>. Google may transfer data to the USA under the EU-US Data Privacy Framework.</p>'),
+            ("Your rights",
+             "<p>You have the right of access to your data, to rectification or erasure, to restriction of processing, to data portability, "
+             "to object to processing based on legitimate interest and to withdraw consent where given. "
+             'Just write to <a href="mailto:kostera@kostera.cz">kostera@kostera.cz</a>.</p>'
+             "<p>If you believe we process your data unlawfully, you may lodge a complaint with the Czech Office for Personal Data Protection "
+             '(<a href="https://uoou.gov.cz" target="_blank" rel="noopener">uoou.gov.cz</a>).</p>'),
+        ],
+        note=f"Effective from {_FILL.format('date')}. This text is a template prepared for the website – the company will verify it before launch."),
+    "cookies": dict(
+        title="Cookies | J.K.FOOD",
+        desc="Which cookies and browser storage kostera.cz uses. No advertising or analytics cookies.",
+        h1="Cookies",
+        intro="kostera.cz does not use advertising or analytics cookies and does not track your visit.",
+        body=[
+            ("What the website stores in your browser",
+             '<div class="legal-table"><table><thead><tr><th>Name</th><th>Purpose</th><th>Duration</th></tr></thead><tbody>'
+             "<tr><td><code>jkadmin</code></td><td>Login to the administration – website administrators only.</td><td>until the browser is closed</td></tr>"
+             "</tbody></table></div>"
+             "<p>Apart from this, the website stores nothing in your browser.</p>"),
+            ("YouTube video",
+             "<p>The home page contains a video from YouTube (Google). It loads once you start browsing the page and plays automatically, "
+             "muted, when you reach it. It is played from youtube-nocookie.com (privacy-enhanced mode), but YouTube may still store cookies "
+             "and similar data in your browser and process your IP address – according to "
+             '<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google\'s privacy policy</a>.</p>'
+             "<p>If you do not want this, you can block third-party content in your browser or watch the video directly on YouTube.</p>"),
+            ("How to delete cookies",
+             "<p>You can delete cookies and site data at any time in your browser settings (usually Settings → Privacy → Clear browsing data).</p>"
+             '<p>More about personal data processing: <a href="ochrana-osobnich-udaju.html">Privacy policy</a>.</p>'),
+        ],
+        note=""),
+}
