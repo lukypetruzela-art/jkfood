@@ -15,6 +15,13 @@
 
 Pokud hosting běží na **nginx** místo Apache, je potřeba převést pravidla z `.htaccess` do konfigurace serveru (správce hostingu).
 
+## Rychlá kontrola hostingu
+
+Soubor `tools/kontrola-hostingu.php` nahrajte spolu s webem do kořenové složky a otevřete
+`https://…/kontrola-hostingu.php`. Ukáže, co hosting splňuje (✅), co je potřeba opravit (❌ s návodem)
+a co ověřit ručně (⚠️): verzi PHP, rozšíření, .htaccess, HTTPS, zápis do `api/data/`, spojení se SMTP.
+**Po kontrole soubor smažte.**
+
 ## Postup
 
 1. **Nahrát soubory** do kořenové složky webu (u zkušební verze do složky subdomény). Nenahrávat:
