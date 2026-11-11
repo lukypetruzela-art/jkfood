@@ -1,0 +1,17 @@
+# Statistika jazyků na GitHubu: počítat jen vlastní kód
+api/lib/PHPMailer/** linguist-vendored
+assets/site.min.css linguist-generated
+assets/sortiment-data.js linguist-generated
+sortiment*.html linguist-generated
+en/*.html linguist-generated
+prumysl.html linguist-generated
+vyzkum-a-vyvoj.html linguist-generated
+hotova-jidla.html linguist-generated
+masny-prumysl.html linguist-generated
+pekarstvi.html linguist-generated
+mlekarny.html linguist-generated
+snacky-a-pochutiny.html linguist-generated
+gastro-a-jidelny.html linguist-generated
+privatni-znacka.html linguist-generated
+nas-tym.html linguist-generated
+kariera.html linguist-generated

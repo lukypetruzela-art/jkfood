@@ -220,7 +220,7 @@ def render_chips(active):
 
 def build_catalog(items, v):
     tpl = (ROOT / "tools" / "sortiment.template.html").read_text(encoding="utf-8")
-    footcats = "".join(f'<li><a href="{c["file"]}">{esc(c["name"])}</a></li>' for c in CATS)
+    hd, ft = site_chrome("sortiment.html", "products.html")   # menu a patička z úvodní stránky
     legacy = ", ".join(f"'{c['id']}': '{c['file']}'" for c in CATS)
     pages = [None] + list(range(len(CATS)))
     for active in pages:
@@ -264,11 +264,8 @@ def build_catalog(items, v):
                 .replace("{{INTRO}}", nbsp(esc(intro))).replace("{{PLACEHOLDER}}", esc(placeholder))
                 .replace("{{CHIPS}}", render_chips(active)).replace("{{LIST}}", render_list(items, cats_idx))
                 .replace("{{COUNT}}", f"Celkem {len(shown)} {plural(len(shown))}")
-                .replace("{{FOOTCATS}}", footcats).replace("{{LEGACY}}", legacy if active is None else ""))
+                .replace("{{HEADER}}", hd).replace("{{FOOTER}}", ft).replace("{{LEGACY}}", legacy if active is None else ""))
         assert "{{" not in page, re.findall(r"\{\{\w+\}\}", page)
-        hd, ft = site_chrome("sortiment.html", "products.html")
-        page = re.sub(r'<header class="top".*?</header>', lambda m: hd, page, count=1, flags=re.S)
-        page = re.sub(r'<footer class="foot">.*?</footer>', lambda m: ft, page, count=1, flags=re.S)
         (ROOT / file).write_text(page, encoding="utf-8")
     return [("sortiment.html", "0.9")] + [(c["file"], "0.8") for c in CATS]
 
@@ -349,10 +346,6 @@ def build_index(v):
         ld({"@context": "https://schema.org", "@graph": graph}),
     ])
     s = re.sub(r"<!-- META:START -->.*?<!-- META:END -->", lambda m: f"<!-- META:START -->\n{meta}\n<!-- META:END -->", s, flags=re.S)
-    legend = "\n".join(
-        f'<li><a href="{c["file"]}" data-cat="{i}"><canvas class="sw-ic" data-ic="{i}" width="28" height="28" aria-hidden="true"></canvas><span class="nm">{esc(c["name"])}</span></a></li>'
-        for i, c in enumerate(CATS))
-    s = re.sub(r"<!-- LEGEND:START -->.*?<!-- LEGEND:END -->", lambda m: f"<!-- LEGEND:START -->\n{legend}\n<!-- LEGEND:END -->", s, flags=re.S)
     foot = "".join(f'<li><a href="{c["file"]}">{esc(c["name"])}</a></li>' for c in CATS)
     s = re.sub(r"<!-- FOOTCATS:START -->.*?<!-- FOOTCATS:END -->", lambda m: f"<!-- FOOTCATS:START -->{foot}<!-- FOOTCATS:END -->", s, flags=re.S)
     s = re.sub(r"<!-- FAQ:START -->.*?<!-- FAQ:END -->", lambda m: f"<!-- FAQ:START -->\n{render_faq('cs')}\n<!-- FAQ:END -->", s, flags=re.S)
@@ -365,7 +358,7 @@ def build_index(v):
             'imagesizes="100vw" media="(min-width:761px)" type="image/avif" fetchpriority="high">\n'
             f"<style>{css}</style>")
     s = re.sub(r"<!-- HOME:START -->.*?<!-- HOME:END -->", lambda m: f"<!-- HOME:START -->\n{home}\n<!-- HOME:END -->", s, flags=re.S)
-    rows = v2_cat_rows(load_items(), [c["id"] for c in CATS]) + [v2_row(
+    rows = cat_rows(load_items(), [c["id"] for c in CATS]) + [cat_row(
         "hotova-jidla.html", "Vlastní značky", "Hotová jídla v kelímku CHUŤ a HOT&GO", "stačí zalít horkou vodou – kompletní jídlo za pár minut")]
     s = re.sub(r"<!-- SORTLIST:START -->.*?<!-- SORTLIST:END -->",
                lambda m: "<!-- SORTLIST:START -->\n" + "\n".join("          " + r for r in rows) + "\n<!-- SORTLIST:END -->", s, flags=re.S)
@@ -375,8 +368,6 @@ def build_index(v):
     p404 = ROOT / "404.html"
     if p404.exists():
         t = p404.read_text(encoding="utf-8")
-        foot404 = "".join(f'<li><a href="/{c["file"]}">{esc(c["name"])}</a></li>' for c in CATS)
-        t = re.sub(r"<!-- FOOTCATS:START -->.*?<!-- FOOTCATS:END -->", lambda m: f"<!-- FOOTCATS:START -->{foot404}<!-- FOOTCATS:END -->", t, flags=re.S)
         t = re.sub(r'(assets/styles\.css)\?v=\w+', rf"\1?v={v}", t)
         hd, ft = site_chrome(absolute=True)
         t = re.sub(r'<header class="top".*?</header>', lambda m: hd, t, count=1, flags=re.S)
@@ -772,8 +763,8 @@ def build_en():
 
     # --- stránky pro firmy (Průmysl, obory, Výzkum a vývoj, Hotová jídla): obsah z anglických dat, menu a patička překladem
     items = load_items()
-    b2b = [("prumysl.html", lambda: v2_prumysl("en")), ("vyzkum-a-vyvoj.html", lambda: v2_vyvoj("en")),
-           ("hotova-jidla.html", lambda: v2_jidla("en"))] + [(o["file"], lambda o=o: v2_obor(o, items, "en")) for o in OBORY]
+    b2b = [("prumysl.html", lambda: page_prumysl("en")), ("vyzkum-a-vyvoj.html", lambda: page_vyvoj("en")),
+           ("hotova-jidla.html", lambda: page_jidla("en"))] + [(o["file"], lambda o=o: page_obor(o, items, "en")) for o in OBORY]
     b2b_pages = []
     for cz, render in b2b:
         en = T.B2B_FILES[cz]
@@ -994,7 +985,7 @@ def count_word(n, lang="cs"):
     return "výrobek" if n == 1 else "výrobky" if 2 <= n <= 4 else "výrobků"
 
 
-def v2_row(href, count, name, ex):
+def cat_row(href, count, name, ex):
     return (f'<li><a href="{href}"><span class="vs-n">{count}</span><span class="vs-nm">{esc(name)}</span>'
             f'<span class="vs-ex">{nbsp(esc(ex))}</span><span class="vs-go" aria-hidden="true"></span></a></li>')
 
@@ -1006,19 +997,19 @@ def _en():
     return i18n_en
 
 
-def v2_cat_rows(items, ids, lang="cs"):
+def cat_rows(items, ids, lang="cs"):
     by_id = {c["id"]: (i, c) for i, c in enumerate(CATS)}
     ex = _en().V2_EX_EN if lang == "en" else V2_EX
     rows = []
     for cid in ids:
         i, c = by_id[cid]
         n = sum(1 for p in items if p["g"] == i)
-        rows.append(v2_row(c["file"], f"{n}&nbsp;{count_word(n, lang)}", c["name"], ex[cid]))
+        rows.append(cat_row(c["file"], f"{n}&nbsp;{count_word(n, lang)}", c["name"], ex[cid]))
     return rows
 
 
 def cards(items, cls=""):
-    return (f'<ol class="coop-list v2-cards {cls}">' + "".join(
+    return (f'<ol class="coop-list b2b-cards {cls}">' + "".join(
         f'<li><span class="coop-n" aria-hidden="true">{i + 1}</span><h3>{t}</h3><p>{x}</p></li>'
         for i, (t, x) in enumerate(items)) + "</ol>")
 
@@ -1049,11 +1040,11 @@ def why_html(lang="cs", hid="ob-why"):
     L = ui(lang)
     why = _en().WHY_EN if lang == "en" else WHY
     return (f'<section class="obor-sec" aria-labelledby="{hid}"><h2 class="obor-h" id="{hid}">{L["why"]}</h2>'
-            + '<ul class="v2-why">' + "".join(f"<li><h3>{t}</h3><p>{x}</p></li>" for t, x in why) + "</ul></section>")
+            + '<ul class="b2b-why">' + "".join(f"<li><h3>{t}</h3><p>{x}</p></li>" for t, x in why) + "</ul></section>")
 
 
 def bullets(lead, pts):
-    return (f'<div class="v2-focus"><p>{lead}</p><ul>' + "".join(f"<li>{nbsp(esc(x))}</li>" for x in pts) + "</ul></div>")
+    return (f'<div class="b2b-focus"><p>{lead}</p><ul>' + "".join(f"<li>{nbsp(esc(x))}</li>" for x in pts) + "</ul></div>")
 
 
 def form_link(obor, typ=None):
@@ -1061,7 +1052,7 @@ def form_link(obor, typ=None):
     return q + (f"&amp;typ={typ.replace(' ', '%20')}" if typ else "") + "#kontakt"
 
 
-def v2_page(file, title, desc, crumbs, h1, intro, body, cta, lang="cs"):
+def b2b_page(file, title, desc, crumbs, h1, intro, body, cta, lang="cs"):
     """Stránka pro firmy. Česky se rovnou zapíše, anglicky vrátí HTML (dokončí ho build_en)."""
     en_file = _en().B2B_FILES[file]
     url = f"{SITE}/{file}" if lang == "cs" else f"{SITE}/en/{en_file}"
@@ -1073,7 +1064,7 @@ def v2_page(file, title, desc, crumbs, h1, intro, body, cta, lang="cs"):
     return simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_current=nav, en_file=en_file, write=lang == "cs")
 
 
-def photo(src, alt, cls="v2-photo"):
+def photo(src, alt, cls="b2b-photo"):
     return (f'<figure class="{cls}"><picture><source srcset="img/{src}-600.webp 600w, img/{src}-800.webp 800w, img/{src}-1000.webp 1000w" sizes="(max-width:900px) 92vw, 560px" type="image/webp">'
             f'<img src="img/{src}.jpg" alt="{alt}" width="1000" height="800" fetchpriority="high" decoding="async"></picture></figure>')
 
@@ -1098,10 +1089,10 @@ def obor_text(o, lang):
     return o if lang == "cs" else {**o, **_en().OBORY_EN[o["file"]]}
 
 
-def v2_obor(o, items, lang="cs"):
+def page_obor(o, items, lang="cs"):
     L, t = ui(lang), obor_text(o, lang)
     parts = []
-    head = f'<p class="v2-tag">{esc(t["tag"])}</p>'
+    head = f'<p class="b2b-tag">{esc(t["tag"])}</p>'
     if t["focus"]:
         parts.append(f'<section class="obor-sec" aria-labelledby="ob-focus">{head}<h2 class="sr" id="ob-focus">{L["focus_sr"]}</h2>'
                      + bullets(t.get("focus_lead", L["focus_lead"]), t["focus"]) + "</section>")
@@ -1112,13 +1103,13 @@ def v2_obor(o, items, lang="cs"):
                      + cards([(esc(a), nbsp(esc(b))) for a, b in t["offer"]]) + "</section>")
     parts.append(f'<section class="obor-sec" aria-labelledby="ob-cats"><div class="obor-cats-head"><h2 class="obor-h" id="ob-cats">{L["cats"]}</h2>'
                  f'<a class="rail-mini" href="sortiment.html">{L["all"]} <span class="i-next" aria-hidden="true"></span></a></div>'
-                 f'<ul class="vsort-list">{"".join(v2_cat_rows(items, o["cats"], lang))}</ul></section>')
+                 f'<ul class="vsort-list">{"".join(cat_rows(items, o["cats"], lang))}</ul></section>')
     parts.append(steps5_html(lang))
     others = "".join(f'<li><a href="{x["file"]}">{esc(obor_text(x, lang)["nav"])}</a></li>' for x in OBORY if x is not o)
-    parts.append(f'<nav class="obor-sec v2-others" aria-label="{L["others"]}"><h2 class="obor-h">{L["others"]}</h2><ul>{others}</ul></nav>')
+    parts.append(f'<nav class="obor-sec b2b-others" aria-label="{L["others"]}"><h2 class="obor-h">{L["others"]}</h2><ul>{others}</ul></nav>')
     cta = cta_band("obor-cta", L["cta_title"], L["cta_text"],
                    [("btn-white", form_link(t["name"]), L["cta_enquire"]), ("btn-ghost", form_link(t["name"], "Vzorky"), L["cta_samples"])])
-    return v2_page(o["file"], t["title"], t["desc"], [(L["home"], ""), (L["industry"], "prumysl.html"), (t["nav"], o["file"])],
+    return b2b_page(o["file"], t["title"], t["desc"], [(L["home"], ""), (L["industry"], "prumysl.html"), (t["nav"], o["file"])],
                    t["h1"], t["intro"], "".join(parts), cta, lang)
 
 
@@ -1136,20 +1127,20 @@ PRUMYSL_CS = dict(
     obor="Průmysl")
 
 
-def v2_prumysl(lang="cs"):
+def page_prumysl(lang="cs"):
     L = ui(lang)
     T = _en().PRUMYSL_EN if lang == "en" else PRUMYSL_CS
     tiles = "".join(f'<li><a href="{o["file"]}"><span class="vs-nm">{esc(obor_text(o, lang)["nav"])}</span><span class="vs-ex">{esc(obor_text(o, lang)["tag"])}</span>'
                     '<span class="vs-go" aria-hidden="true"></span></a></li>' for o in OBORY)
-    body = (f'<section class="obor-sec v2-split" aria-labelledby="pr-dehy"><div><p class="v2-tag">{T["tag"]}</p>'
-            f'<h2 class="obor-h" id="pr-dehy">{T["h2"]}</h2><p class="v2-p">{T["p"]}</p>'
+    body = (f'<section class="obor-sec b2b-split" aria-labelledby="pr-dehy"><div><p class="b2b-tag">{T["tag"]}</p>'
+            f'<h2 class="obor-h" id="pr-dehy">{T["h2"]}</h2><p class="b2b-p">{T["p"]}</p>'
             + bullets(T["lead"], T["pts"]) + "</div>" + photo("pilir-prumysl", T["alt"]) + "</section>"
             f'<section class="obor-sec" aria-labelledby="pr-obory"><h2 class="obor-h" id="pr-obory">{T["sectors"]}</h2>'
-            f'<ul class="vsort-list v2-obory">{tiles}</ul></section>'
+            f'<ul class="vsort-list b2b-obory">{tiles}</ul></section>'
             + why_html(lang) + steps5_html(lang))
     cta = cta_band("pr-cta", T["cta_title"], T["cta_text"],
                    [("btn-white", form_link(T["obor"]), L["cta_enquire"]), ("btn-ghost", "tel:+420556310205", "+420 556 310 205")])
-    return v2_page("prumysl.html", T["title"], T["desc"], [(L["home"], ""), (L["industry"], "prumysl.html")], T["h1"], T["intro"], body, cta, lang)
+    return b2b_page("prumysl.html", T["title"], T["desc"], [(L["home"], ""), (L["industry"], "prumysl.html")], T["h1"], T["intro"], body, cta, lang)
 
 
 VYVOJ_CS = dict(
@@ -1172,18 +1163,18 @@ VYVOJ_CS = dict(
     cta_btn="Poptat vývoj", obor="Vývoj na míru")
 
 
-def v2_vyvoj(lang="cs"):
+def page_vyvoj(lang="cs"):
     L = ui(lang)
     T = _en().VYVOJ_EN if lang == "en" else VYVOJ_CS
-    body = (f'<section class="obor-sec v2-split" aria-labelledby="rd-co"><div><p class="v2-tag">{T["tag"]}</p>'
-            f'<h2 class="obor-h" id="rd-co">{T["h2"]}</h2><p class="v2-p">{T["p"]}</p>'
+    body = (f'<section class="obor-sec b2b-split" aria-labelledby="rd-co"><div><p class="b2b-tag">{T["tag"]}</p>'
+            f'<h2 class="obor-h" id="rd-co">{T["h2"]}</h2><p class="b2b-p">{T["p"]}</p>'
             + bullets(T["lead"], T["pts"]) + "</div>" + photo("pilir-vyvoj", T["alt"]) + "</section>"
-            f'<section class="obor-sec" aria-labelledby="rd-help"><h2 class="obor-h" id="rd-help">{T["h2b"]}</h2><p class="v2-p">{T["pb"]}</p>'
-            + cards(T["cards"]) + f'<blockquote class="v2-quote">{T["quote"]}</blockquote></section>'
+            f'<section class="obor-sec" aria-labelledby="rd-help"><h2 class="obor-h" id="rd-help">{T["h2b"]}</h2><p class="b2b-p">{T["pb"]}</p>'
+            + cards(T["cards"]) + f'<blockquote class="b2b-quote">{T["quote"]}</blockquote></section>'
             + steps5_html(lang))
     cta = cta_band("rd-cta", T["cta_title"], T["cta_text"],
                    [("btn-white", form_link(T["obor"], "Vývoj směsi na míru"), T["cta_btn"]), ("btn-ghost", "tel:+420556310205", "+420 556 310 205")])
-    return v2_page("vyzkum-a-vyvoj.html", T["title"], T["desc"], [(L["home"], ""), (T["h1"], "vyzkum-a-vyvoj.html")], T["h1"], T["intro"], body, cta, lang)
+    return b2b_page("vyzkum-a-vyvoj.html", T["title"], T["desc"], [(L["home"], ""), (T["h1"], "vyzkum-a-vyvoj.html")], T["h1"], T["intro"], body, cta, lang)
 
 
 JIDLA_CS = dict(
@@ -1204,31 +1195,31 @@ JIDLA_CS = dict(
     cta_btn="Poptat hotová jídla", obor="Hotová jídla CHUŤ a HOT&GO")
 
 
-def v2_jidla(lang="cs"):
+def page_jidla(lang="cs"):
     L = ui(lang)
     T = _en().JIDLA_EN if lang == "en" else JIDLA_CS
-    ph = "".join(f'<li class="v2-ph"><span class="v2-ph-ic" aria-hidden="true"></span><b>{T["ph_item"]}</b><span>{T["ph_item_sub"]}</span></li>' for _ in range(4))
-    body = (f'<section class="obor-sec v2-split" aria-labelledby="hj-co"><div><p class="v2-tag">{T["tag"]}</p>'
-            f'<h2 class="obor-h" id="hj-co">{T["h2"]}</h2><p class="v2-p">{T["p"]}</p>'
+    ph = "".join(f'<li class="b2b-ph"><span class="b2b-ph-ic" aria-hidden="true"></span><b>{T["ph_item"]}</b><span>{T["ph_item_sub"]}</span></li>' for _ in range(4))
+    body = (f'<section class="obor-sec b2b-split" aria-labelledby="hj-co"><div><p class="b2b-tag">{T["tag"]}</p>'
+            f'<h2 class="obor-h" id="hj-co">{T["h2"]}</h2><p class="b2b-p">{T["p"]}</p>'
             + bullets(T["lead"], T["pts"])
-            + f'</div><div class="v2-ph-hero" role="img" aria-label="{T["ph_hero_label"]}"><span class="v2-ph-ic" aria-hidden="true"></span><b>{T["ph_hero"]}</b></div></section>'
+            + f'</div><div class="b2b-ph-hero" role="img" aria-label="{T["ph_hero_label"]}"><span class="b2b-ph-ic" aria-hidden="true"></span><b>{T["ph_hero"]}</b></div></section>'
             f'<section class="obor-sec" aria-labelledby="hj-druhy"><h2 class="obor-h" id="hj-druhy">{T["h_types"]}</h2>'
-            f'<ul class="v2-ph-grid">{ph}</ul></section>'
-            f'<section class="obor-sec" aria-labelledby="hj-b2b"><h2 class="obor-h" id="hj-b2b">{T["h_b2b"]}</h2><p class="v2-p">{T["pb"]}</p>'
+            f'<ul class="b2b-ph-grid">{ph}</ul></section>'
+            f'<section class="obor-sec" aria-labelledby="hj-b2b"><h2 class="obor-h" id="hj-b2b">{T["h_b2b"]}</h2><p class="b2b-p">{T["pb"]}</p>'
             + cards(T["cards"]) + "</section>")
     cta = cta_band("hj-cta", T["cta_title"], T["cta_text"],
                    [("btn-white", form_link(T["obor"]), T["cta_btn"]), ("btn-ghost", form_link(T["obor"], "Vzorky"), L["cta_samples"])])
-    return v2_page("hotova-jidla.html", T["title"], T["desc"], [(L["home"], ""), (T["h1"], "hotova-jidla.html")], T["h1"], T["intro"], body, cta, lang)
+    return b2b_page("hotova-jidla.html", T["title"], T["desc"], [(L["home"], ""), (T["h1"], "hotova-jidla.html")], T["h1"], T["intro"], body, cta, lang)
 
 
 
 def build_b2b(items):
     """Stránky pro firmy: Průmysl, šest oborů, Výzkum a vývoj, Hotová jídla."""
     for o in OBORY:
-        v2_obor(o, items)
-    v2_prumysl()
-    v2_vyvoj()
-    v2_jidla()
+        page_obor(o, items)
+    page_prumysl()
+    page_vyvoj()
+    page_jidla()
     return [("prumysl.html", "0.9"), ("vyzkum-a-vyvoj.html", "0.8"), ("hotova-jidla.html", "0.8")] + [(o["file"], "0.8") for o in OBORY]
 
 
@@ -1245,7 +1236,8 @@ def finalize_html():
     allpages = list(ROOT.glob("*.html")) + list((ROOT / "en").glob("*.html"))
     src = (ROOT / "assets" / "styles.css").read_text(encoding="utf-8")
     js = set()
-    for f in (ROOT / "assets").glob("*.js"):
+    # třídy, které se objeví až podle dat (reference s citátem, fotky týmu…) nebo je přidává skript
+    for f in [*(ROOT / "assets").glob("*.js"), *(ROOT / "assets").glob("*.json"), *(ROOT / "tools").glob("*.py"), *(ROOT / "tools").glob("*.html")]:
         js |= set(re.findall(r"[A-Za-z_][\w-]*", f.read_text(encoding="utf-8")))
     tokens = set(js)
     for p in allpages:
@@ -1288,8 +1280,8 @@ def finalize_html():
 def main():
     v = asset_version()
     items = load_items()
+    build_index(v)                      # nejdřív úvod: z něj ostatní stránky přebírají menu a patičku
     pages = build_catalog(items, v)
-    build_index(v)
     pages += build_team(v)
     pages += build_career(v)
     pages += build_b2b(items)

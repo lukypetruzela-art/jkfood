@@ -1,18 +1,5 @@
-/* Skupiny sortimentu a ilustrace výrobků J.K.FOOD – sdílí index.html a sortiment.html */
+/* Ilustrace výrobků J.K.FOOD – ikonky skupin v katalogu (sortiment*.html) */
 (() => {
-  // devět skupin sortimentu; id = kotva / stránka skupiny, count = počet výrobků v sortimentu
-  const CATS = [
-    { id: 'testoviny', name: 'Těstoviny', count: 7, color: '#E3B94F' },
-    { id: 'koreni', name: 'Koření jednodruhové', count: 74, color: '#2E211E' },
-    { id: 'smesi', name: 'Kořenicí směsi', count: 71, color: '#C8231A' },
-    { id: 'zelenina', name: 'Sušená zelenina', count: 72, color: '#6F8435' },
-    { id: 'maso', name: 'Směsi pro masný průmysl', count: 181, color: '#7C1A12' },
-    { id: 'houby', name: 'Sušené houby a plody', count: 20, color: '#8B6447' },
-    { id: 'polevky', name: 'Bujóny, polévky, omáčky', count: 19, color: '#DE9B2A' },
-    { id: 'brambory', name: 'Bramborové výrobky', count: 14, color: '#C9A06A' },
-    { id: 'skroby', name: 'Škroby a další', count: 32, color: '#CDB892' }
-  ];
-
   /* ---------- ilustrace výrobků ----------
      Jednotný styl: plochá barva + tmavší stín vpravo dole + světlý odlesk vlevo nahoře.
      Kreslí se v jednotkách: střed (0,0), kousek se vejde zhruba do kruhu o poloměru 1. */
@@ -193,8 +180,6 @@
     ['potato'],                    // bramborové výrobky
     ['sack']                       // škroby a další
   ];
-  // výrobky, které mají zůstat zhruba nastojato (miska, houba, mrkev)
-  const UPRIGHT = { soup: .12, mushroom: .3, carrot: .45, sack: .15 };
 
   /* nakreslí výrobek skupiny cat; k = poloměr v px, v = index druhu (bere se modulo),
      'mix' = ikonka do legendy složená ze dvou druhů */
@@ -211,19 +196,5 @@
     }
     c.restore();
   }
-  const kindOf = (cat, v) => KINDS[cat][v % KINDS[cat].length];
-
-  // ikonka skupiny do <canvas> (legenda, katalog)
-  function productIcon(cat, px) {
-    const ic = document.createElement('canvas');
-    const d = Math.min(2, devicePixelRatio || 1);
-    ic.width = ic.height = Math.round(px * d);
-    ic.style.width = ic.style.height = px + 'px';
-    ic.setAttribute('aria-hidden', 'true');
-    const x = ic.getContext('2d'); x.scale(d, d); x.translate(px / 2, px / 2);
-    drawProduct(x, cat, px * .42, 'mix');
-    return ic;
-  }
-
-  window.JK = { CATS, ICONS, KINDS, UPRIGHT, drawProduct, kindOf, productIcon };
+  window.JK = { drawProduct };
 })();
