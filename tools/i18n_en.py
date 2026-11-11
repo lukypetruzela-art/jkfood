@@ -59,6 +59,9 @@ COMMON = [
     ("<address>Větřkovice 243<br>747 43 Větřkovice</address>", "<address>Větřkovice 243<br>747 43 Větřkovice<br>Czech Republic</address>"),
     # mobilní menu (JS)
     ("'Zavřít menu' : 'Otevřít menu'", "'Close menu' : 'Open menu'"),
+    # hlavička: poptávka
+    ('">Poptat</a>', '">Enquire</a>'),
+    ('">Poptat spolupráci</a>', '">Send an enquiry</a>'),
     # patička: firma a obory
     (">Řeznictví a masný průmysl</a>", ">Meat processing</a>"),
     (">Pekařství</a>", ">Bakery</a>"),

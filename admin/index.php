@@ -126,7 +126,7 @@ h1{font-size:28px;margin:0 0 4px}h2{font-size:20px;margin:0 0 14px}
 .card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:18px}
 label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
 label small{font-weight:400;color:var(--muted)}
-input[type=text],input[type=email],input[type=tel],input[type=password],textarea{width:100%;font:inherit;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
+input[type=text],input[type=email],input[type=tel],input[type=password],input[type=date],select,textarea{width:100%;font:inherit;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
 input:focus,textarea:focus{outline:2px solid var(--red);outline-offset:1px;border-color:var(--red)}
 textarea{min-height:96px;resize:vertical}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
@@ -257,6 +257,11 @@ details summary{cursor:pointer;font-weight:600}
     </div>
     <label>Název pozice</label>
     <input type="text" data-f="nazev" maxlength="120" required placeholder="např. Operátor/ka výroby">
+    <div class="grid">
+      <div><label>Typ úvazku <small>(pro vyhledávání práce na Googlu)</small></label>
+        <select data-f="uvazek"><option value="FULL_TIME">Plný úvazek (HPP)</option><option value="PART_TIME">Zkrácený úvazek</option><option value="TEMPORARY">Brigáda / dočasně (DPP, DPČ)</option><option value="CONTRACTOR">Spolupráce na IČ</option><option value="INTERN">Praxe / stáž</option><option value="OTHER">Jiné</option></select></div>
+      <div><label>Zveřejněno <small>(vyplní se samo při uložení)</small></label><input type="date" data-f="zverejneno"></div>
+    </div>
     <label>Štítky <small>(každý na nový řádek – úvazek, místo, nástup…)</small></label>
     <textarea data-f="stitky" rows="3" placeholder="HPP&#10;Větřkovice&#10;nástup ihned"></textarea>
     <div class="grid">
@@ -301,6 +306,7 @@ details summary{cursor:pointer;font-weight:600}
     card.querySelectorAll('[data-f]').forEach(el => {
       const k = el.dataset.f, v = p[k];
       if (k === 'aktivni') el.checked = v !== false;
+      else if (k === 'uvazek') el.value = v || 'FULL_TIME';
       else el.value = LISTS.includes(k) ? (v || []).join('\n') : (v || '');
     });
     card.addEventListener('input', () => refresh(card));

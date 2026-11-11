@@ -85,6 +85,14 @@ Změny se na webu projeví ihned po kliknutí na **Uložit**.
 - **Pozor při nahrávání nové verze webu:** složku `api/data/` nepřepisujte ani nemažte –
   jsou v ní úpravy zákazníka (v Gitu není, je v `.gitignore`).
 
+## Google Jobs
+
+Pozice se zobrazují i ve vyhledávání práce na Googlu (strukturovaná data JobPosting na stránce Kariéra).
+U pozice stačí vybrat **typ úvazku**; datum zveřejnění se doplní samo při prvním uložení
+(inzerát platí 90 dní od zveřejnění – pak ho stačí znovu uložit s novým datem).
+Vzorové pozice s názvem v hranatých závorkách […] se Googlu neposílají.
+Kontrola: https://search.google.com/test/rich-results (adresa stránky Kariéra).
+
 ## Zabezpečení
 
 - Přihlášení heslem (uložený je jen otisk), po 5 chybných pokusech z jedné IP blokace na 15 minut.

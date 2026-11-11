@@ -731,3 +731,19 @@ form.q[hidden],.q-done[hidden]{display:none}
 @media (max-width:1080px){.v2-cards.five{grid-template-columns:repeat(3,1fr);row-gap:32px}.v2-why{grid-template-columns:1fr 1fr}.v2-ph-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:900px){.v2-split{grid-template-columns:1fr}}
 @media (max-width:560px){.v2-cards.five{grid-template-columns:1fr}.v2-why{grid-template-columns:1fr}}
+
+/* ---------- hlavička: Poptat + e-shop jako odkaz; lepkavé tlačítko na mobilu ---------- */
+.nav a.eshop .ext{margin-left:2px}
+.mcta{display:none}
+@media (max-width:760px){
+  .mcta{display:flex;justify-content:center;position:fixed;left:16px;right:16px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;min-height:52px;box-shadow:0 10px 28px -8px rgba(124,11,8,.55);transition:transform .35s var(--ease),opacity .25s}
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  .at-contact .mcta,.top:has(.nav.open) .mcta{transform:translateY(160%);opacity:0;pointer-events:none}
+}
+@media (max-width:760px) and (prefers-reduced-motion:reduce){.mcta{transition:none}}
+@media (min-width:1181px) and (max-width:1380px){
+  .nav{gap:2px}
+  .nav a.link{padding:10px 9px;font-size:15px}
+  .nav a.lang{margin-left:4px}
+  .nav .btn{margin-left:6px;padding:0 16px}
+}

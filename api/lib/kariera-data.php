@@ -13,6 +13,8 @@ const KARIERA_FILE = KARIERA_DIR . '/kariera.json';
 const KARIERA_BACKUPS = KARIERA_DIR . '/zalohy';
 const KARIERA_DEFAULT = __DIR__ . '/../../assets/kariera.json';
 const KARIERA_KEEP = 20;
+// typy úvazku pro Google Jobs (schema.org employmentType)
+const KARIERA_UVAZKY = ['FULL_TIME', 'PART_TIME', 'TEMPORARY', 'CONTRACTOR', 'INTERN', 'OTHER'];
 
 function kariera_load(): array
 {
@@ -96,6 +98,12 @@ function kariera_normalize(array $in): array
             'pozadujeme' => k_list($p['pozadujeme'] ?? []),
             'naplne' => k_list($p['naplne'] ?? []),
         ];
+        $uv = k_line($p['uvazek'] ?? '', 20);
+        $item['uvazek'] = in_array($uv, KARIERA_UVAZKY, true) ? $uv : 'FULL_TIME';
+        $dt = k_line($p['zverejneno'] ?? '', 10);
+        if ($dt !== '' && preg_match('/^\d{4}-\d{2}-\d{2}$/', $dt) && strtotime($dt)) {
+            $item['zverejneno'] = $dt;
+        }
         $pm = k_line($p['kontakt_email'] ?? '', 200);
         if ($pm !== '') {
             if (!filter_var($pm, FILTER_VALIDATE_EMAIL)) {
@@ -124,6 +132,10 @@ function kariera_normalize(array $in): array
 /** Uloží data (atomicky) a předchozí verzi odloží do záloh. */
 function kariera_save(array $d): void
 {
+    foreach ($d['pozice'] as &$p) {          // datum zveřejnění se doplní při prvním uložení pozice
+        $p['zverejneno'] ??= date('Y-m-d');
+    }
+    unset($p);
     foreach ([KARIERA_DIR, KARIERA_BACKUPS] as $dir) {
         if (!is_dir($dir) && !mkdir($dir, 0750, true) && !is_dir($dir)) {
             throw new RuntimeException('Nelze vytvořit složku pro data: ' . $dir);

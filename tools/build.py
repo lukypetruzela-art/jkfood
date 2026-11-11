@@ -562,9 +562,32 @@ return '<li class="job"><details'+(i?'':' open')+'><summary><h3>'+E(j.nazev)+'</
 +'<div class="job-body"><div class="job-cols">'+cols+'</div><div class="job-actions"><a class="btn btn-red" href="mailto:'+E(m)+'?subject='+encodeURIComponent('Zájem o pozici: '+j.nazev)+'">Mám zájem – poslat životopis</a>'
 +(tel?'<a class="btn btn-line" href="tel:'+E(tel.replace(/[^+0-9]/g,''))+'">Zavolat '+E(tel)+'</a>':'')+'</div></div></details></li>';}).join(''):"""
 CAREER_JS += repr(JOBS_EMPTY) + r""";
+const ld=document.getElementById('jobsLd');if(ld){const L2=[['nabizime','Nabízíme'],['pozadujeme','Požadujeme'],['naplne','Náplň práce']];
+ld.textContent=JSON.stringify(act.filter(j=>j.zverejneno&&j.nazev.indexOf('[')<0).map(j=>{const d=new Date(j.zverejneno);d.setDate(d.getDate()+90);
+return {'@context':'https://schema.org','@type':'JobPosting',title:j.nazev,description:'<p>'+E(j.nazev)+' – J.K.FOOD, Větřkovice.</p>'+L2.filter(([k])=>(j[k]||[]).length).map(([k,l])=>'<h3>'+l+'</h3><ul>'+j[k].map(x=>'<li>'+E(x)+'</li>').join('')+'</ul>').join(''),
+datePosted:j.zverejneno,validThrough:d.toISOString().slice(0,10),employmentType:j.uvazek||'FULL_TIME',
+hiringOrganization:{'@type':'Organization',name:'Jaroslav Kostera, J.K.FOOD s.r.o.',sameAs:location.origin+'/',logo:location.origin+'/assets/icons/logo-512.png'},
+jobLocation:{'@type':'Place',address:{'@type':'PostalAddress',streetAddress:'Větřkovice 243',addressLocality:'Větřkovice',postalCode:'747 43',addressRegion:'Moravskoslezský kraj',addressCountry:'CZ'}},directApply:false};}));}
 const cta=document.getElementById('career-cta');if(cta){const box=cta.closest('section');const p=box.querySelector('p');if(p&&d.dalsi)p.innerHTML=nb(d.dalsi);
 const a=box.querySelector('a[href^="mailto:"]');if(a&&mail){a.href='mailto:'+mail+'?subject='+encodeURIComponent('Životopis – J.K.FOOD');a.textContent='Napsat na '+mail;}}
 }).catch(()=>{});})();"""
+
+
+def job_ld(j):
+    """JobPosting pro vyhledávání práce na Googlu (Google Jobs). Vzorové pozice ([…]) se nepublikují."""
+    if "[" in j["nazev"] or not j.get("zverejneno"):
+        return None
+    desc = "".join(f"<h3>{l}</h3><ul>" + "".join(f"<li>{esc(x)}</li>" for x in j.get(k, [])) + "</ul>"
+                   for k, l in [("nabizime", "Nabízíme"), ("pozadujeme", "Požadujeme"), ("naplne", "Náplň práce")] if j.get(k))
+    posted = datetime.date.fromisoformat(j["zverejneno"])
+    return {"@context": "https://schema.org", "@type": "JobPosting", "title": j["nazev"],
+            "description": f"<p>{esc(j['nazev'])} – J.K.FOOD, Větřkovice.</p>{desc}",
+            "datePosted": j["zverejneno"], "validThrough": (posted + datetime.timedelta(days=90)).isoformat(),
+            "employmentType": j.get("uvazek", "FULL_TIME"),
+            "hiringOrganization": {"@type": "Organization", "name": ORG["legal"], "sameAs": f"{SITE}/", "logo": f"{SITE}/assets/icons/logo-512.png"},
+            "jobLocation": {"@type": "Place", "address": {"@type": "PostalAddress", "streetAddress": "Větřkovice 243", "addressLocality": "Větřkovice",
+                                                          "postalCode": "747 43", "addressRegion": "Moravskoslezský kraj", "addressCountry": "CZ"}},
+            "directApply": False}
 
 
 def build_career(v):
@@ -591,8 +614,10 @@ def build_career(v):
             f'<section class="career-jobs" aria-labelledby="jobs-title"><div class="team-grp-head"><h2 id="jobs-title">Volné pozice</h2>'
             f'<p id="jobsCount">{jobs_count(len(active))}</p></div>'
             f'<ul class="jobs" id="jobs">{"".join(jobs) or JOBS_EMPTY}</ul></section>'
+            # inzeráty pro Google Jobs (aktualizuje je i skript níže podle administrace)
+            + '<script type="application/ld+json" id="jobsLd">' + json.dumps([x for x in map(job_ld, active) if x], ensure_ascii=False).replace("</", "<\\/") + "</script>"
             # aktuální inzeráty z administrace (api/kariera.php); bez PHP zůstanou ty z HTML
-            f'<script>{CAREER_JS}</script>')
+            + f'<script>{CAREER_JS}</script>')
     cta = cta_band("career-cta", "Nenašli jste svou pozici?", nbsp(esc(data["dalsi"])),
                    [("btn-white", f"mailto:{mail}?subject={quote('Životopis – J.K.FOOD')}", f"Napsat na {mail}"),
                     ("btn-ghost", "nas-tym.html", "Poznejte náš tým")])
