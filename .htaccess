@@ -20,10 +20,13 @@ ErrorDocument 404 /404.html
     RewriteEngine On
 
     # --- 1) HTTPS a www (jedna adresa pro vyhledávače) ---
-    RewriteCond %{HTTPS} !=on [OR]
-    RewriteCond %{HTTP_HOST} !^www\. [NC]
-    RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
-    RewriteRule ^ https://www.%1%{REQUEST_URI} [R=301,L,NE]
+    # www jen u hlavní domény (zkušební subdoména typu test.kostera.cz zůstává beze změny)
+    RewriteCond %{HTTP_HOST} ^kostera\.cz$ [NC]
+    RewriteRule ^ https://www.kostera.cz%{REQUEST_URI} [R=301,L,NE]
+    # HTTPS na každé adrese; X-Forwarded-Proto kvůli hostingům za proxy
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L,NE]
 
     # index.html → /
     RewriteCond %{THE_REQUEST} \s/index\.html[\s?] [NC]

@@ -2,7 +2,7 @@
 /*
  * Administrace stránky Kariéra – kostera.cz/admin/
  * Přihlášení heslem (hash v api/config.php → 'admin_heslo_hash'), úpravy se na webu projeví ihned.
- * Návod: api/NAVOD.md, část „Administrace kariéry“.
+ * Návod: NASAZENI.md a api/NAVOD.md, část „Administrace kariéry“.
  */
 declare(strict_types=1);
 
@@ -19,6 +19,7 @@ header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-i
 $cfgFile = __DIR__ . '/../api/config.php';
 $cfg = is_file($cfgFile) ? (require $cfgFile) : [];
 $hash = is_array($cfg) ? (string) ($cfg['admin_heslo_hash'] ?? '') : '';
+$newHash = '';
 
 $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
 session_name('jkadmin');
@@ -54,6 +55,14 @@ function redirect(string $flash): void
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!csrf_ok()) {
         $errors[] = 'Platnost formuláře vypršela. Obnovte stránku a zkuste to znovu.';
+    } elseif ($action === 'hash' && $hash === '') {
+        // jen dokud není heslo nastavené: vytvoří otisk k vložení do api/config.php (nic neukládá)
+        $pw = (string) ($_POST['nove_heslo'] ?? '');
+        if (mb_strlen($pw) < 12) {
+            $errors[] = 'Heslo musí mít aspoň 12 znaků.';
+        } else {
+            $newHash = password_hash($pw, PASSWORD_DEFAULT);
+        }
     } elseif ($action === 'login') {
         if ($hash === '') {
             $errors[] = 'Administrace zatím nemá nastavené heslo (viz návod).';
@@ -170,13 +179,21 @@ details summary{cursor:pointer;font-weight:600}
     <?php if ($msg): ?><div class="msg ok"><?= h($msg) ?></div><?php endif; ?>
     <?php if ($errors): ?><div class="msg err"><?= h(implode(' ', $errors)) ?></div><?php endif; ?>
     <?php if ($hash === ''): ?>
-      <div class="msg err">Heslo zatím není nastavené. Správce webu ho nastaví podle návodu v souboru api/NAVOD.md.</div>
+      <div class="msg err">Heslo zatím není nastavené. Správce webu ho nastaví podle návodu v souboru NASAZENI.md.</div>
+      <?php if (!empty($newHash)): ?>
+        <p class="help">Otisk hesla – zkopírujte ho do <b>api/config.php</b> jako <code>'admin_heslo_hash' =&gt; '…'</code>:</p>
+        <input type="text" readonly value="<?= h($newHash) ?>" onclick="this.select()">
+      <?php else: ?>
+        <label for="nove_heslo">Zvolte heslo pro administraci <small>(aspoň 12 znaků)</small></label>
+        <input id="nove_heslo" type="password" name="nove_heslo" autocomplete="new-password" minlength="12">
+        <p><button class="btn" type="submit" name="action" value="hash" formnovalidate>Vytvořit otisk hesla</button></p>
+        <p class="help">Heslo se nikam neuloží – vznikne jen otisk, který správce vloží do nastavení.</p>
+      <?php endif; ?>
     <?php endif; ?>
-    <label for="heslo">Heslo</label>
-    <input id="heslo" type="password" name="heslo" autocomplete="current-password" required autofocus>
+    <?php if ($hash !== ''): ?><label for="heslo">Heslo</label><?php endif; ?>
+    <?php if ($hash !== ''): ?><input id="heslo" type="password" name="heslo" autocomplete="current-password" required autofocus><?php endif; ?>
     <input type="hidden" name="csrf" value="<?= h(csrf()) ?>">
-    <input type="hidden" name="action" value="login">
-    <p><button class="btn red" type="submit">Přihlásit</button></p>
+    <?php if ($hash !== ''): ?><p><button class="btn red" type="submit" name="action" value="login">Přihlásit</button></p><?php endif; ?>
   </form>
 </div>
 <?php else: ?>
