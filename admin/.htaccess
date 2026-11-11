@@ -1,0 +1,7 @@
+# Administrace kariéry – nevyhledávat, nevypisovat obsah složky, neukládat do mezipaměti.
+Options -Indexes
+DirectoryIndex index.php
+<IfModule mod_headers.c>
+    Header set X-Robots-Tag "noindex, nofollow"
+    Header set Cache-Control "no-store"
+</IfModule>

@@ -507,13 +507,43 @@ def build_team(v):
     return [("nas-tym.html", "0.6")]
 
 
+JOBS_EMPTY = '<li class="job-empty">Momentálně nemáme vypsanou žádnou pozici. Pošlete nám ale životopis – rádi se vám ozveme.</li>'
+
+
+def jobs_count(n):
+    if n == 0:
+        return "Žádná volná pozice"
+    return f'{n} {"pozice" if n <= 4 else "pozic"} · klikněte pro podrobnosti'
+
+
+# stejné vykreslení jako v build_career, ale v prohlížeči z aktuálních dat administrace
+CAREER_JS = r"""(()=>{const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nb=s=>E(s).replace(/ ([aikosuvzAIKOSUVZ]) /g,' $1&nbsp;');
+fetch('api/kariera.php',{cache:'no-store'}).then(r=>r.ok&&/json/.test(r.headers.get('content-type')||'')?r.json():null).then(d=>{if(!d||!Array.isArray(d.pozice))return;
+const mail=d.kontakt_email,act=d.pozice.filter(j=>j.aktivni!==false),n=act.length;
+const intro=document.querySelector('.cat-head .intro');if(intro&&d.intro)intro.innerHTML=nb(d.intro);
+const why=document.querySelector('.career-why .why');if(why&&Array.isArray(d.proc))why.innerHTML=d.proc.map(w=>'<li><h3>'+E(w.nadpis)+'</h3><p>'+nb(w.text)+'</p></li>').join('');
+document.getElementById('jobsCount').textContent=n?n+' '+(n<=4?'pozice':'pozic')+' · klikněte pro podrobnosti':'Žádná volná pozice';
+const L=[['nabizime','Nabízíme'],['pozadujeme','Požadujeme'],['naplne','Náplň práce']];
+document.getElementById('jobs').innerHTML=n?act.map((j,i)=>{const cols=L.filter(([k])=>(j[k]||[]).length).map(([k,l])=>'<div><h4>'+l+'</h4><ul>'+j[k].map(x=>'<li>'+E(x)+'</li>').join('')+'</ul></div>').join('');
+const m=j.kontakt_email||mail,tel=j.kontakt_tel;
+return '<li class="job"><details'+(i?'':' open')+'><summary><h3>'+E(j.nazev)+'</h3><span class="job-tags">'+(j.stitky||[]).map(t=>'<span>'+E(t)+'</span>').join('')+'</span><span class="job-toggle" aria-hidden="true"></span></summary>'
++'<div class="job-body"><div class="job-cols">'+cols+'</div><div class="job-actions"><a class="btn btn-red" href="mailto:'+E(m)+'?subject='+encodeURIComponent('Zájem o pozici: '+j.nazev)+'">Mám zájem – poslat životopis</a>'
++(tel?'<a class="btn btn-line" href="tel:'+E(tel.replace(/[^+0-9]/g,''))+'">Zavolat '+E(tel)+'</a>':'')+'</div></div></details></li>';}).join(''):"""
+CAREER_JS += repr(JOBS_EMPTY) + r""";
+const cta=document.getElementById('career-cta');if(cta){const box=cta.closest('section');const p=box.querySelector('p');if(p&&d.dalsi)p.innerHTML=nb(d.dalsi);
+const a=box.querySelector('a[href^="mailto:"]');if(a&&mail){a.href='mailto:'+mail+'?subject='+encodeURIComponent('Životopis – J.K.FOOD');a.textContent='Napsat na '+mail;}}
+}).catch(()=>{});})();"""
+
+
 def build_career(v):
     """Stránka Kariéra (kariera.html) z assets/kariera.json."""
     data = json.loads((ROOT / "assets" / "kariera.json").read_text(encoding="utf-8"))
     mail = data["kontakt_email"]
     why = "".join(f'<li><h3>{esc(w["nadpis"])}</h3><p>{nbsp(esc(w["text"]))}</p></li>' for w in data["proc"])
     jobs = []
-    for i, j in enumerate(data["pozice"]):
+    active = [j for j in data["pozice"] if j.get("aktivni", True)]   # skryté pozice se nezobrazují
+    for i, j in enumerate(active):
         tags = "".join(f"<span>{esc(t)}</span>" for t in j.get("stitky", []))
         cols = []
         for key, label in [("nabizime", "Nabízíme"), ("pozadujeme", "Požadujeme"), ("naplne", "Náplň práce")]:
@@ -528,8 +558,10 @@ def build_career(v):
                     f'<div class="job-body"><div class="job-cols">{"".join(cols)}</div><div class="job-actions">{"".join(actions)}</div></div></details></li>')
     body = (f'<section class="career-why" aria-labelledby="why-title"><h2 id="why-title" class="sr">Proč pracovat u nás</h2><ul class="why">{why}</ul></section>'
             f'<section class="career-jobs" aria-labelledby="jobs-title"><div class="team-grp-head"><h2 id="jobs-title">Volné pozice</h2>'
-            f'<p>{len(data["pozice"])} {"pozice" if 2 <= len(data["pozice"]) <= 4 else "pozic" if len(data["pozice"]) != 1 else "pozice"} · klikněte pro podrobnosti</p></div>'
-            f'<ul class="jobs">{"".join(jobs)}</ul></section>')
+            f'<p id="jobsCount">{jobs_count(len(active))}</p></div>'
+            f'<ul class="jobs" id="jobs">{"".join(jobs) or JOBS_EMPTY}</ul></section>'
+            # aktuální inzeráty z administrace (api/kariera.php); bez PHP zůstanou ty z HTML
+            f'<script>{CAREER_JS}</script>')
     cta = cta_band("career-cta", "Nenašli jste svou pozici?", nbsp(esc(data["dalsi"])),
                    [("btn-white", f"mailto:{mail}?subject={quote('Životopis – J.K.FOOD')}", f"Napsat na {mail}"),
                     ("btn-ghost", "nas-tym.html", "Poznejte náš tým")])
@@ -699,9 +731,9 @@ def build_ai(items):
     """robots.txt (výslovně povolené AI roboty), llms.txt a llms-full.txt – stručný strojově čitelný
     přehled firmy pro ChatGPT, Claude, Gemini, Perplexity a další (konvence llmstxt.org)."""
     robots = ["# Vyhledávače i AI asistenti mají k veřejnému obsahu webu přístup povolený.", "User-agent: *",
-              "Allow: /", "Disallow: /api/", "Disallow: /tools/", ""]
+              "Allow: /", "Disallow: /api/", "Disallow: /admin/", "Disallow: /tools/", ""]
     for bot in AI_BOTS:
-        robots += [f"User-agent: {bot}", "Allow: /", "Disallow: /api/", "Disallow: /tools/", ""]
+        robots += [f"User-agent: {bot}", "Allow: /", "Disallow: /api/", "Disallow: /admin/", "Disallow: /tools/", ""]
     robots += [f"Sitemap: {SITE}/sitemap.xml", ""]
     (ROOT / "robots.txt").write_text("\n".join(robots), encoding="utf-8")
 

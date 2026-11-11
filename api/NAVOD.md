@@ -52,3 +52,42 @@ serverem se zapíše do chybového logu PHP na hostingu. Po vyřešení debug za
   s předvyplněným obsahem, takže se žádná poptávka neztratí.
 
 Knihovna PHPMailer 6.9.3 (`api/lib/PHPMailer`, licence LGPL 2.1).
+
+---
+
+# Administrace kariéry – kostera.cz/admin/
+
+Zákazník si sám upravuje stránku Kariéra: volné pozice (přidat, upravit, skrýt, smazat, seřadit),
+úvodní text, kontaktní e-mail, body „Proč pracovat u nás“ a text v červeném pruhu.
+Změny se na webu projeví ihned po kliknutí na **Uložit**.
+
+## Zprovoznění (jednorázově, správce webu)
+
+1. Hosting musí mít **PHP 8.0 nebo novější** (stejně jako formulář poptávky).
+2. Zvolte heslo (aspoň 12 znaků) a vytvořte jeho otisk:
+   ```bash
+   php -r "echo password_hash('zvolene-heslo', PASSWORD_DEFAULT), PHP_EOL;"
+   ```
+   Výsledek (začíná `$2y$`) vložte do `api/config.php` jako `'admin_heslo_hash' => '...'`.
+   Samotné heslo předejte zákazníkovi bezpečně (ne e-mailem spolu s adresou).
+3. Složka `api/data/` musí být **zapisovatelná** pro PHP (vytvoří se sama při prvním uložení;
+   když to hosting nedovolí, vytvořte ji ručně s právy 750 nebo 770).
+4. Otevřete `https://www.kostera.cz/admin/`, přihlaste se a jednou uložte.
+
+## Jak to funguje
+
+- Data se ukládají do `api/data/kariera.json`. Stránka `kariera.html` si je při načtení vezme přes
+  `api/kariera.php`. Skryté pozice se na web vůbec neposílají.
+- Dokud v administraci nikdo nic neuložil, platí výchozí data z `assets/kariera.json`
+  (ta jsou zároveň přímo v HTML stránky – zobrazí se i bez PHP, např. na náhledu na Vercelu).
+- Každé uložení si pamatuje předchozí stav: posledních 20 verzí je v `api/data/zalohy/`
+  a v administraci je lze obnovit (sekce „Předchozí verze“).
+- **Pozor při nahrávání nové verze webu:** složku `api/data/` nepřepisujte ani nemažte –
+  jsou v ní úpravy zákazníka (v Gitu není, je v `.gitignore`).
+
+## Zabezpečení
+
+- Přihlášení heslem (uložený je jen otisk), po 5 chybných pokusech z jedné IP blokace na 15 minut.
+- Ochrana formulářů proti podvržení (CSRF token), odhlášení po 2 hodinách nečinnosti.
+- Administrace je skrytá před vyhledávači (`noindex`, `robots.txt`).
+- Doporučení: provozovat jen přes HTTPS (přesměrování je v kořenovém `.htaccess`).

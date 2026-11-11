@@ -28,6 +28,12 @@ return [
     // Max. počet odeslání z jedné IP adresy za 10 minut.
     'rate_limit'    => 5,
 
+    // --- administrace kariéry (kostera.cz/admin/) ---
+    // Heslo se sem NEPÍŠE přímo, ale jako otisk (hash). Vytvoří ho příkaz (na serveru nebo v počítači s PHP):
+    //   php -r "echo password_hash('zvolene-heslo', PASSWORD_DEFAULT), PHP_EOL;"
+    // Výsledek (začíná $2y$…) vložte mezi apostrofy. Prázdné = administrace je vypnutá.
+    'admin_heslo_hash' => '',
+
     // Při ladění zapněte – do logu se zapíše podrobný průběh SMTP komunikace.
     'debug'         => false,
 ];
