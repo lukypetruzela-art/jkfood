@@ -405,7 +405,7 @@ def site_chrome(nav_current=None, en_file=None, absolute=False):
     return header, footer
 
 
-def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_current=None, en_file=None):
+def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_current=None, en_file=None, write=True):
     """Podstránka se stejnou hlavičkou a patičkou jako index.html (Náš tým, Kariéra)."""
     idx = (ROOT / "index.html").read_text(encoding="utf-8")
     head_start = idx[: idx.index("<!-- META:START -->")]
@@ -463,7 +463,9 @@ def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_curr
 </body>
 </html>
 """
-    (ROOT / file).write_text(page, encoding="utf-8")
+    if write:
+        (ROOT / file).write_text(page, encoding="utf-8")
+    return page
 
 
 def cta_band(cid, title, text, buttons):
@@ -630,6 +632,10 @@ def build_career(v):
 
 
 # ---------------------------------------------------------------- anglická verze (en/)
+def html_unescape(s):
+    return html.unescape(s)
+
+
 def build_en():
     """Anglická verze vzniká z hotových českých stránek: překlad (tools/i18n_en.py),
     úprava cest pro složku en/ a nová metadata. Nepřeložené dvojice ohlásí."""
@@ -661,11 +667,13 @@ def build_en():
             attr, u = m.group(1), m.group(2)
             if attr in ("srcset", "imagesrcset"):
                 return f'{attr}="' + ", ".join("../" + c.strip() for c in u.split(",")) + '"'
-            if re.match(r"(https?:|//|#|mailto:|tel:|data:|/|\.\./)", u):
+            if re.match(r"(https?:|//|#|mailto:|tel:|data:|/|\.\./|\$\{)", u):
                 return m.group(0)
             base, _, frag = u.partition("#")
             if base == "index.html" or base.startswith("index.html?"):
                 new = u
+            elif base in T.B2B_FILES:
+                new = T.B2B_FILES[base] + (f"#{frag}" if frag else "")
             elif base == "nas-tym.html":
                 new = "team.html" + (f"#{frag}" if frag else "")
             elif base == "sortiment.html":
@@ -704,6 +712,7 @@ def build_en():
     html = re.sub(r"<!-- FAQ:START -->.*?<!-- FAQ:END -->", lambda m: f"<!-- FAQ:START -->\n{render_faq('en')}\n<!-- FAQ:END -->", html, flags=re.S)
     html = names(tr(html, T.COMMON + T.INDEX, "index"))
     html = re.sub(r"(\d+)&nbsp;výrob(?:ek|ky|ků)", r"\1&nbsp;products", html)
+    html = re.sub(r"page: '([\w-]+\.html)'", lambda m: f"page: '{T.B2B_FILES.get(m.group(1), '../' + m.group(1))}'", html)
     html = meta(html, "J.K.FOOD – Czech producer of spices and seasoning blends",
                 "Family company from Větřkovice, Czech Republic. Since 1996 we have produced spices, seasoning blends, dried vegetables "
                 "and dehydrated foods for food manufacturers and catering.", "", "",
@@ -761,12 +770,33 @@ def build_en():
                 "team.html", "nas-tym.html", [org, breadcrumbs_ld([("Home", "en/"), ("Our team", "en/team.html")])])
     (ROOT / "en" / "team.html").write_text(lang_link(paths(html), "nas-tym.html"), encoding="utf-8")
 
+    # --- stránky pro firmy (Průmysl, obory, Výzkum a vývoj, Hotová jídla): obsah z anglických dat, menu a patička překladem
+    items = load_items()
+    b2b = [("prumysl.html", lambda: v2_prumysl("en")), ("vyzkum-a-vyvoj.html", lambda: v2_vyvoj("en")),
+           ("hotova-jidla.html", lambda: v2_jidla("en"))] + [(o["file"], lambda o=o: v2_obor(o, items, "en")) for o in OBORY]
+    b2b_pages = []
+    for cz, render in b2b:
+        en = T.B2B_FILES[cz]
+        html = render()
+        html = tr(html, T.COMMON + [('aria-label="Drobečková navigace"', 'aria-label="Breadcrumbs"')], en)
+        html = names(html)
+        title = re.search(r"<title>(.*?)</title>", html).group(1)
+        desc = re.search(r'<meta name="description" content="([^"]*)"', html).group(1)
+        h1 = re.search(r'<h1[^>]*>(.*?)</h1>', html, re.S).group(1)
+        crumbs = [("Home", "en/")] + ([("Industry", "en/industry.html")] if cz not in ("prumysl.html", "vyzkum-a-vyvoj.html", "hotova-jidla.html") else []) \
+            + [(html_unescape(h1), f"en/{en}")]
+        graph = [org, breadcrumbs_ld(crumbs), {"@type": "WebPage", "url": f"{SITE}/en/{en}", "name": html_unescape(h1), "inLanguage": "en",
+                                               "description": html_unescape(desc), "about": {"@id": f"{SITE}/#firma"}}]
+        html = meta(html, html_unescape(title), html_unescape(desc), en, cz, graph)
+        (ROOT / "en" / en).write_text(lang_link(paths(html), cz), encoding="utf-8")
+        b2b_pages.append((f"en/{en}", "0.6"))
+
     # --- kontrola: nepřeložené dvojice a zbytky češtiny
     if missing:
         raise SystemExit("Nepřeložené texty (upravte tools/i18n_en.py):\n  " + "\n  ".join(missing))
     allowed = {"CHUŤ", "halušky", "Větřkovice", "Galčanová", "Kostera", "Větřkovic", "Česká verze", "CZ – česká verze", "Má chuť", "pepř, guláš"}
     leftovers = []
-    for f in ["index.html", "products.html", "team.html"]:
+    for f in ["index.html", "products.html", "team.html"] + list(T.B2B_FILES.values()):
         h = (ROOT / "en" / f).read_text(encoding="utf-8")
         h = re.sub(r"<script>.*?</script>|<style.*?</style>", " ", h, flags=re.S)
         h = re.sub(r'<ul class="items">.*?</ul>', " ", h, flags=re.S)     # názvy výrobků zůstávají česky
@@ -777,7 +807,7 @@ def build_en():
                 leftovers.append(f"{f}: {t[:80]}")
     if leftovers:
         print("⚠ zbytky češtiny v anglické verzi:\n  " + "\n  ".join(sorted(set(leftovers))))
-    return [("en/", "0.8"), ("en/products.html", "0.7"), ("en/team.html", "0.5")]
+    return [("en/", "0.8"), ("en/products.html", "0.7"), ("en/team.html", "0.5")] + b2b_pages
 
 # ---------------------------------------------------------------- AI vyhledávače
 AI_BOTS = ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot", "Claude-User",
@@ -852,7 +882,10 @@ def build_ai(items):
 
 def build_sitemap(pages):
     urls = [("", "1.0")] + pages
-    pairs = {"": "en/", "sortiment.html": "en/products.html", "nas-tym.html": "en/team.html"}
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    import i18n_en as T
+    pairs = {"": "en/", "sortiment.html": "en/products.html", "nas-tym.html": "en/team.html", **{cz: f"en/{en}" for cz, en in T.B2B_FILES.items()}}
     pairs.update({v: k for k, v in list(pairs.items())})
     xml = ['<?xml version="1.0" encoding="UTF-8"?>',
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">']
@@ -955,7 +988,9 @@ V2_EX = {
 }
 
 
-def count_word(n):
+def count_word(n, lang="cs"):
+    if lang == "en":
+        return "product" if n == 1 else "products"
     return "výrobek" if n == 1 else "výrobky" if 2 <= n <= 4 else "výrobků"
 
 
@@ -964,13 +999,21 @@ def v2_row(href, count, name, ex):
             f'<span class="vs-ex">{nbsp(esc(ex))}</span><span class="vs-go" aria-hidden="true"></span></a></li>')
 
 
-def v2_cat_rows(items, ids):
+def _en():
+    import sys
+    sys.path.insert(0, str(ROOT / "tools"))
+    import i18n_en
+    return i18n_en
+
+
+def v2_cat_rows(items, ids, lang="cs"):
     by_id = {c["id"]: (i, c) for i, c in enumerate(CATS)}
+    ex = _en().V2_EX_EN if lang == "en" else V2_EX
     rows = []
     for cid in ids:
         i, c = by_id[cid]
         n = sum(1 for p in items if p["g"] == i)
-        rows.append(v2_row(c["file"], f"{n}&nbsp;{count_word(n)}", c["name"], V2_EX[cid]))
+        rows.append(v2_row(c["file"], f"{n}&nbsp;{count_word(n, lang)}", c["name"], ex[cid]))
     return rows
 
 
@@ -980,14 +1023,33 @@ def cards(items, cls=""):
         for i, (t, x) in enumerate(items)) + "</ol>")
 
 
-def steps5_html():
-    return ('<section class="obor-sec" aria-labelledby="ob-steps"><h2 class="obor-h" id="ob-steps">Jak spolupráce probíhá</h2>'
-            + cards(STEPS5, "five") + "</section>")
+UI_CS = {
+    "home": "Úvod", "industry": "Průmysl",
+    "focus_sr": "Na co klademe důraz", "focus_lead": "Důraz klademe na:",
+    "offer": "Co pro vás uděláme", "cats": "Typický sortiment", "all": "Celý sortiment",
+    "steps": "Jak spolupráce probíhá", "others": "Další obory",
+    "cta_title": "Pošleme vám vzorky", "cta_text": "Napište nám, co vyrábíte a co hledáte – připravíme vzorky i nabídku.",
+    "cta_enquire": "Poptat spolupráci", "cta_samples": "Objednat vzorky",
+    "why": "Proč spolupracovat s&nbsp;J.K.FOOD", "count": "výrobků",
+}
 
 
-def why_html(hid="ob-why"):
-    return (f'<section class="obor-sec" aria-labelledby="{hid}"><h2 class="obor-h" id="{hid}">Proč spolupracovat s&nbsp;J.K.FOOD</h2>'
-            + '<ul class="v2-why">' + "".join(f"<li><h3>{t}</h3><p>{x}</p></li>" for t, x in WHY) + "</ul></section>")
+def ui(lang):
+    return _en().B2B_UI if lang == "en" else UI_CS
+
+
+def steps5_html(lang="cs"):
+    L = ui(lang)
+    steps = _en().STEPS5_EN if lang == "en" else STEPS5
+    return (f'<section class="obor-sec" aria-labelledby="ob-steps"><h2 class="obor-h" id="ob-steps">{L["steps"]}</h2>'
+            + cards(steps, "five") + "</section>")
+
+
+def why_html(lang="cs", hid="ob-why"):
+    L = ui(lang)
+    why = _en().WHY_EN if lang == "en" else WHY
+    return (f'<section class="obor-sec" aria-labelledby="{hid}"><h2 class="obor-h" id="{hid}">{L["why"]}</h2>'
+            + '<ul class="v2-why">' + "".join(f"<li><h3>{t}</h3><p>{x}</p></li>" for t, x in why) + "</ul></section>")
 
 
 def bullets(lead, pts):
@@ -999,13 +1061,17 @@ def form_link(obor, typ=None):
     return q + (f"&amp;typ={typ.replace(' ', '%20')}" if typ else "") + "#kontakt"
 
 
-def v2_page(file, title, desc, crumbs, h1, intro, body, cta):
-    graph = [{"@type": "WebPage", "@id": f"{SITE}/{file}#stranka", "url": f"{SITE}/{file}", "name": h1,
-              "description": desc, "inLanguage": "cs", "about": {"@id": f"{SITE}/#firma"}}]
+def v2_page(file, title, desc, crumbs, h1, intro, body, cta, lang="cs"):
+    """Stránka pro firmy. Česky se rovnou zapíše, anglicky vrátí HTML (dokončí ho build_en)."""
+    en_file = _en().B2B_FILES[file]
+    url = f"{SITE}/{file}" if lang == "cs" else f"{SITE}/en/{en_file}"
+    graph = [{"@type": "WebPage", "@id": f"{url}#stranka", "url": url, "name": h1,
+              "description": desc, "inLanguage": lang, "about": {"@id": f"{SITE}/#firma"}}]
     nav = {"prumysl.html": "prumysl.html", "vyzkum-a-vyvoj.html": "vyzkum-a-vyvoj.html"}.get(file)
     if file in {o["file"] for o in OBORY}:
         nav = "prumysl.html"
-    simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_current=nav)
+    return simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_current=nav, en_file=en_file, write=lang == "cs")
+
 
 def photo(src, alt, cls="v2-photo"):
     return (f'<figure class="{cls}"><picture><source srcset="img/{src}-600.webp 600w, img/{src}-800.webp 800w, img/{src}-1000.webp 1000w" sizes="(max-width:900px) 92vw, 560px" type="image/webp">'
@@ -1019,7 +1085,7 @@ AVIF_SRC = ["img/uvod-m-600", "img/uvod-900", "img/uvod-1536", "img/hero-2-700",
 
 
 def make_avif():
-    """AVIF verze fotek pro verzi 2 (vytvoří se z WebP, jen když chybí nebo je WebP novější)."""
+    """AVIF verze fotek (vytvoří se z WebP, jen když chybí nebo je WebP novější)."""
     from PIL import Image
     for f in AVIF_SRC:
         src, dst = ROOT / f"{f}.webp", ROOT / f"{f}.avif"
@@ -1027,96 +1093,133 @@ def make_avif():
             Image.open(src).convert("RGB").save(dst, quality=45, speed=4)
 
 
-def v2_obor(o, items):
+def obor_text(o, lang):
+    """Údaje oboru v daném jazyce (soubor, sortiment a štítek pro odkazy zůstávají společné)."""
+    return o if lang == "cs" else {**o, **_en().OBORY_EN[o["file"]]}
+
+
+def v2_obor(o, items, lang="cs"):
+    L, t = ui(lang), obor_text(o, lang)
     parts = []
-    head = f'<p class="v2-tag">{esc(o["tag"])}</p>'
-    if o["focus"]:
-        parts.append(f'<section class="obor-sec" aria-labelledby="ob-focus">{head}<h2 class="sr" id="ob-focus">Na co klademe důraz</h2>'
-                     + bullets(o.get("focus_lead", "Důraz klademe na:"), o["focus"]) + "</section>")
+    head = f'<p class="v2-tag">{esc(t["tag"])}</p>'
+    if t["focus"]:
+        parts.append(f'<section class="obor-sec" aria-labelledby="ob-focus">{head}<h2 class="sr" id="ob-focus">{L["focus_sr"]}</h2>'
+                     + bullets(t.get("focus_lead", L["focus_lead"]), t["focus"]) + "</section>")
     else:
         parts.append(f'<div class="obor-sec">{head}</div>')
-    if o["offer"]:
-        parts.append('<section class="obor-sec" aria-labelledby="ob-offer"><h2 class="obor-h" id="ob-offer">Co pro vás uděláme</h2>'
-                     + cards([(esc(t), nbsp(esc(x))) for t, x in o["offer"]]) + "</section>")
-    parts.append('<section class="obor-sec" aria-labelledby="ob-cats"><div class="obor-cats-head"><h2 class="obor-h" id="ob-cats">Typický sortiment</h2>'
-                 '<a class="rail-mini" href="sortiment.html">Celý sortiment <span class="i-next" aria-hidden="true"></span></a></div>'
-                 f'<ul class="vsort-list">{"".join(v2_cat_rows(items, o["cats"]))}</ul></section>')
-    parts.append(steps5_html())
-    others = "".join(f'<li><a href="{x["file"]}">{esc(x["nav"])}</a></li>' for x in OBORY if x is not o)
-    parts.append(f'<nav class="obor-sec v2-others" aria-label="Další obory"><h2 class="obor-h">Další obory</h2><ul>{others}</ul></nav>')
-    cta = cta_band("obor-cta", "Pošleme vám vzorky", "Napište nám, co vyrábíte a co hledáte – připravíme vzorky i nabídku.",
-                   [("btn-white", form_link(o["name"]), "Poptat spolupráci"), ("btn-ghost", form_link(o["name"], "Vzorky"), "Objednat vzorky")])
-    v2_page(o["file"], o["title"], o["desc"], [("Úvod", ""), ("Průmysl", "prumysl.html"), (o["nav"], o["file"])],
-            o["h1"], o["intro"], "".join(parts), cta)
+    if t["offer"]:
+        parts.append(f'<section class="obor-sec" aria-labelledby="ob-offer"><h2 class="obor-h" id="ob-offer">{L["offer"]}</h2>'
+                     + cards([(esc(a), nbsp(esc(b))) for a, b in t["offer"]]) + "</section>")
+    parts.append(f'<section class="obor-sec" aria-labelledby="ob-cats"><div class="obor-cats-head"><h2 class="obor-h" id="ob-cats">{L["cats"]}</h2>'
+                 f'<a class="rail-mini" href="sortiment.html">{L["all"]} <span class="i-next" aria-hidden="true"></span></a></div>'
+                 f'<ul class="vsort-list">{"".join(v2_cat_rows(items, o["cats"], lang))}</ul></section>')
+    parts.append(steps5_html(lang))
+    others = "".join(f'<li><a href="{x["file"]}">{esc(obor_text(x, lang)["nav"])}</a></li>' for x in OBORY if x is not o)
+    parts.append(f'<nav class="obor-sec v2-others" aria-label="{L["others"]}"><h2 class="obor-h">{L["others"]}</h2><ul>{others}</ul></nav>')
+    cta = cta_band("obor-cta", L["cta_title"], L["cta_text"],
+                   [("btn-white", form_link(t["name"]), L["cta_enquire"]), ("btn-ghost", form_link(t["name"], "Vzorky"), L["cta_samples"])])
+    return v2_page(o["file"], t["title"], t["desc"], [(L["home"], ""), (L["industry"], "prumysl.html"), (t["nav"], o["file"])],
+                   t["h1"], t["intro"], "".join(parts), cta, lang)
 
 
-def v2_prumysl():
-    tiles = "".join(f'<li><a href="{o["file"]}"><span class="vs-nm">{esc(o["nav"])}</span><span class="vs-ex">{esc(o["tag"])}</span>'
+PRUMYSL_CS = dict(
+    title="Průmysl – suroviny a směsi pro potravinářské výrobce | J.K.FOOD",
+    desc="Dehydratované suroviny, kořenicí a technologické směsi pro potravinářský průmysl: masná výroba, pekařství, mlékárny, snacky, private label a OEM.",
+    h1="Řešení pro potravinářské výrobce a zpracovatele",
+    intro="Dodáváme suroviny a směsi pro potravinářský průmysl, kde je klíčová stálá kvalita, opakovatelnost chuti a funkčnost ve výrobním procesu. Spolupracujeme s výrobci napříč obory potravinářství.",
+    tag="Spolehlivý partner pro průmyslové aplikace", h2="Dehydratované suroviny a&nbsp;technologické směsi",
+    p="Pro průmyslové provozy dodáváme dehydratované suroviny, kořenicí a&nbsp;technologické směsi, které umožňují přesné dávkování, stabilní chuť a&nbsp;snadné zapojení do výrobních linek. Každé řešení přizpůsobujeme konkrétní technologii, výrobnímu procesu a&nbsp;požadovanému výsledku.",
+    lead="Naše řešení pomáhají:", pts=["snížit závislost na sezónních surovinách", "zjednodušit výrobní procesy", "zajistit stejnou kvalitu napříč šaržemi"],
+    alt="Pracovnice obsluhuje průmyslový míchací stroj s kořenicí směsí", sectors="Obory, kterým dodáváme",
+    cta_title="Kontakt pro průmyslové partnery",
+    cta_text="Máte konkrétní požadavky nebo hledáte spolehlivého dodavatele pro výrobu? Rádi s&nbsp;vámi projdeme možnosti spolupráce.",
+    obor="Průmysl")
+
+
+def v2_prumysl(lang="cs"):
+    L = ui(lang)
+    T = _en().PRUMYSL_EN if lang == "en" else PRUMYSL_CS
+    tiles = "".join(f'<li><a href="{o["file"]}"><span class="vs-nm">{esc(obor_text(o, lang)["nav"])}</span><span class="vs-ex">{esc(obor_text(o, lang)["tag"])}</span>'
                     '<span class="vs-go" aria-hidden="true"></span></a></li>' for o in OBORY)
-    body = ('<section class="obor-sec v2-split" aria-labelledby="pr-dehy"><div><p class="v2-tag">Spolehlivý partner pro průmyslové aplikace</p>'
-            '<h2 class="obor-h" id="pr-dehy">Dehydratované suroviny a&nbsp;technologické směsi</h2>'
-            '<p class="v2-p">Pro průmyslové provozy dodáváme dehydratované suroviny, kořenicí a&nbsp;technologické směsi, které umožňují přesné dávkování, stabilní chuť a&nbsp;snadné zapojení do výrobních linek. Každé řešení přizpůsobujeme konkrétní technologii, výrobnímu procesu a&nbsp;požadovanému výsledku.</p>'
-            + bullets("Naše řešení pomáhají:", ["snížit závislost na sezónních surovinách", "zjednodušit výrobní procesy", "zajistit stejnou kvalitu napříč šaržemi"])
-            + "</div>" + photo("pilir-prumysl", "Pracovnice obsluhuje průmyslový míchací stroj s kořenicí směsí") + "</section>"
-            '<section class="obor-sec" aria-labelledby="pr-obory"><h2 class="obor-h" id="pr-obory">Obory, kterým dodáváme</h2>'
+    body = (f'<section class="obor-sec v2-split" aria-labelledby="pr-dehy"><div><p class="v2-tag">{T["tag"]}</p>'
+            f'<h2 class="obor-h" id="pr-dehy">{T["h2"]}</h2><p class="v2-p">{T["p"]}</p>'
+            + bullets(T["lead"], T["pts"]) + "</div>" + photo("pilir-prumysl", T["alt"]) + "</section>"
+            f'<section class="obor-sec" aria-labelledby="pr-obory"><h2 class="obor-h" id="pr-obory">{T["sectors"]}</h2>'
             f'<ul class="vsort-list v2-obory">{tiles}</ul></section>'
-            + why_html() + steps5_html())
-    cta = cta_band("pr-cta", "Kontakt pro průmyslové partnery",
-                   "Máte konkrétní požadavky nebo hledáte spolehlivého dodavatele pro výrobu? Rádi s&nbsp;vámi projdeme možnosti spolupráce.",
-                   [("btn-white", form_link("Průmysl"), "Poptat spolupráci"), ("btn-ghost", "tel:+420556310205", "+420 556 310 205")])
-    v2_page("prumysl.html", "Průmysl – suroviny a směsi pro potravinářské výrobce | J.K.FOOD",
-            "Dehydratované suroviny, kořenicí a technologické směsi pro potravinářský průmysl: masná výroba, pekařství, mlékárny, snacky, private label a OEM.",
-            [("Úvod", ""), ("Průmysl", "prumysl.html")], "Řešení pro potravinářské výrobce a zpracovatele",
-            "Dodáváme suroviny a směsi pro potravinářský průmysl, kde je klíčová stálá kvalita, opakovatelnost chuti a funkčnost ve výrobním procesu. Spolupracujeme s výrobci napříč obory potravinářství.",
-            body, cta)
+            + why_html(lang) + steps5_html(lang))
+    cta = cta_band("pr-cta", T["cta_title"], T["cta_text"],
+                   [("btn-white", form_link(T["obor"]), L["cta_enquire"]), ("btn-ghost", "tel:+420556310205", "+420 556 310 205")])
+    return v2_page("prumysl.html", T["title"], T["desc"], [(L["home"], ""), (L["industry"], "prumysl.html")], T["h1"], T["intro"], body, cta, lang)
 
 
-def v2_vyvoj():
-    body = ('<section class="obor-sec v2-split" aria-labelledby="rd-co"><div><p class="v2-tag">Stálá kvalita začíná u vývoje</p>'
-            '<h2 class="obor-h" id="rd-co">Co ve vývoji řešíme</h2>'
-            '<p class="v2-p">Každý výrobek vyvíjíme s&nbsp;ohledem na jeho skutečné použití – ve výrobě, gastronomii i&nbsp;retailu. Sledujeme technologické chování, senzoriku i&nbsp;opakovatelnost výsledku. Nevyvíjíme do šuplíku, ale pro výrobu.</p>'
-            + bullets("Zaměřujeme se zejména na:", ["chuť, vůni a stálost barvy", "homogenitu směsí a stabilitu šarží", "dávkování, sypkost a mísitelnost", "chování výrobku při zpracování a skladování"])
-            + "</div>" + photo("pilir-vyvoj", "Laboratoř: vzorek kořenicí směsi na laboratorní váze, zkumavky se vzorky koření") + "</section>"
-            '<section class="obor-sec" aria-labelledby="rd-help"><h2 class="obor-h" id="rd-help">Vývoj na míru a&nbsp;spolupráce</h2>'
-            '<p class="v2-p">Spolupracujeme s&nbsp;výrobci, gastronomií i&nbsp;partnery pro private label. Připravujeme nové výrobky a&nbsp;upravujeme stávající receptury podle konkrétního zadání, technologie a&nbsp;požadované ceny.</p>'
-            + cards([("Vývoj směsí na míru", "Nová chuť podle vašeho zadání a&nbsp;technologie."),
-                     ("Úpravy chuti a&nbsp;složení", "Doladíme stávající recepturu – chuť, složení i&nbsp;cenu."),
-                     ("Stálá kvalita při růstu", "Recepturu připravíme tak, aby fungovala i&nbsp;při vyšších objemech."),
-                     ("Zavedení do sériové výroby", "Pomůžeme s&nbsp;přechodem ze vzorku na pravidelnou výrobu.")])
-            + '<blockquote class="v2-quote">Nejsme jen dodavatel surovin. Jsme partner, který rozumí surovinám, technologii i&nbsp;provozu.</blockquote></section>'
-            + steps5_html())
-    cta = cta_band("rd-cta", "Máte konkrétní zadání?", "Rádi s&nbsp;vámi probereme váš projekt a&nbsp;připravíme vzorky k&nbsp;testování.",
-                   [("btn-white", form_link("Vývoj na míru", "Vývoj směsi na míru"), "Poptat vývoj"), ("btn-ghost", "tel:+420556310205", "+420 556 310 205")])
-    v2_page("vyzkum-a-vyvoj.html", "Výzkum a vývoj kořenicích směsí na míru | J.K.FOOD",
-            "Vlastní vývojové zázemí: receptury na míru, úpravy chuti a složení, stabilita šarží a zavedení do sériové výroby. Vzorky k testování.",
-            [("Úvod", ""), ("Výzkum a vývoj", "vyzkum-a-vyvoj.html")], "Výzkum a vývoj",
-            "Vývoj je přirozenou součástí J.K.FOOD. Ve vlastním vývojovém zázemí vyvíjíme a testujeme receptury tak, aby splňovaly nároky na chuť, funkčnost i dlouhodobou stabilitu.",
-            body, cta)
+VYVOJ_CS = dict(
+    title="Výzkum a vývoj kořenicích směsí na míru | J.K.FOOD",
+    desc="Vlastní vývojové zázemí: receptury na míru, úpravy chuti a složení, stabilita šarží a zavedení do sériové výroby. Vzorky k testování.",
+    h1="Výzkum a vývoj",
+    intro="Vývoj je přirozenou součástí J.K.FOOD. Ve vlastním vývojovém zázemí vyvíjíme a testujeme receptury tak, aby splňovaly nároky na chuť, funkčnost i dlouhodobou stabilitu.",
+    tag="Stálá kvalita začíná u vývoje", h2="Co ve vývoji řešíme",
+    p="Každý výrobek vyvíjíme s&nbsp;ohledem na jeho skutečné použití – ve výrobě, gastronomii i&nbsp;retailu. Sledujeme technologické chování, senzoriku i&nbsp;opakovatelnost výsledku. Nevyvíjíme do šuplíku, ale pro výrobu.",
+    lead="Zaměřujeme se zejména na:", pts=["chuť, vůni a stálost barvy", "homogenitu směsí a stabilitu šarží", "dávkování, sypkost a mísitelnost", "chování výrobku při zpracování a skladování"],
+    alt="Laboratoř: vzorek kořenicí směsi na laboratorní váze, zkumavky se vzorky koření",
+    h2b="Vývoj na míru a&nbsp;spolupráce",
+    pb="Spolupracujeme s&nbsp;výrobci, gastronomií i&nbsp;partnery pro private label. Připravujeme nové výrobky a&nbsp;upravujeme stávající receptury podle konkrétního zadání, technologie a&nbsp;požadované ceny.",
+    cards=[("Vývoj směsí na míru", "Nová chuť podle vašeho zadání a&nbsp;technologie."),
+           ("Úpravy chuti a&nbsp;složení", "Doladíme stávající recepturu – chuť, složení i&nbsp;cenu."),
+           ("Stálá kvalita při růstu", "Recepturu připravíme tak, aby fungovala i&nbsp;při vyšších objemech."),
+           ("Zavedení do sériové výroby", "Pomůžeme s&nbsp;přechodem ze vzorku na pravidelnou výrobu.")],
+    quote="Nejsme jen dodavatel surovin. Jsme partner, který rozumí surovinám, technologii i&nbsp;provozu.",
+    cta_title="Máte konkrétní zadání?", cta_text="Rádi s&nbsp;vámi probereme váš projekt a&nbsp;připravíme vzorky k&nbsp;testování.",
+    cta_btn="Poptat vývoj", obor="Vývoj na míru")
 
 
-def v2_jidla():
-    ph = "".join('<li class="v2-ph"><span class="v2-ph-ic" aria-hidden="true"></span><b>Foto kelímku</b><span>název · gramáž · příprava</span></li>' for _ in range(4))
-    body = ('<section class="obor-sec v2-split" aria-labelledby="hj-co"><div><p class="v2-tag">Spolehlivé řešení, když je čas rozhodující</p>'
-            '<h2 class="obor-h" id="hj-co">Kompletní jídlo za pár minut</h2>'
-            '<p class="v2-p">Řada hotových jídel v&nbsp;kelímku značek CHUŤ a&nbsp;HOT&amp;GO je určená pro rychlou a&nbsp;jednoduchou přípravu. Stačí zalít horkou vodou a&nbsp;za několik minut je jídlo připravené k&nbsp;podávání – doma, v&nbsp;práci i&nbsp;na cestách.</p>'
-            + bullets("Každý kelímek:", ["je kompletní hotové jídlo", "má jasný a jednoduchý způsob přípravy", "dává pokaždé stejný chuťový výsledek", "nepotřebuje další suroviny ani vybavení"])
-            + '</div><div class="v2-ph-hero" role="img" aria-label="Místo pro fotografii hotových jídel CHUŤ a HOT&amp;GO"><span class="v2-ph-ic" aria-hidden="true"></span><b>Fotka řady CHUŤ a HOT&amp;GO</b></div></section>'
-            '<section class="obor-sec" aria-labelledby="hj-druhy"><h2 class="obor-h" id="hj-druhy">Druhy a balení</h2>'
+def v2_vyvoj(lang="cs"):
+    L = ui(lang)
+    T = _en().VYVOJ_EN if lang == "en" else VYVOJ_CS
+    body = (f'<section class="obor-sec v2-split" aria-labelledby="rd-co"><div><p class="v2-tag">{T["tag"]}</p>'
+            f'<h2 class="obor-h" id="rd-co">{T["h2"]}</h2><p class="v2-p">{T["p"]}</p>'
+            + bullets(T["lead"], T["pts"]) + "</div>" + photo("pilir-vyvoj", T["alt"]) + "</section>"
+            f'<section class="obor-sec" aria-labelledby="rd-help"><h2 class="obor-h" id="rd-help">{T["h2b"]}</h2><p class="v2-p">{T["pb"]}</p>'
+            + cards(T["cards"]) + f'<blockquote class="v2-quote">{T["quote"]}</blockquote></section>'
+            + steps5_html(lang))
+    cta = cta_band("rd-cta", T["cta_title"], T["cta_text"],
+                   [("btn-white", form_link(T["obor"], "Vývoj směsi na míru"), T["cta_btn"]), ("btn-ghost", "tel:+420556310205", "+420 556 310 205")])
+    return v2_page("vyzkum-a-vyvoj.html", T["title"], T["desc"], [(L["home"], ""), (T["h1"], "vyzkum-a-vyvoj.html")], T["h1"], T["intro"], body, cta, lang)
+
+
+JIDLA_CS = dict(
+    title="Hotová jídla v kelímku CHUŤ a HOT&GO | J.K.FOOD",
+    desc="Hotová jídla v kelímku značek CHUŤ a HOT&GO: stačí zalít horkou vodou. Pro obchody, kanceláře, pracovní provozy i cestování.",
+    h1="Hotová jídla v kelímku CHUŤ a HOT&GO",
+    intro="Vlastní řada hotových jídel pro rychlou a jednoduchou přípravu. Jistota chuti, pohodlí a stejný výsledek bez ohledu na místo nebo situaci.",
+    tag="Spolehlivé řešení, když je čas rozhodující", h2="Kompletní jídlo za pár minut",
+    p="Řada hotových jídel v&nbsp;kelímku značek CHUŤ a&nbsp;HOT&amp;GO je určená pro rychlou a&nbsp;jednoduchou přípravu. Stačí zalít horkou vodou a&nbsp;za několik minut je jídlo připravené k&nbsp;podávání – doma, v&nbsp;práci i&nbsp;na cestách.",
+    lead="Každý kelímek:", pts=["je kompletní hotové jídlo", "má jasný a jednoduchý způsob přípravy", "dává pokaždé stejný chuťový výsledek", "nepotřebuje další suroviny ani vybavení"],
+    ph_hero="Fotka řady CHUŤ a HOT&amp;GO", ph_hero_label="Místo pro fotografii hotových jídel CHUŤ a HOT&amp;GO",
+    ph_item="Foto kelímku", ph_item_sub="název · gramáž · příprava", h_types="Druhy a balení",
+    h_b2b="Pro obchodní partnery",
+    pb="Hotová jídla v&nbsp;kelímku se snadno skladují, přenášejí i&nbsp;prodávají. Hodí se tam, kde zákazníci potřebují rychlé a&nbsp;spolehlivé jídlo – v&nbsp;kancelářích a&nbsp;pracovních provozech, pro studenty i&nbsp;na cestách.",
+    cards=[("Rychlá příprava", "Bez vaření – stačí horká voda."), ("Žádné nádobí navíc", "Jídlo se připraví i&nbsp;podává přímo v&nbsp;kelímku."),
+           ("Snadné skladování", "Kelímky se dobře skladují, přenášejí i&nbsp;vystavují."), ("Porce jako hotové jídlo", "Každý kelímek je plnohodnotná porce.")],
+    cta_title="Hotová jídla do vašeho sortimentu", cta_text="Máte zájem o&nbsp;hotová jídla CHUŤ a&nbsp;HOT&amp;GO pro svůj obchod nebo provoz? Napište nám.",
+    cta_btn="Poptat hotová jídla", obor="Hotová jídla CHUŤ a HOT&GO")
+
+
+def v2_jidla(lang="cs"):
+    L = ui(lang)
+    T = _en().JIDLA_EN if lang == "en" else JIDLA_CS
+    ph = "".join(f'<li class="v2-ph"><span class="v2-ph-ic" aria-hidden="true"></span><b>{T["ph_item"]}</b><span>{T["ph_item_sub"]}</span></li>' for _ in range(4))
+    body = (f'<section class="obor-sec v2-split" aria-labelledby="hj-co"><div><p class="v2-tag">{T["tag"]}</p>'
+            f'<h2 class="obor-h" id="hj-co">{T["h2"]}</h2><p class="v2-p">{T["p"]}</p>'
+            + bullets(T["lead"], T["pts"])
+            + f'</div><div class="v2-ph-hero" role="img" aria-label="{T["ph_hero_label"]}"><span class="v2-ph-ic" aria-hidden="true"></span><b>{T["ph_hero"]}</b></div></section>'
+            f'<section class="obor-sec" aria-labelledby="hj-druhy"><h2 class="obor-h" id="hj-druhy">{T["h_types"]}</h2>'
             f'<ul class="v2-ph-grid">{ph}</ul></section>'
-            '<section class="obor-sec" aria-labelledby="hj-b2b"><h2 class="obor-h" id="hj-b2b">Pro obchodní partnery</h2>'
-            '<p class="v2-p">Hotová jídla v&nbsp;kelímku se snadno skladují, přenášejí i&nbsp;prodávají. Hodí se tam, kde zákazníci potřebují rychlé a&nbsp;spolehlivé jídlo – v&nbsp;kancelářích a&nbsp;pracovních provozech, pro studenty i&nbsp;na cestách.</p>'
-            + cards([("Rychlá příprava", "Bez vaření – stačí horká voda."),
-                     ("Žádné nádobí navíc", "Jídlo se připraví i&nbsp;podává přímo v&nbsp;kelímku."),
-                     ("Snadné skladování", "Kelímky se dobře skladují, přenášejí i&nbsp;vystavují."),
-                     ("Porce jako hotové jídlo", "Každý kelímek je plnohodnotná porce.")])
-            + "</section>")
-    cta = cta_band("hj-cta", "Hotová jídla do vašeho sortimentu", "Máte zájem o&nbsp;hotová jídla CHUŤ a&nbsp;HOT&amp;GO pro svůj obchod nebo provoz? Napište nám.",
-                   [("btn-white", form_link("Hotová jídla CHUŤ a HOT&GO"), "Poptat hotová jídla"), ("btn-ghost", form_link("Hotová jídla CHUŤ a HOT&GO", "Vzorky"), "Objednat vzorky")])
-    v2_page("hotova-jidla.html", "Hotová jídla v kelímku CHUŤ a HOT&GO | J.K.FOOD",
-            "Hotová jídla v kelímku značek CHUŤ a HOT&GO: stačí zalít horkou vodou. Pro obchody, kanceláře, pracovní provozy i cestování.",
-            [("Úvod", ""), ("Hotová jídla", "hotova-jidla.html")], "Hotová jídla v kelímku CHUŤ a HOT&GO",
-            "Vlastní řada hotových jídel pro rychlou a jednoduchou přípravu. Jistota chuti, pohodlí a stejný výsledek bez ohledu na místo nebo situaci.",
-            body, cta)
+            f'<section class="obor-sec" aria-labelledby="hj-b2b"><h2 class="obor-h" id="hj-b2b">{T["h_b2b"]}</h2><p class="v2-p">{T["pb"]}</p>'
+            + cards(T["cards"]) + "</section>")
+    cta = cta_band("hj-cta", T["cta_title"], T["cta_text"],
+                   [("btn-white", form_link(T["obor"]), T["cta_btn"]), ("btn-ghost", form_link(T["obor"], "Vzorky"), L["cta_samples"])])
+    return v2_page("hotova-jidla.html", T["title"], T["desc"], [(L["home"], ""), (T["h1"], "hotova-jidla.html")], T["h1"], T["intro"], body, cta, lang)
+
 
 
 def build_b2b(items):

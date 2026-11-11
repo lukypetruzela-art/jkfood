@@ -240,6 +240,7 @@ INDEX = [
     ("<b>Nakupujete pro domácnost?</b> Naše koření a&nbsp;směsi v&nbsp;menších baleních najdete v&nbsp;e-shopu.",
      "<b>Shopping for your household?</b> Our spices and blends in smaller packs are available in our e-shop (in Czech)."),
     # záložky oborů (JS)
+    ("'Dobrý den, jsme z oboru ' + obor + '.\\n\\n'", "'Hello, our sector: ' + obor + '.\\n\\n'"),
     ("name: 'Masný průmysl', title: 'Chuť, barva a konzistence pod kontrolou',\n      text: 'Kořenicí a technologické směsi přizpůsobené masné výrobě a vaší technologii.',\n      pts: ['Stabilní chuť a barva', 'Navážení na výrobní dávku', 'Technologické postupy ke kombi směsím']",
      "name: 'Meat processing', title: 'Taste, colour and texture under control',\n      text: 'Seasoning and technological blends tailored to meat production and your technology.',\n      pts: ['Stable taste and colour', 'Pre-weighed for your production batch', 'Technological procedures for combi blends']"),
     ("name: 'Pekařství', title: 'Funkční suroviny pro pekařskou výrobu',\n      text: 'Suroviny a směsi pro rovnoměrné rozložení chuti, stabilní strukturu a jednoduchou aplikaci.',\n      pts: ['Koření a semínka do pečiva', 'Stabilní receptury', 'Opakovatelné výsledky']",
@@ -252,7 +253,7 @@ INDEX = [
      "name: 'Food service', title: 'A reliable supplier for large kitchens',\n      text: 'Stocks, soups, sauces, spices and dried vegetables in catering packs for canteens, restaurants and caterers.',\n      pts: ['Catering packs', 'Delivery by our own transport', 'A sales representative in your region']"),
     ("name: 'Private label a OEM', title: 'Vývoj a výroba pod vaší značkou',\n      text: 'Pro průmyslové a obchodní partnery vyvíjíme receptury, optimalizujeme je pro výrobu a dlouhodobě dodáváme.',\n      pts: ['Technické konzultace', 'Standardizace výroby', 'Logistická podpora']",
      "name: 'Private label and OEM', title: 'Development and production under your brand',\n      text: 'For industrial and retail partners we develop recipes, optimise them for production and supply long-term.',\n      pts: ['Technical consultations', 'Production standardisation', 'Logistics support']"),
-    (">Více pro váš obor <span", ">More for your sector (CZ) <span"),
+    (">Více pro váš obor <span", ">More for your sector <span"),
 ]
 
 # katalog (sortiment)
@@ -287,3 +288,154 @@ TEAM = {
               "[vedoucí výroby]": "[production manager]", "[technolog, vývoj směsí na míru]": "[technologist, custom blend development]",
               "[objednávky a fakturace]": "[orders and invoicing]"},
 }
+
+
+# ---------------------------------------------------------------- stránky pro firmy (Průmysl, obory, vývoj, hotová jídla)
+# české soubory → anglické
+B2B_FILES = {
+    "prumysl.html": "industry.html", "vyzkum-a-vyvoj.html": "research-development.html", "hotova-jidla.html": "ready-meals.html",
+    "masny-prumysl.html": "meat-processing.html", "pekarstvi.html": "bakery.html", "mlekarny.html": "dairy.html",
+    "snacky-a-pochutiny.html": "snacks.html", "gastro-a-jidelny.html": "food-service.html", "privatni-znacka.html": "private-label.html",
+}
+
+B2B_UI = {
+    "home": "Home", "industry": "Industry",
+    "focus_sr": "What we focus on", "focus_lead": "We focus on:",
+    "offer": "What we do for you", "cats": "Typical products", "all": "Full product range",
+    "steps": "How we work together", "others": "Other sectors",
+    "cta_title": "We will send you samples", "cta_text": "Tell us what you produce and what you are looking for – we will prepare samples and an offer.",
+    "cta_enquire": "Send an enquiry", "cta_samples": "Request samples",
+    "why": "Why work with J.K.FOOD", "count": "products",
+}
+
+STEPS5_EN = [("Needs analysis", "We discuss your product, technology, target taste and price."),
+             ("Proposed solution", "We propose ingredients or a blend and prepare samples."),
+             ("Testing and fine-tuning", "You test the samples in your production and we fine-tune them."),
+             ("Production standard", "We fix the recipe so that every batch is the same."),
+             ("Delivery and support", "Regular deliveries by our own transport and technical support.")]
+
+WHY_EN = [("Experience across sectors", "Since 1996 we have supplied meat processors, bakeries, dairies, snack producers and large kitchens."),
+          ("We understand production", "We know how ingredients behave during dosing, processing and storage."),
+          ("Quality and consistency", "The same taste, colour and flowability in every batch."),
+          ("Flexible approach", "Recipe, packaging and deliveries tailored to your needs.")]
+
+V2_EX_EN = {
+    "testoviny": "fusilli, elbows, wide and cut noodles",
+    "koreni": "pepper, paprika, caraway, marjoram – whole, crushed, ground",
+    "smesi": "goulash, grill, chicken, gyros and more",
+    "zelenina": "onion, garlic, carrot, celery – flakes, cubes, powder",
+    "maso": "combi blends, glazing injections, technological additives",
+    "houby": "porcini, chanterelle, shiitake, nuts and dried fruit",
+    "polevky": "stocks, soups, sauces and marinades for large kitchens",
+    "brambory": "mashed potatoes, dumplings, potato pancakes",
+    "skroby": "starches, garlic pastes, paprika extracts",
+}
+
+OBORY_EN = {
+    "masny-prumysl.html": dict(
+        name="Meat processing", nav="Meat processing",
+        title="Seasoning and combi blends for meat processing | J.K.FOOD",
+        desc="Seasoning and technological blends for butchers and meat producers: sausages, salami, frankfurters, ham. Stable taste and colour, precise dosing, pre-weighed batches.",
+        h1="Butchers and meat processing", tag="Taste, colour and texture under control",
+        intro="For butchers and meat producers we supply seasoning and technological blends tailored to the specific requirements of meat production.",
+        focus=["stable taste and colour", "compatibility with your production technology", "simple and precise dosing"],
+        offer=[("Blends to your recipe", "We develop a blend for you, or take over your recipe and produce it in consistent quality."),
+               ("Pre-weighed for your batch", "We mix spices, starches and technological additives directly for your bowl-cutter batch. No weighing, no dust."),
+               ("Technological procedures", "We supply technological procedures for combi blends and help when introducing a new product."),
+               ("Packaging and batch labelling", "Pack sizes to match your consumption, batch number on every pack, EAN code on request.")]),
+    "pekarstvi.html": dict(
+        name="Bakery", nav="Bakery",
+        title="Spices and blends for bakeries | J.K.FOOD",
+        desc="Spices, seeds, seasoning blends and dried vegetables for bakery production. Even flavour distribution, stable recipes, easy application.",
+        h1="Bakery", tag="Functional ingredients for bakery production",
+        intro="We offer bakeries ingredients and blends that support even flavour distribution, a stable structure and easy application in production.",
+        focus=["simpler handling of flavouring ingredients", "stable recipes", "repeatable results in production"],
+        offer=[("Spices and seeds for baked goods", "Caraway, coriander, fennel and other spices, whole or ground."),
+               ("Dried vegetables", "Onion, garlic, peppers and other vegetables as flakes, cubes or granules."),
+               ("Custom blends", "We prepare a blend for your product – from savoury bakery to filled products."),
+               ("Pack sizes for your volume", "We adapt the pack size to your consumption.")]),
+    "mlekarny.html": dict(
+        name="Dairy", nav="Dairy",
+        title="Ingredients and blends for dairies | J.K.FOOD",
+        desc="Spices, seasoning blends and dried vegetables for dairy products – spreads, cheeses, dressings. Delicate flavour, processing stability, controlled composition.",
+        h1="Dairy industry", tag="Stable taste and functionality in dairy products",
+        intro="For dairies we supply ingredients and blends for applications where delicate flavour, processing stability and controlled composition matter.",
+        focus_lead="Our solutions are designed to:",
+        focus=["respect the technological requirements of dairy production", "work across different temperature regimes", "support a consistent sensory result"], offer=[]),
+    "snacky-a-pochutiny.html": dict(
+        name="Snacks", nav="Snacks",
+        title="Seasoning blends for snacks | J.K.FOOD",
+        desc="Seasoning and flavouring blends for snack producers: fast application, even seasoning, a stable flavour profile from batch to batch.",
+        h1="Snacks", tag="Intense flavour, efficient application",
+        intro="For snack producers we offer blends designed for fast application and even seasoning.",
+        focus_lead="Our solutions are designed for:",
+        focus=["production efficiency", "a stable flavour profile", "minimal batch-to-batch variation"], offer=[]),
+    "gastro-a-jidelny.html": dict(
+        name="Food service", nav="Food service and canteens",
+        title="Spices, stocks and soups for canteens and food service | J.K.FOOD",
+        desc="Stocks, soups, sauces, seasoning blends and dried vegetables in catering packs for school and hospital canteens, restaurants, hotels and caterers.",
+        h1="Food service and canteens", tag="A reliable supplier for large kitchens",
+        intro="Stocks, soups, sauces, spices and dried vegetables in catering packs for school, hospital and social catering, restaurants, hotels and caterers.",
+        focus=[],
+        offer=[("Catering packs", "Large packs of spices, blends and semi-finished products that are easy to work with in a large kitchen."),
+               ("Regular deliveries", "We deliver with our own transport, usually within 5 working days (Czech Republic)."),
+               ("A sales representative in your region", "Personal contact, advice on the range and help with orders."),
+               ("Ready blends and ingredients", "Blends for meat, fish and vegetables, potato products, pasta and dried mushrooms.")]),
+    "privatni-znacka.html": dict(
+        name="Private label and OEM", nav="Private label and OEM",
+        title="Private label and OEM – spices and blends under your brand | J.K.FOOD",
+        desc="Private label and OEM cooperation: recipe development, optimisation for production, standardisation and long-term supply of spices and blends under the partner's brand.",
+        h1="Private label and OEM", tag="Development and production to order",
+        intro="We offer industrial and retail partners private label and OEM cooperation. We develop recipes, optimise them for production and supply long-term.",
+        focus_lead="Our cooperation includes:",
+        focus=["technical consultations", "development and adjustment of composition", "production standardisation", "logistics support"], offer=[]),
+}
+
+PRUMYSL_EN = dict(
+    title="Industry – ingredients and blends for food manufacturers | J.K.FOOD",
+    desc="Dehydrated ingredients, seasoning and technological blends for the food industry: meat processing, bakery, dairy, snacks, private label and OEM.",
+    h1="Solutions for food manufacturers and processors",
+    intro="We supply ingredients and blends for the food industry, where consistent quality, repeatable taste and functionality in the production process are key. We work with manufacturers across food sectors.",
+    tag="A reliable partner for industrial applications", h2="Dehydrated ingredients and technological blends",
+    p="For industrial producers we supply dehydrated ingredients, seasoning and technological blends that allow precise dosing, stable taste and easy integration into production lines. Every solution is adapted to the specific technology, production process and desired result.",
+    lead="Our solutions help to:", pts=["reduce dependence on seasonal raw materials", "simplify production processes", "ensure the same quality across batches"],
+    alt="A worker operating an industrial mixer with a seasoning blend", sectors="Sectors we supply",
+    cta_title="Contact for industrial partners",
+    cta_text="Do you have specific requirements or are you looking for a reliable supplier for your production? We will be glad to discuss the options with you.",
+    obor="Industry")
+
+VYVOJ_EN = dict(
+    title="Research and development of custom seasoning blends | J.K.FOOD",
+    desc="Our own development facilities: custom recipes, adjustments of taste and composition, batch stability and introduction into series production. Samples for testing.",
+    h1="Research and development",
+    intro="Development is a natural part of J.K.FOOD. In our own development facilities we create and test recipes so that they meet requirements for taste, functionality and long-term stability.",
+    tag="Consistent quality starts with development", h2="What our development covers",
+    p="We develop every product with its real use in mind – in production, food service and retail. We monitor technological behaviour, sensory properties and the repeatability of the result. We do not develop for the drawer, but for production.",
+    lead="We focus in particular on:", pts=["taste, aroma and colour stability", "homogeneity of blends and batch stability", "dosing, flowability and miscibility", "product behaviour during processing and storage"],
+    alt="Laboratory: a seasoning blend sample on a laboratory scale, test tubes with spice samples",
+    h2b="Custom development and cooperation",
+    pb="We work with manufacturers, food service and private label partners. We create new products and adjust existing recipes to a specific brief, technology and target price.",
+    cards=[("Custom blend development", "A new flavour based on your brief and technology."),
+           ("Taste and composition adjustments", "We fine-tune an existing recipe – taste, composition and price."),
+           ("Consistent quality as you grow", "We prepare the recipe so that it works at higher volumes too."),
+           ("Introduction into series production", "We help with the transition from sample to regular production.")],
+    quote="We are not just an ingredient supplier. We are a partner who understands ingredients, technology and production.",
+    cta_title="Do you have a specific brief?", cta_text="We will be glad to discuss your project and prepare samples for testing.",
+    cta_btn="Enquire about development", obor="Custom development")
+
+JIDLA_EN = dict(
+    title="CHUŤ and HOT&GO ready meals in a cup | J.K.FOOD",
+    desc="CHUŤ and HOT&GO ready meals in a cup: just add hot water. For shops, offices, workplaces and travel.",
+    h1="CHUŤ and HOT&GO ready meals in a cup",
+    intro="Our own range of ready meals for quick and simple preparation. Reliable taste, convenience and the same result wherever you are.",
+    tag="A reliable solution when time matters", h2="A complete meal in a few minutes",
+    p="The CHUŤ and HOT&amp;GO ready meals in a cup are designed for quick and simple preparation. Just add hot water and the meal is ready in a few minutes – at home, at work or on the go.",
+    lead="Every cup:", pts=["is a complete ready meal", "has a clear and simple preparation method", "gives the same taste every time", "needs no extra ingredients or equipment"],
+    ph_hero="Photo of the CHUŤ and HOT&amp;GO range", ph_hero_label="Placeholder for a photo of CHUŤ and HOT&amp;GO ready meals",
+    ph_item="Photo of the cup", ph_item_sub="name · weight · preparation", h_types="Varieties and packaging",
+    h_b2b="For trade partners",
+    pb="Ready meals in a cup are easy to store, carry and sell. They suit places where customers need a quick and reliable meal – offices and workplaces, students and travel.",
+    cards=[("Quick preparation", "No cooking – just hot water."), ("No extra dishes", "The meal is prepared and served directly in the cup."),
+           ("Easy storage", "The cups are easy to store, carry and display."), ("A full meal portion", "Every cup is a full portion.")],
+    cta_title="Ready meals for your range", cta_text="Interested in CHUŤ and HOT&amp;GO ready meals for your shop or business? Write to us.",
+    cta_btn="Enquire about ready meals", obor="CHUŤ and HOT&GO ready meals")
