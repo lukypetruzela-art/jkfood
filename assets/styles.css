@@ -718,3 +718,85 @@ form.q[hidden],.q-done[hidden]{display:none}
 .legal-table th,.legal-table td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
 .legal-table th{font-weight:600;color:var(--ink);background:var(--blush)}
 mark.fill{background:#FFF3C4;color:#7A5A00;padding:0 4px;border-radius:4px}
+
+/* ---------- sjednocení: mezery, nadpisy druhé úrovně ---------- */
+:root{--sec:clamp(72px,8vw,120px)}
+section.block,.vsort{padding:var(--sec) 0}
+section.block.tight{padding-top:0}
+.vwhy{padding:var(--sec) 0 0}
+.coop h3,.obor-h{font-size:clamp(26px,2.6vw,36px);line-height:1.1;font-weight:600;letter-spacing:-.02em}
+
+/* ---------- menu: rozbalovací „O firmě“ ---------- */
+.nav .navsub-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 14px;border:0;background:none;font:inherit;font-size:16px;font-weight:500;color:inherit;border-radius:999px;cursor:pointer;white-space:nowrap;transition:color .2s,background-color .25s var(--ease)}
+.chev{width:7px;height:7px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .25s var(--ease)}
+@media (min-width:1181px){
+  .navsub{position:relative}
+  .navsub-menu{position:absolute;left:0;top:100%;min-width:200px;padding:8px;display:grid;background:#fff;border:1px solid var(--line);border-radius:20px 20px 20px 0;box-shadow:0 18px 40px -18px rgba(31,26,25,.35);opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .2s var(--ease),transform .25s var(--ease),visibility .25s}
+  .navsub:hover .navsub-menu,.navsub:focus-within .navsub-menu{opacity:1;visibility:visible;transform:none}
+  .navsub:hover .chev,.navsub:focus-within .chev{transform:translateY(2px) rotate(225deg)}
+  .navsub:hover .navsub-btn,.navsub:focus-within .navsub-btn{color:var(--red);background:var(--blush)}
+  .navsub:has([aria-current]) .navsub-btn{color:var(--red)}
+  .nav .navsub-menu a.link{display:block;border-radius:12px}
+}
+@media (min-width:1181px) and (max-width:1380px){.nav .navsub-btn{padding:10px 9px;font-size:15px}}
+@media (max-width:1180px){
+  .navsub-btn{display:none!important}
+  .navsub,.navsub-menu{display:flex;flex-direction:column}
+}
+
+/* ---------- video u příběhu firmy ---------- */
+.story-video{margin-top:48px}
+.story-video .yt{border-radius:32px 32px 32px 0}
+.story-video .yt-btn{width:72px;height:72px}
+.story-video .yt-label{font-size:20px}
+.story-video-cap{margin-top:12px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 18px;font-size:15px;color:var(--muted)}
+.story-video-cap .video-yt{font-size:15px}
+
+/* ---------- ikony v kartách (způsoby spolupráce, proč s námi) ---------- */
+.coop-ic,.why-ic{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:var(--drop);background:var(--blush);color:var(--red)}
+.coop-ic svg,.why-ic svg{width:26px;height:26px}
+.b2b-why li{border-top:0;padding:clamp(22px,2.2vw,30px);background:var(--blush);border-radius:32px 32px 32px 0}
+.why-ic{background:#fff}
+.b2b-why h3{margin-top:18px;font-size:21px}
+.b2b-why p{font-size:17px}
+
+/* ---------- kontaktní osoby: řada karet pod formulářem ---------- */
+.people{margin-top:clamp(40px,5vw,64px);grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;border-top:0;padding-top:0}
+.people li{background:var(--blush);border-radius:24px 24px 24px 0;padding:22px 24px}
+.people span{margin-bottom:8px}
+@media (max-width:900px){.people{grid-template-columns:1fr}}
+
+/* ---------- tmavé záhlaví podstránek (stejný styl jako úvod) ---------- */
+.phero{position:relative;isolation:isolate;overflow:hidden;background:var(--ink);color:#fff;padding:clamp(28px,3.4vw,48px) 0 clamp(44px,5.5vw,84px)}
+.phero-bg{position:absolute;inset:0;z-index:-2;display:block}
+.phero-bg img{width:100%;height:100%;object-fit:cover;object-position:60% 38%}
+.phero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(24,17,16,.95) 0%,rgba(24,17,16,.84) 42%,rgba(24,17,16,.45) 100%)}
+.phero .crumbs,.phero .crumbs a{color:rgba(255,255,255,.72)}
+.phero .crumbs a:hover{color:#fff}
+.phero .intro{color:rgba(255,255,255,.84)}
+.phero+.page-body{padding-top:clamp(40px,5vw,72px)}
+@media (max-width:760px){.phero::after{background:linear-gradient(180deg,rgba(24,17,16,.8),rgba(24,17,16,.92))}}
+
+/* ---------- mobil: nízké karty pilířů a kroky jako časová osa ---------- */
+@media (max-width:760px){
+  .pil{display:grid;grid-template-columns:auto 1fr auto;column-gap:14px;align-items:center;padding:16px 18px;border-radius:28px 28px 28px 0}
+  .pil picture{display:contents}
+  .pil-ic{grid-column:1;grid-row:1/3;width:48px;height:48px}
+  .pil h3{grid-column:2;grid-row:1;margin:0;padding:0;font-size:19px;align-self:end}
+  .pil p{grid-column:2;grid-row:2;margin-top:3px;font-size:15px;line-height:1.35;align-self:start;max-width:none}
+  .pil-go{grid-column:3;grid-row:1/3;margin:0 2px 0 0;width:22px}
+  .pil.has-img::before{background:linear-gradient(90deg,rgba(24,17,16,.92) 0%,rgba(24,17,16,.72) 100%)}
+  .pil-grid li:nth-child(2) .pil.has-img::before{background:linear-gradient(90deg,rgba(90,9,6,.94) 0%,rgba(80,8,6,.74) 100%)}
+  .pil-grid{gap:10px}
+}
+@media (max-width:560px){
+  .steps{row-gap:0;margin-top:40px}
+  .steps li{display:grid;grid-template-columns:44px 1fr;column-gap:16px;padding:0 0 26px}
+  .steps li:last-child{padding-bottom:0}
+  .steps .n{grid-row:1/3;width:44px;height:44px;font-size:17px}
+  .steps h3{margin-top:9px;font-size:20px}
+  .steps p{grid-column:2;margin-top:4px;max-width:none}
+  .steps li::after{display:block;left:21px;right:auto;top:44px;bottom:0;width:1.5px;height:auto}
+  .steps li:last-child::after{display:none}
+  .steps-cta{margin-top:36px}
+}

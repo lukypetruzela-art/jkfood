@@ -264,7 +264,7 @@ def build_catalog(items, v):
                 .replace("{{INTRO}}", nbsp(esc(intro))).replace("{{PLACEHOLDER}}", esc(placeholder))
                 .replace("{{CHIPS}}", render_chips(active)).replace("{{LIST}}", render_list(items, cats_idx))
                 .replace("{{COUNT}}", f"Celkem {len(shown)} {plural(len(shown))}")
-                .replace("{{HEADER}}", hd).replace("{{FOOTER}}", ft).replace("{{LEGACY}}", legacy if active is None else ""))
+                .replace("{{PHERO}}", PHERO_BG).replace("{{HEADER}}", hd).replace("{{FOOTER}}", ft).replace("{{LEGACY}}", legacy if active is None else ""))
         assert "{{" not in page, re.findall(r"\{\{\w+\}\}", page)
         (ROOT / file).write_text(page, encoding="utf-8")
     return [("sortiment.html", "0.9")] + [(c["file"], "0.8") for c in CATS]
@@ -396,6 +396,12 @@ def site_chrome(nav_current=None, en_file=None, absolute=False):
     return header, footer
 
 
+# fotka v tmavém záhlaví podstránek (stejná jako na úvodu; rozmazání pod textem je předpočítané ve fotce)
+PHERO_BG = ('<picture class="phero-bg"><source media="(max-width:760px)" srcset="img/uvod-m-600.webp" type="image/webp">'
+            '<source srcset="img/uvod-900.webp 900w, img/uvod-1536.webp 1536w" sizes="100vw" type="image/webp">'
+            '<img src="img/uvod.jpg" alt="" width="1536" height="1024" fetchpriority="high" decoding="async"></picture>')
+
+
 def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_current=None, en_file=None, write=True):
     """Podstránka se stejnou hlavičkou a patičkou jako index.html (Náš tým, Kariéra)."""
     idx = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -421,7 +427,8 @@ def simple_page(file, title, desc, crumbs, h1, intro, body, cta, graph, nav_curr
 {header}
 
 <main id="obsah">
-  <section class="cat-head" aria-labelledby="page-title">
+  <section class="cat-head phero" aria-labelledby="page-title">
+    {PHERO_BG}
     <div class="wrap">
       {crumbs_html}
       <h1 class="h2 cat-title" id="page-title">{esc(h1)}</h1>
@@ -1037,11 +1044,18 @@ def steps5_html(lang="cs"):
             + cards(steps, "five") + "</section>")
 
 
+_IC = '<span class="why-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{}</svg></span>'
+WHY_ICONS = ['<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+             '<circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/>',
+             '<path d="M12 3l7 3v5.5c0 4.5-3 8-7 9.5-4-1.5-7-5-7-9.5V6z"/><path d="M9 12l2.2 2.2L15.2 10"/>',
+             '<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>']
+
+
 def why_html(lang="cs", hid="ob-why"):
     L = ui(lang)
     why = _en().WHY_EN if lang == "en" else WHY
     return (f'<section class="obor-sec" aria-labelledby="{hid}"><h2 class="obor-h" id="{hid}">{L["why"]}</h2>'
-            + '<ul class="b2b-why">' + "".join(f"<li><h3>{t}</h3><p>{x}</p></li>" for t, x in why) + "</ul></section>")
+            + '<ul class="b2b-why">' + "".join(f"<li>{_IC.format(WHY_ICONS[i])}<h3>{t}</h3><p>{x}</p></li>" for i, (t, x) in enumerate(why)) + "</ul></section>")
 
 
 def bullets(lead, pts):
@@ -1067,7 +1081,7 @@ def b2b_page(file, title, desc, crumbs, h1, intro, body, cta, lang="cs"):
 
 def photo(src, alt, cls="b2b-photo"):
     return (f'<figure class="{cls}"><picture><source srcset="img/{src}-600.webp 600w, img/{src}-800.webp 800w, img/{src}-1000.webp 1000w" sizes="(max-width:900px) 92vw, 560px" type="image/webp">'
-            f'<img src="img/{src}.jpg" alt="{alt}" width="1000" height="800" fetchpriority="high" decoding="async"></picture></figure>')
+            f'<img src="img/{src}.jpg" alt="{alt}" width="1000" height="800" decoding="async"></picture></figure>')
 
 SPECULATION = ('<script type="speculationrules">{"prerender":[{"where":{"and":[{"href_matches":"/*"},'
                '{"not":{"href_matches":"/api/*"}},{"not":{"selector_matches":"[target=_blank], [href^=\'tel:\'], [href^=\'mailto:\']"}}]},'
@@ -1090,15 +1104,20 @@ def obor_text(o, lang):
     return o if lang == "cs" else {**o, **_en().OBORY_EN[o["file"]]}
 
 
+OBOR_PHOTO = {"masny-prumysl.html": "pilir-prumysl", "pekarstvi.html": "pilir-produkty", "mlekarny.html": "pilir-vyvoj",
+              "snacky-a-pochutiny.html": "pilir-produkty", "gastro-a-jidelny.html": "pilir-prumysl", "privatni-znacka.html": "pilir-vyvoj"}
+
+
 def page_obor(o, items, lang="cs"):
+    slug = o["file"][:-5]
+    o = {**o, "photo": f"obor-{slug}" if (ROOT / "img" / f"obor-{slug}-1000.webp").exists() else OBOR_PHOTO[o["file"]]}
     L, t = ui(lang), obor_text(o, lang)
     parts = []
     head = f'<p class="b2b-tag">{esc(t["tag"])}</p>'
-    if t["focus"]:
-        parts.append(f'<section class="obor-sec" aria-labelledby="ob-focus">{head}<h2 class="sr" id="ob-focus">{L["focus_sr"]}</h2>'
-                     + bullets(t.get("focus_lead", L["focus_lead"]), t["focus"]) + "</section>")
-    else:
-        parts.append(f'<div class="obor-sec">{head}</div>')
+    # úvodní blok: vlevo hlavní body, vpravo fotka oboru (dokud není vlastní img/obor-…, použije se obecná)
+    lead, pts = (t.get("focus_lead", L["focus_lead"]), t["focus"]) if t["focus"] else (L["offer"] + ":", [a for a, _ in t["offer"]])
+    parts.append(f'<section class="obor-sec b2b-split" aria-labelledby="ob-focus"><div>{head}<h2 class="sr" id="ob-focus">{L["focus_sr"]}</h2>'
+                 + bullets(lead, pts) + "</div>" + photo(o["photo"], esc(t.get("photo_alt", t["name"]))) + "</section>")
     if t["offer"]:
         parts.append(f'<section class="obor-sec" aria-labelledby="ob-offer"><h2 class="obor-h" id="ob-offer">{L["offer"]}</h2>'
                      + cards([(esc(a), nbsp(esc(b))) for a, b in t["offer"]]) + "</section>")
@@ -1106,7 +1125,7 @@ def page_obor(o, items, lang="cs"):
                  f'<a class="rail-mini" href="sortiment.html">{L["all"]} <span class="i-next" aria-hidden="true"></span></a></div>'
                  f'<ul class="vsort-list">{"".join(cat_rows(items, o["cats"], lang))}</ul></section>')
     parts.append(steps5_html(lang))
-    others = "".join(f'<li><a href="{x["file"]}">{esc(obor_text(x, lang)["nav"])}</a></li>' for x in OBORY if x is not o)
+    others = "".join(f'<li><a href="{x["file"]}">{esc(obor_text(x, lang)["nav"])}</a></li>' for x in OBORY if x["file"] != o["file"])
     parts.append(f'<nav class="obor-sec b2b-others" aria-label="{L["others"]}"><h2 class="obor-h">{L["others"]}</h2><ul>{others}</ul></nav>')
     cta = cta_band("obor-cta", L["cta_title"], L["cta_text"],
                    [("btn-white", form_link(t["name"]), L["cta_enquire"]), ("btn-ghost", form_link(t["name"], "Vzorky"), L["cta_samples"])])

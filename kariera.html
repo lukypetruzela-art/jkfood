@@ -29,7 +29,7 @@
 <link rel="preload" href="assets/fonts/dmsans-latin-ext.woff2?v=fa2817e6" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin.woff2?v=d8e84876" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-ext.woff2?v=4fe8ad01" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/site.min.css?v=2c521879">
+<link rel="stylesheet" href="assets/site.min.css?v=fa26999e">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -49,9 +49,14 @@
       <a class="link" href="prumysl.html">Průmysl</a>
       <a class="link" href="vyzkum-a-vyvoj.html">Výzkum a vývoj</a>
       <a class="link" href="index.html#sortiment">Sortiment</a>
-      <a class="link" href="index.html#pribeh">O nás</a>
-      <a class="link" href="nas-tym.html">Náš tým</a>
-      <a class="link" href="kariera.html" aria-current="page">Kariéra</a>
+      <div class="navsub">
+        <button class="link navsub-btn" type="button" aria-haspopup="true">O firmě <span class="chev" aria-hidden="true"></span></button>
+        <div class="navsub-menu">
+          <a class="link" href="index.html#pribeh">O nás</a>
+          <a class="link" href="nas-tym.html">Náš tým</a>
+          <a class="link" href="kariera.html" aria-current="page">Kariéra</a>
+        </div>
+      </div>
       <a class="link" href="index.html#kontakt">Kontakt</a>
       <a class="link eshop" href="https://eshop.kostera.cz/" target="_blank" rel="noopener">E-shop <span class="ext" aria-hidden="true"></span></a>
       <a class="link lang" href="en/index.html" hreflang="en" lang="en" aria-label="EN – English version">EN</a>
@@ -62,7 +67,8 @@
 </header>
 
 <main id="obsah">
-  <section class="cat-head" aria-labelledby="page-title">
+  <section class="cat-head phero" aria-labelledby="page-title">
+    <picture class="phero-bg"><source media="(max-width:760px)" srcset="img/uvod-m-600.avif" type="image/avif"><source media="(max-width:760px)" srcset="img/uvod-m-600.webp" type="image/webp"><source srcset="img/uvod-900.avif 900w, img/uvod-1536.avif 1536w" sizes="100vw" type="image/avif"><source srcset="img/uvod-900.webp 900w, img/uvod-1536.webp 1536w" sizes="100vw" type="image/webp"><img src="img/uvod.jpg" alt="" width="1536" height="1024" fetchpriority="high" decoding="async"></picture>
     <div class="wrap">
       <nav class="crumbs" aria-label="Drobečková navigace"><a href="index.html">Úvod</a><span aria-hidden="true">/</span><span aria-current="page">Kariéra</span></nav>
       <h1 class="h2 cat-title" id="page-title">Kariéra</h1>
@@ -115,7 +121,7 @@ const a=box.querySelector('a[href^="mailto:"]');if(a&&mail){a.href='mailto:'+mai
       <div><h3>Sortiment</h3><ul>
 <!-- FOOTCATS:START --><li><a href="sortiment-testoviny.html">Těstoviny</a></li><li><a href="sortiment-koreni-jednodruhove.html">Koření jednodruhové</a></li><li><a href="sortiment-korenici-smesi.html">Kořenicí směsi</a></li><li><a href="sortiment-susena-zelenina.html">Sušená zelenina</a></li><li><a href="sortiment-smesi-pro-masny-prumysl.html">Směsi pro masný průmysl</a></li><li><a href="sortiment-susene-houby-a-plody.html">Sušené houby a plody</a></li><li><a href="sortiment-bujony-polevky-omacky.html">Bujóny, polévky, omáčky</a></li><li><a href="sortiment-bramborove-vyrobky.html">Bramborové výrobky</a></li><li><a href="sortiment-skroby-a-dalsi.html">Škroby a další</a></li><!-- FOOTCATS:END -->
       </ul></div>
-      <div><h3>Firma</h3><ul><li><a href="index.html#pribeh">O nás</a></li><li><a href="nas-tym.html">Náš tým</a></li><li><a href="prumysl.html">Průmysl</a></li><li class="fsub"><a href="masny-prumysl.html">Řeznictví a masný průmysl</a></li><li class="fsub"><a href="pekarstvi.html">Pekařství</a></li><li class="fsub"><a href="mlekarny.html">Mlékárenský průmysl</a></li><li class="fsub"><a href="snacky-a-pochutiny.html">Snacky a pochutiny</a></li><li class="fsub"><a href="gastro-a-jidelny.html">Gastro a jídelny</a></li><li class="fsub"><a href="privatni-znacka.html">Private label a OEM</a></li><li><a href="vyzkum-a-vyvoj.html">Výzkum a vývoj</a></li><li><a href="hotova-jidla.html">Hotová jídla CHUŤ a HOT&amp;GO</a></li><li><a href="kariera.html">Kariéra</a></li><li><a href="#">Ke stažení</a></li></ul></div>
+      <div><h3>Firma</h3><ul><li><a href="index.html#pribeh">O nás</a></li><li><a href="nas-tym.html">Náš tým</a></li><li><a href="prumysl.html">Průmysl</a></li><li class="fsub"><a href="masny-prumysl.html">Řeznictví a masný průmysl</a></li><li class="fsub"><a href="pekarstvi.html">Pekařství</a></li><li class="fsub"><a href="mlekarny.html">Mlékárenský průmysl</a></li><li class="fsub"><a href="snacky-a-pochutiny.html">Snacky a pochutiny</a></li><li class="fsub"><a href="gastro-a-jidelny.html">Gastro a jídelny</a></li><li class="fsub"><a href="privatni-znacka.html">Private label a OEM</a></li><li><a href="vyzkum-a-vyvoj.html">Výzkum a vývoj</a></li><li><a href="hotova-jidla.html">Hotová jídla CHUŤ a HOT&amp;GO</a></li><li><a href="kariera.html">Kariéra</a></li></ul></div>
       <div><h3>Kontakt</h3><ul><li><a href="mailto:kostera@kostera.cz">kostera@kostera.cz</a></li><li><a href="tel:+420556310205">+420 556 310 205</a></li><li><a href="https://eshop.kostera.cz/" target="_blank" rel="noopener">E-shop <span class="ext" aria-hidden="true"></span></a></li></ul></div>
     </div>
     <div class="foot-bottom">
