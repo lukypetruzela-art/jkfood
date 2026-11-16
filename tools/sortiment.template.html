@@ -83,11 +83,8 @@
 
 {{FOOTER}}
 
-<script src="assets/products.js?v={{V}}" defer></script>
 <script>
 addEventListener('DOMContentLoaded', () => {
-  const { drawProduct } = window.JK;
-
   /* ---------- hlavička (menu, stín při scrollu) ---------- */
   const top = document.getElementById('top');
   const burger = top.querySelector('.burger');
@@ -109,14 +106,13 @@ addEventListener('DOMContentLoaded', () => {
   }, { passive: true });
   top.classList.toggle('scrolled', scrollY > 8);
 
-  /* ---------- ikonky skupin (plátna mají pevnou velikost už v HTML) ---------- */
-  const dpr = Math.min(2, devicePixelRatio || 1);
-  document.querySelectorAll('canvas[data-ic]').forEach(cv => {
-    const px = cv.width;
-    cv.style.width = cv.style.height = px + 'px';
-    cv.width = cv.height = Math.round(px * dpr);
-    const x = cv.getContext('2d'); x.scale(dpr, dpr); x.translate(px / 2, px / 2);
-    drawProduct(x, +cv.dataset.ic, px * .42, 'mix');
+  /* ---------- přehled: skupina ukáže prvních pár výrobků, zbytek po kliknutí ---------- */
+  const groupsEl = document.getElementById('groups');
+  groupsEl.addEventListener('click', e => {
+    const btn = e.target.closest('.grp-more'); if (!btn) return;
+    const sec = btn.parentNode, first = sec.querySelector('li.x a');
+    sec.classList.remove('clamp'); btn.remove();
+    if (first) first.focus({ preventScroll: true });
   });
 
   /* ---------- hledání ve výpisu (výpis je hotový v HTML, tady se jen skrývá) ---------- */
@@ -162,6 +158,7 @@ addEventListener('DOMContentLoaded', () => {
     countEl.textContent = !q ? totalText : shown ? 'Nalezeno: ' + shown + ' ' + plural(shown) : '';
     emptyEl.hidden = shown > 0;
     qClear.hidden = !query;
+    groupsEl.classList.toggle('q', !!q);          // při hledání se prohledávají a ukazují i sbalené výrobky
   }
   let t;
   qEl.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { query = qEl.value; apply(); }, 60); });

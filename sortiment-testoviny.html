@@ -29,7 +29,7 @@
 <link rel="preload" href="assets/fonts/dmsans-latin-ext.woff2?v=fa2817e6" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin.woff2?v=d8e84876" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin-ext.woff2?v=4fe8ad01" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/site.min.css?v=fa26999e">
+<link rel="stylesheet" href="assets/site.min.css?v=ad75a3a2">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -90,15 +90,15 @@
     <div class="wrap">
       <div class="chips" id="chips" role="toolbar" aria-label="Skupiny výrobků">
 <a class="chip all" href="sortiment.html">Vše</a>
-<a class="chip" href="sortiment-testoviny.html" aria-current="page"><canvas data-ic="0" width="26" height="26" aria-hidden="true"></canvas>Těstoviny</a>
-<a class="chip" href="sortiment-koreni-jednodruhove.html"><canvas data-ic="1" width="26" height="26" aria-hidden="true"></canvas>Koření jednodruhové</a>
-<a class="chip" href="sortiment-korenici-smesi.html"><canvas data-ic="2" width="26" height="26" aria-hidden="true"></canvas>Kořenicí směsi</a>
-<a class="chip" href="sortiment-susena-zelenina.html"><canvas data-ic="3" width="26" height="26" aria-hidden="true"></canvas>Sušená zelenina</a>
-<a class="chip" href="sortiment-smesi-pro-masny-prumysl.html"><canvas data-ic="4" width="26" height="26" aria-hidden="true"></canvas>Směsi pro masný průmysl</a>
-<a class="chip" href="sortiment-susene-houby-a-plody.html"><canvas data-ic="5" width="26" height="26" aria-hidden="true"></canvas>Sušené houby a plody</a>
-<a class="chip" href="sortiment-bujony-polevky-omacky.html"><canvas data-ic="6" width="26" height="26" aria-hidden="true"></canvas>Bujóny, polévky, omáčky</a>
-<a class="chip" href="sortiment-bramborove-vyrobky.html"><canvas data-ic="7" width="26" height="26" aria-hidden="true"></canvas>Bramborové výrobky</a>
-<a class="chip" href="sortiment-skroby-a-dalsi.html"><canvas data-ic="8" width="26" height="26" aria-hidden="true"></canvas>Škroby a další</a>
+<a class="chip" href="sortiment-testoviny.html" aria-current="page">Těstoviny</a>
+<a class="chip" href="sortiment-koreni-jednodruhove.html">Koření jednodruhové</a>
+<a class="chip" href="sortiment-korenici-smesi.html">Kořenicí směsi</a>
+<a class="chip" href="sortiment-susena-zelenina.html">Sušená zelenina</a>
+<a class="chip" href="sortiment-smesi-pro-masny-prumysl.html">Směsi pro masný průmysl</a>
+<a class="chip" href="sortiment-susene-houby-a-plody.html">Sušené houby a plody</a>
+<a class="chip" href="sortiment-bujony-polevky-omacky.html">Bujóny, polévky, omáčky</a>
+<a class="chip" href="sortiment-bramborove-vyrobky.html">Bramborové výrobky</a>
+<a class="chip" href="sortiment-skroby-a-dalsi.html">Škroby a další</a>
       </div>
     </div>
   </div>
@@ -108,7 +108,7 @@
       <p class="cat-count" id="count">Celkem 7 výrobků</p>
       <div id="groups">
 <section class="grp" id="sk-testoviny" aria-labelledby="h-testoviny">
-<div class="grp-head"><span class="grp-ic"><canvas data-ic="0" width="52" height="52" aria-hidden="true"></canvas></span><h2 id="h-testoviny">Těstoviny</h2><span class="n">7 výrobků</span></div>
+<div class="grp-head"><h2 id="h-testoviny">Těstoviny</h2><span class="n">7 výrobků</span></div>
 <div class="sub" data-s="Těstoviny">
 <ul class="items">
 <li><a class="item" href="index.html?produkt=Kol%C3%ADnka#kontakt">Kolínka</a></li>
@@ -164,11 +164,8 @@
   </div>
 </footer>
 
-<script src="assets/products.js?v=2f610843" defer></script>
 <script>
 addEventListener('DOMContentLoaded', () => {
-  const { drawProduct } = window.JK;
-
   /* ---------- hlavička (menu, stín při scrollu) ---------- */
   const top = document.getElementById('top');
   const burger = top.querySelector('.burger');
@@ -190,14 +187,13 @@ addEventListener('DOMContentLoaded', () => {
   }, { passive: true });
   top.classList.toggle('scrolled', scrollY > 8);
 
-  /* ---------- ikonky skupin (plátna mají pevnou velikost už v HTML) ---------- */
-  const dpr = Math.min(2, devicePixelRatio || 1);
-  document.querySelectorAll('canvas[data-ic]').forEach(cv => {
-    const px = cv.width;
-    cv.style.width = cv.style.height = px + 'px';
-    cv.width = cv.height = Math.round(px * dpr);
-    const x = cv.getContext('2d'); x.scale(dpr, dpr); x.translate(px / 2, px / 2);
-    drawProduct(x, +cv.dataset.ic, px * .42, 'mix');
+  /* ---------- přehled: skupina ukáže prvních pár výrobků, zbytek po kliknutí ---------- */
+  const groupsEl = document.getElementById('groups');
+  groupsEl.addEventListener('click', e => {
+    const btn = e.target.closest('.grp-more'); if (!btn) return;
+    const sec = btn.parentNode, first = sec.querySelector('li.x a');
+    sec.classList.remove('clamp'); btn.remove();
+    if (first) first.focus({ preventScroll: true });
   });
 
   /* ---------- hledání ve výpisu (výpis je hotový v HTML, tady se jen skrývá) ---------- */
@@ -243,6 +239,7 @@ addEventListener('DOMContentLoaded', () => {
     countEl.textContent = !q ? totalText : shown ? 'Nalezeno: ' + shown + ' ' + plural(shown) : '';
     emptyEl.hidden = shown > 0;
     qClear.hidden = !query;
+    groupsEl.classList.toggle('q', !!q);          // při hledání se prohledávají a ukazují i sbalené výrobky
   }
   let t;
   qEl.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { query = qEl.value; apply(); }, 60); });

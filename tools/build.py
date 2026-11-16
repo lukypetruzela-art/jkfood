@@ -39,7 +39,7 @@ ORG = {
     "same_as": ["https://www.facebook.com/Jaroslav-Kostera-JK-FOOD-355532857955037/"],
 }
 
-# devět skupin – pořadí musí odpovídat JK.CATS v assets/products.js
+# devět skupin katalogu
 CATS = [
     dict(id="testoviny", slug="testoviny", name="Těstoviny",
          title="Těstoviny – vřetena, kolínka, široké i řezané",
@@ -169,7 +169,7 @@ def breadcrumbs_ld(items):
 
 def asset_version():
     h = hashlib.sha1()
-    for f in ["assets/styles.css", "assets/products.js"]:
+    for f in ["assets/styles.css"]:
         h.update((ROOT / f).read_bytes())
     return h.hexdigest()[:8]
 
@@ -181,6 +181,9 @@ def load_items():
     return items
 
 
+GRP_SHOW = 12      # kolik výrobků skupiny ukázat na přehledu sortimentu
+
+
 def render_list(items, cats_idx):
     out = []
     for gi in cats_idx:
@@ -189,22 +192,27 @@ def render_list(items, cats_idx):
         if not g_items:
             continue
         head_tag = "h2"
-        out.append(f'<section class="grp" id="sk-{c["id"]}" aria-labelledby="h-{c["id"]}">')
+        clamp = len(cats_idx) > 1 and len(g_items) > GRP_SHOW + 4      # na přehledu jen prvních pár, zbytek po kliknutí
+        seen = 0
+        out.append(f'<section class="grp{" clamp" if clamp else ""}" id="sk-{c["id"]}" aria-labelledby="h-{c["id"]}">')
         title = (f'<a href="{c["file"]}">{esc(c["name"])}</a>' if len(cats_idx) > 1 else esc(c["name"]))
         out.append(
-            f'<div class="grp-head"><span class="grp-ic"><canvas data-ic="{gi}" width="52" height="52" aria-hidden="true"></canvas></span>'
+            f'<div class="grp-head">'
             f'<{head_tag} id="h-{c["id"]}">{title}</{head_tag}><span class="n">{len(g_items)} {plural(len(g_items))}</span></div>')
         subs = list(dict.fromkeys(p["s"] for p in g_items))
         for s in subs:
-            out.append(f'<div class="sub" data-s="{esc(s)}">')
+            out.append(f'<div class="sub{" x" if clamp and seen >= GRP_SHOW else ""}" data-s="{esc(s)}">')
             if len(subs) > 1 or s != c["name"]:
                 out.append(f"<h3>{esc(s)}</h3>")
             out.append('<ul class="items">')
             for p in g_items:
                 if p["s"] == s:
                     href = "index.html?produkt=" + quote(p["n"], safe="") + "#kontakt"
-                    out.append(f'<li><a class="item" href="{href}">{esc(p["n"])}</a></li>')
+                    out.append(f'<li{" class=\"x\"" if clamp and seen >= GRP_SHOW else ""}><a class="item" href="{href}">{esc(p["n"])}</a></li>')
+                    seen += 1
             out.append("</ul></div>")
+        if clamp:
+            out.append(f'<button class="grp-more" type="button">Zobrazit všech {len(g_items)} {plural(len(g_items))} <span class="chev" aria-hidden="true"></span></button>')
         out.append("</section>")
     return "\n".join(out)
 
@@ -214,7 +222,7 @@ def render_chips(active):
     chips = [f'<a class="chip all" href="sortiment.html"{cur_all}>Vše</a>']
     for i, c in enumerate(CATS):
         cur = ' aria-current="page"' if active == i else ""
-        chips.append(f'<a class="chip" href="{c["file"]}"{cur}><canvas data-ic="{i}" width="26" height="26" aria-hidden="true"></canvas>{esc(c["name"])}</a>')
+        chips.append(f'<a class="chip" href="{c["file"]}"{cur}>{esc(c["name"])}</a>')
     return "\n".join(chips)
 
 
@@ -728,6 +736,7 @@ def build_en():
                   'and we will reply in English.</p>', html, flags=re.S)
     html = re.sub(r'(<nav class="crumbs"[^>]*>)<a href="index.html">Úvod</a>(.*?)<span aria-current="page">Sortiment</span>',
                   r'\1<a href="index.html">Home</a>\2<span aria-current="page">Products</span>', html)
+    html = re.sub(r"Zobrazit všech (\d+) výrob\w+", r"Show all \1 products", html)
     html = re.sub(r"(\d+) výrob(?:ek|ky|ků)", lambda m: f"{m.group(1)} product{'s' if m.group(1) != '1' else ''}", html)
     html = html.replace("Celkem ", "").replace('<p class="cat-count" id="count">', '<p class="cat-count" id="count">Total: ')
     html = re.sub(r"const legacy = \{.*?\};", "const legacy = {};", html)
@@ -1087,7 +1096,8 @@ SPECULATION = ('<script type="speculationrules">{"prerender":[{"where":{"and":[{
                '{"not":{"href_matches":"/api/*"}},{"not":{"selector_matches":"[target=_blank], [href^=\'tel:\'], [href^=\'mailto:\']"}}]},'
                '"eagerness":"moderate"}]}</script>')
 AVIF_SRC = ["img/uvod-m-600", "img/uvod-900", "img/uvod-1536", "img/hero-2-700", "img/hero-2-900"] + [
-    f"img/{n}-{w}" for n in ("pilir-prumysl", "pilir-vyvoj", "pilir-produkty") for w in (600, 800, 1000)]
+    f"img/{n}-{w}" for n in ("pilir-prumysl", "pilir-vyvoj", "pilir-produkty") for w in (600, 800, 1000)] + sorted(
+    str(f.relative_to(ROOT))[:-5] for f in (ROOT / "img").glob("obor-*-*.webp"))
 
 
 def make_avif():
@@ -1108,6 +1118,21 @@ OBOR_PHOTO = {"masny-prumysl.html": "pilir-prumysl", "pekarstvi.html": "pilir-pr
               "snacky-a-pochutiny.html": "pilir-produkty", "gastro-a-jidelny.html": "pilir-prumysl", "privatni-znacka.html": "pilir-vyvoj"}
 
 
+# popisy fotek oborů (česky, anglicky)
+OBOR_ALT = {
+    "masny-prumysl.html": ("Ruka v rukavici sype kořenicí směs na čerstvé klobásy, vedle nakrájený salám a misky s paprikou a pepřem",
+                           "Gloved hand sprinkling a seasoning blend over fresh sausages, next to sliced salami and bowls of paprika and pepper"),
+    "pekarstvi.html": ("Pekař sype směs semínek na nepečené housky na plechu, v pozadí pekařská pec",
+                       "Baker sprinkling a seed mix over unbaked rolls on a tray, bakery oven in the background"),
+    "snacky-a-pochutiny.html": ("Paprikové koření se sype na chipsy a křupky v nerezovém ochucovacím bubnu",
+                                "Paprika seasoning being dusted over crisps and puffed snacks in a stainless seasoning drum"),
+    "gastro-a-jidelny.html": ("Kuchař míchá polévku ve velkém hrnci, vedle gastronádoby se sušenou zeleninou, bylinkami a paprikou",
+                              "Cook stirring soup in a large pot, next to containers of dried vegetables, herbs and paprika"),
+    "privatni-znacka.html": ("Bílé sáčky a sklenice s kořením bez potisku na balicí lince, ruka v rukavici kontroluje sáček",
+                             "Unprinted white pouches and jars of spices on a packaging line, a gloved hand checking a pouch"),
+}
+
+
 def page_obor(o, items, lang="cs"):
     slug = o["file"][:-5]
     o = {**o, "photo": f"obor-{slug}" if (ROOT / "img" / f"obor-{slug}-1000.webp").exists() else OBOR_PHOTO[o["file"]]}
@@ -1117,7 +1142,7 @@ def page_obor(o, items, lang="cs"):
     # úvodní blok: vlevo hlavní body, vpravo fotka oboru (dokud není vlastní img/obor-…, použije se obecná)
     lead, pts = (t.get("focus_lead", L["focus_lead"]), t["focus"]) if t["focus"] else (L["offer"] + ":", [a for a, _ in t["offer"]])
     parts.append(f'<section class="obor-sec b2b-split" aria-labelledby="ob-focus"><div>{head}<h2 class="sr" id="ob-focus">{L["focus_sr"]}</h2>'
-                 + bullets(lead, pts) + "</div>" + photo(o["photo"], esc(t.get("photo_alt", t["name"]))) + "</section>")
+                 + bullets(lead, pts) + "</div>" + photo(o["photo"], esc(OBOR_ALT[o["file"]][lang == "en"] if o["photo"].startswith("obor-") and o["file"] in OBOR_ALT else t["name"])) + "</section>")
     if t["offer"]:
         parts.append(f'<section class="obor-sec" aria-labelledby="ob-offer"><h2 class="obor-h" id="ob-offer">{L["offer"]}</h2>'
                      + cards([(esc(a), nbsp(esc(b))) for a, b in t["offer"]]) + "</section>")

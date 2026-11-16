@@ -415,7 +415,6 @@ form.q[hidden],.q-done[hidden]{display:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 16px 0 10px;border:1.5px solid var(--line);border-radius:var(--drop);background:#fff;font:inherit;font-size:15.5px;font-weight:520;color:var(--ink);cursor:pointer;white-space:nowrap;transition:border-color .2s,background-color .2s,color .2s}
 .chip.all{padding:0 18px}
-.chip canvas{flex:none}
 .chip:hover{border-color:var(--ink)}
 .chip{text-decoration:none}
 .chip[aria-pressed="true"],.chip[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:#fff}
@@ -424,7 +423,6 @@ form.q[hidden],.q-done[hidden]{display:none}
 .cat-count{font-size:15px;color:var(--muted);margin-bottom:8px}
 .grp{padding-top:clamp(40px,5vw,64px)}
 .grp-head{display:flex;align-items:center;gap:18px;padding-bottom:20px;border-bottom:1px solid var(--ink);margin-bottom:8px}
-.grp-ic{flex:none;width:72px;height:72px;border-radius:var(--drop);background:var(--blush);display:flex;align-items:center;justify-content:center}
 .grp-head h2{font-size:clamp(28px,3vw,42px);line-height:1.05;letter-spacing:-.02em;font-weight:600}
 .grp-head h2 a{text-decoration:none}
 .grp-head h2 a:hover{color:var(--red)}
@@ -465,7 +463,6 @@ form.q[hidden],.q-done[hidden]{display:none}
   .item::after{font-size:13px}
   .sub{padding-top:20px}
   .sub h3{margin-bottom:2px}
-  .grp-ic{width:56px;height:56px}
   .grp-head{gap:14px}
 }
 
@@ -800,3 +797,10 @@ section.block.tight{padding-top:0}
   .steps li:last-child::after{display:none}
   .steps-cta{margin-top:36px}
 }
+
+/* ---------- katalog: bez ikonek, skupiny sbalené na prvních pár výrobků ---------- */
+.chip{padding:0 18px}
+#groups:not(.q) .grp.clamp .x{display:none}
+#groups.q .grp-more{display:none}
+.grp-more{display:inline-flex;align-items:center;gap:10px;margin-top:20px;min-height:46px;padding:0 20px;border:1.5px solid var(--ink);border-radius:var(--drop);background:#fff;font:inherit;font-size:16px;font-weight:600;color:var(--ink);cursor:pointer;transition:background-color .2s,color .2s,border-color .2s}
+.grp-more:hover{background:var(--red);border-color:var(--red);color:#fff}
