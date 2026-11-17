@@ -10,7 +10,7 @@
 <link rel="preload" href="../assets/fonts/dmsans-latin-ext.woff2?v=fa2817e6" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/inter-latin.woff2?v=d8e84876" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/fonts/inter-latin-ext.woff2?v=4fe8ad01" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/site.min.css?v=ad75a3a2">
+<link rel="stylesheet" href="../assets/site.min.css?v=4381304b">
 <title>CHUŤ and HOT&amp;GO ready meals in a cup | J.K.FOOD</title>
 <meta name="description" content="CHUŤ and HOT&amp;GO ready meals in a cup: just add hot water. For shops, offices, workplaces and travel.">
 <link rel="alternate" hreflang="cs" href="https://www.kostera.cz/hotova-jidla.html">
@@ -54,8 +54,8 @@
       <a class="link" href="research-development.html">Research &amp; development</a>
       <a class="link" href="index.html#sortiment">Products</a>
       <div class="navsub">
-        <button class="link navsub-btn" type="button" aria-haspopup="true">Company <span class="chev" aria-hidden="true"></span></button>
-        <div class="navsub-menu">
+        <button class="link navsub-btn" type="button" aria-expanded="false" aria-controls="navsub">Company <span class="chev" aria-hidden="true"></span></button>
+        <div class="navsub-menu" id="navsub">
           <a class="link" href="index.html#pribeh">About us</a>
           <a class="link" href="team.html">Our team</a>
         </div>
@@ -67,6 +67,17 @@
     </nav>
     <a class="mcta btn btn-red" href="index.html#kontakt">Send an enquiry</a>
   </div>
+  <script>
+  /* podmenu „O firmě“: myší se otevře najetím, na dotykové obrazovce a z klávesnice kliknutím */
+  (() => {
+    const sub = document.querySelector('.navsub'), btn = sub.querySelector('.navsub-btn');
+    const set = open => { sub.classList.toggle('open', open); btn.setAttribute('aria-expanded', open); };
+    btn.addEventListener('click', () => set(!sub.classList.contains('open')));
+    document.addEventListener('click', e => { if (!sub.contains(e.target)) set(false); });
+    sub.addEventListener('keydown', e => { if (e.key === 'Escape' && sub.classList.contains('open')) { set(false); btn.focus(); } });
+    sub.addEventListener('focusout', e => { if (!sub.contains(e.relatedTarget)) set(false); });
+  })();
+  </script>
 </header>
 
 <main id="obsah">
