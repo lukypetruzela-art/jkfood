@@ -181,6 +181,9 @@ INDEX = [
     (">Poslat další poptávku</button>", ">Send another enquiry</button>"),
     # formulář (JS)
     ("'Dobrý den, mám zájem o výrobek: '", "'Hello, I am interested in the product: '"),
+    ("'Dobrý den, mám zájem o tyto výrobky:\\n'", "'Hello, I am interested in these products:\\n'"),
+    ("'Konzultace výběru ze sortimentu'", "'Help with choosing from the range'"),
+    ("'Dobrý den, potřebujeme poradit s výběrem ze sortimentu. Vyrábíme: \\n\\n'", "'Hello, we need advice on choosing from your range. We produce: \\n\\n'"),
     ("'Vyplňte prosím jméno.'", "'Please enter your name.'"),
     ("'Vyplňte prosím e-mail.'", "'Please enter your e-mail.'"),
     ("'Zadejte prosím platný e-mail.'", "'Please enter a valid e-mail address.'"),
@@ -255,23 +258,6 @@ INDEX = [
 ]
 
 # katalog (sortiment)
-CATALOG = [
-    ('placeholder="Hledat, např. pepř, guláš, šunka…"', 'placeholder="Search Czech names, e.g. pepř, guláš…"'),
-    ('<label class="sr" for="q">Hledat výrobek</label>', '<label class="sr" for="q">Search products</label>'),
-    ('aria-label="Vymazat hledání"', 'aria-label="Clear search"'),
-    ('aria-label="Skupiny výrobků"', 'aria-label="Product groups"'),
-    (">Vše</a>", ">All</a>"),
-    ("<p class=\"cat-empty-title\">Tohle jsme v&nbsp;sortimentu nenašli.</p>", "<p class=\"cat-empty-title\">We could not find that in our range.</p>"),
-    ("<p>Zkuste jiné slovo, nebo nám napište – směs vám rádi připravíme na míru.</p>", "<p>Try another word or write to us – we will be happy to prepare a custom blend for you.</p>"),
-    (">Napsat poptávku</a>", ">Send an enquiry</a>"),
-    ("Hledáte vlastní chuť?", "Looking for your own flavour?"),
-    ("<p>Kořenicí směs vyvineme přesně podle vaší výroby a&nbsp;receptury.</p>", "<p>We will develop a seasoning blend precisely for your production and recipe.</p>"),
-    ("Nakoupit v&nbsp;e-shopu <span", "Visit the e-shop (CZ) <span"),
-    ('aria-label="Drobečková navigace"', 'aria-label="Breadcrumbs"'),
-    # JS
-    ("const plural = n => n === 1 ? 'výrobek' : n >= 2 && n <= 4 ? 'výrobky' : 'výrobků';", "const plural = n => n === 1 ? 'product' : 'products';"),
-    ("'Nalezeno: ' + shown", "'Found: ' + shown"),
-]
 
 # tým
 TEAM = {

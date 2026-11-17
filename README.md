@@ -9,7 +9,8 @@ Statický web (HTML, CSS, JS) generovaný skriptem v Pythonu, s PHP jen pro popt
 | `index.html` | **úvodní stránka – zdroj** (ručně upravovaná). Menu a patička odsud platí pro celý web. Části mezi značkami `<!-- …:START -->` a `<!-- …:END -->` doplňuje generátor. |
 | `assets/styles.css` | **styly – zdroj**. Web používá z nich vygenerovaný zmenšený `assets/site.min.css`. |
 | `assets/*.json`, `assets/sortiment-data.js` | data: výrobky, tým, reference, časté dotazy, kariéra (výchozí) |
-| `tools/build.py` | generátor: katalog, Průmysl a obory, Výzkum a vývoj, Hotová jídla, tým, kariéra, anglická verze, SEO soubory |
+| `assets/katalog.js` | katalog na stránce Sortiment (hledání, filtry, „Načíst další“) a nezávazná poptávka více výrobků (i na stránkách kategorií) |
+| `tools/build.py` | generátor: Sortiment (4 produktové skupiny nad 9 kategoriemi v `KAT_GROUPS`) a stránky kategorií, Průmysl a obory, Výzkum a vývoj, Hotová jídla, tým, kariéra, anglická verze, SEO soubory |
 | `tools/i18n_en.py` | anglické texty |
 | `tools/sortiment.template.html` | šablona stránek katalogu |
 | `tools/cssmin.py` | zmenšení stylů (jen použitá pravidla) |

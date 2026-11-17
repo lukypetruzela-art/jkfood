@@ -484,9 +484,22 @@
       F('f-prod').value = produkt;
       F('f-msg').value = 'Dobrý den, mám zájem o výrobek: ' + produkt + '\n\n';
     }
+    // poptávka více výrobků z katalogu: index.html?produkty=A|B|C#kontakt
+    const produkty = (params.get('produkty') || '').split('|').map(x => x.trim()).filter(Boolean).slice(0, 100);
+    if (produkty.length && !produkt) {
+      F('f-type').value = 'Nabídku sortimentu';
+      F('f-prod').value = produkty.join(', ');
+      F('f-msg').value = 'Dobrý den, mám zájem o tyto výrobky:\n' + produkty.map(x => '– ' + x).join('\n') + '\n\n';
+    }
+    // poradenství z katalogu: index.html?konzultace=1#kontakt
+    if (params.has('konzultace') && !produkt && !produkty.length) {
+      F('f-type').value = 'Nabídku sortimentu';
+      F('f-prod').value = 'Konzultace výběru ze sortimentu';
+      F('f-msg').value = 'Dobrý den, potřebujeme poradit s výběrem ze sortimentu. Vyrábíme: \n\n';
+    }
     // poptávka ze stránky oboru: index.html?obor=Masný průmysl&typ=Vzorky#kontakt
     const obor = params.get('obor');
-    if (obor && !produkt) {
+    if (obor && !produkt && !produkty.length) {
       const typ = params.get('typ');
       F('f-type').value = [...F('f-type').options].some(o => o.value === typ) ? typ : 'Nabídku sortimentu';
       F('f-prod').value = 'Obor: ' + obor;
@@ -532,6 +545,7 @@
     };
     const showDone = () => {
       form.hidden = true; done.hidden = false; done.focus();
+      if (produkty.length) try { localStorage.removeItem('jk-poptavka'); } catch (e) { /* nic */ }   // odeslaný výběr z katalogu vyprázdnit
     };
     const busy = on => { btn.disabled = on; btn.setAttribute('aria-busy', on); lbl.textContent = on ? 'Odesílám…' : 'Odeslat poptávku'; };
 

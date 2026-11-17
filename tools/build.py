@@ -169,7 +169,7 @@ def breadcrumbs_ld(items):
 
 def asset_version():
     h = hashlib.sha1()
-    for f in ["assets/styles.css"]:
+    for f in ["assets/styles.css", "assets/katalog.js"]:
         h.update((ROOT / f).read_bytes())
     return h.hexdigest()[:8]
 
@@ -181,9 +181,6 @@ def load_items():
     return items
 
 
-GRP_SHOW = 12      # kolik výrobků skupiny ukázat na přehledu sortimentu
-
-
 def render_list(items, cats_idx):
     out = []
     for gi in cats_idx:
@@ -192,27 +189,22 @@ def render_list(items, cats_idx):
         if not g_items:
             continue
         head_tag = "h2"
-        clamp = len(cats_idx) > 1 and len(g_items) > GRP_SHOW + 4      # na přehledu jen prvních pár, zbytek po kliknutí
-        seen = 0
-        out.append(f'<section class="grp{" clamp" if clamp else ""}" id="sk-{c["id"]}" aria-labelledby="h-{c["id"]}">')
+        out.append(f'<section class="grp" id="sk-{c["id"]}" aria-labelledby="h-{c["id"]}">')
         title = (f'<a href="{c["file"]}">{esc(c["name"])}</a>' if len(cats_idx) > 1 else esc(c["name"]))
         out.append(
             f'<div class="grp-head">'
             f'<{head_tag} id="h-{c["id"]}">{title}</{head_tag}><span class="n">{len(g_items)} {plural(len(g_items))}</span></div>')
         subs = list(dict.fromkeys(p["s"] for p in g_items))
         for s in subs:
-            out.append(f'<div class="sub{" x" if clamp and seen >= GRP_SHOW else ""}" data-s="{esc(s)}">')
+            out.append(f'<div class="sub" data-s="{esc(s)}">')
             if len(subs) > 1 or s != c["name"]:
                 out.append(f"<h3>{esc(s)}</h3>")
             out.append('<ul class="items">')
             for p in g_items:
                 if p["s"] == s:
                     href = "index.html?produkt=" + quote(p["n"], safe="") + "#kontakt"
-                    out.append(f'<li{" class=\"x\"" if clamp and seen >= GRP_SHOW else ""}><a class="item" href="{href}">{esc(p["n"])}</a></li>')
-                    seen += 1
+                    out.append(f'<li class="kat-row"><span class="item kat-name">{esc(p["n"])}</span>{kat_add_btn(p["n"], "cs", href)}</li>')
             out.append("</ul></div>")
-        if clamp:
-            out.append(f'<button class="grp-more" type="button">Zobrazit všech {len(g_items)} {plural(len(g_items))} <span class="chev" aria-hidden="true"></span></button>')
         out.append("</section>")
     return "\n".join(out)
 
@@ -229,30 +221,17 @@ def render_chips(active):
 def build_catalog(items, v):
     tpl = (ROOT / "tools" / "sortiment.template.html").read_text(encoding="utf-8")
     hd, ft = site_chrome("sortiment.html", "products.html")   # menu a patička z úvodní stránky
-    legacy = ", ".join(f"'{c['id']}': '{c['file']}'" for c in CATS)
-    pages = [None] + list(range(len(CATS)))
-    for active in pages:
-        if active is None:
-            file, h1 = "sortiment.html", "Sortiment"
-            title = "Sortiment koření, směsí a sušených potravin | J.K.FOOD"
-            desc = ("Přes 490 výrobků J.K.FOOD: koření, kořenicí směsi, sušená zelenina, směsi pro masný průmysl, "
-                    "houby, bujóny, polévky, bramborové výrobky a těstoviny.")
-            intro = ("Přes 490 výrobků v devíti skupinách. U každého výrobku můžete rovnou poslat poptávku, "
-                     "balení pro domácnost najdete v e-shopu.")
-            crumbs = [("Úvod", ""), ("Sortiment", "sortiment.html")]
-            shown = items
-            cats_idx = list(range(len(CATS)))
-            placeholder = "Hledat, např. pepř, guláš, šunka…"
-        else:
-            c = CATS[active]
-            file, h1 = c["file"], c["name"]
-            title = f"{c['title']} | J.K.FOOD"
-            desc = c["desc"]
-            intro = c["desc"]
-            crumbs = [("Úvod", ""), ("Sortiment", "sortiment.html"), (c["name"], c["file"])]
-            shown = [p for p in items if p["g"] == active]
-            cats_idx = [active]
-            placeholder = "Hledat v této skupině…"
+    build_overview(items, v)
+    for active in range(len(CATS)):
+        c = CATS[active]
+        file, h1 = c["file"], c["name"]
+        title = f"{c['title']} | J.K.FOOD"
+        desc = c["desc"]
+        intro = c["desc"]
+        crumbs = [("Úvod", ""), ("Sortiment", "sortiment.html"), (c["name"], c["file"])]
+        shown = [p for p in items if p["g"] == active]
+        cats_idx = [active]
+        placeholder = "Hledat v této skupině…"
 
         crumbs_html = '<nav class="crumbs" aria-label="Drobečková navigace">' + '<span aria-hidden="true">/</span>'.join(
             (f'<a href="{u or "index.html"}">{esc(n)}</a>' if i < len(crumbs) - 1 else f'<span aria-current="page">{esc(n)}</span>')
@@ -265,17 +244,336 @@ def build_catalog(items, v):
                            "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": p["n"]}
                                                for i, p in enumerate(shown)]},
         }]
-        alts = {"cs": file, "en": "en/products.html"} if active is None else None
+        alts = None
         head = head_common(title, desc, file, alternates=alts) + "\n" + ld({"@context": "https://schema.org", "@graph": graph})
         page = (tpl.replace("{{TITLE}}", esc(title)).replace("{{DESCRIPTION}}", esc(desc)).replace("{{HEAD}}", head)
                 .replace("{{V}}", v).replace("{{CRUMBS}}", crumbs_html).replace("{{H1}}", esc(h1))
                 .replace("{{INTRO}}", nbsp(esc(intro))).replace("{{PLACEHOLDER}}", esc(placeholder))
                 .replace("{{CHIPS}}", render_chips(active)).replace("{{LIST}}", render_list(items, cats_idx))
                 .replace("{{COUNT}}", f"Celkem {len(shown)} {plural(len(shown))}")
-                .replace("{{PHERO}}", PHERO_BG).replace("{{HEADER}}", hd).replace("{{FOOTER}}", ft).replace("{{LEGACY}}", legacy if active is None else ""))
+                .replace("{{PHERO}}", PHERO_BG).replace("{{ENQ}}", kat_enquiry_bar("cs")).replace("{{HEADER}}", hd).replace("{{FOOTER}}", ft).replace("{{LEGACY}}", ""))
         assert "{{" not in page, re.findall(r"\{\{\w+\}\}", page)
         (ROOT / file).write_text(page, encoding="utf-8")
     return [("sortiment.html", "0.9")] + [(c["file"], "0.8") for c in CATS]
+
+
+# ---------------------------------------------------------------- katalog: stránka Sortiment (rozcestník + katalog)
+# Čtyři produktové skupiny jsou jen prezentační vrstva nad devíti kategoriemi v datech (CATS).
+KAT_PAGE = 30          # kolik produktů ukázat najednou (další tlačítkem „Načíst další“)
+KAT_GROUPS = [
+    dict(id="koreni-a-smesi", cats=["koreni", "smesi"], img="hero-2", widths=(700, 900),
+         cs=("Koření a kořenicí směsi", "Jednodruhové koření celé, drcené i mleté a kořenicí směsi podle vlastních receptur."),
+         en=("Spices and seasoning blends", "Whole, crushed and ground single spices and seasoning blends made to our own recipes.")),
+    dict(id="susene-suroviny", cats=["zelenina", "houby"], img="pilir-produkty", widths=(600, 800, 1000),
+         cs=("Sušené suroviny", "Sušená zelenina v plátcích, kostkách, granulích i jako pudr, sušené houby a suché plody."),
+         en=("Dried ingredients", "Dried vegetables as flakes, cubes, granules or powder, dried mushrooms, nuts and dried fruit.")),
+    dict(id="masna-vyroba", cats=["maso"], img="obor-masny-prumysl", widths=(600, 800, 1000),
+         cs=("Směsi pro masnou výrobu", "Kořenicí a technologické přípravky pro masný průmysl – kombi směsi, lakovací nástřiky a přísady."),
+         en=("Blends for meat production", "Seasoning and technological preparations for the meat industry – combi blends, glazing injections and additives.")),
+    dict(id="gastro-a-dalsi", cats=["polevky", "testoviny", "brambory", "skroby"], img="obor-gastro-a-jidelny", widths=(600, 800, 1000),
+         cs=("Gastro a další produkty", "Bujóny, polévky a omáčky, těstoviny, bramborové výrobky, škroby a další ingredience."),
+         en=("Food service and more", "Stocks, soups and sauces, pasta, potato products, starches and other ingredients.")),
+]
+# hlavní podskupiny směsí pro masnou výrobu (v kartě jako přehled, kategorie je jen jedna)
+KAT_MASO_SUBS = ["Kombi směsi", "Kořenicí směsi z přírodního koření", "Technologické přísady", "Technologické náhrady masa"]
+
+KAT_UI = {
+    "cs": dict(
+        h1="Sortiment pro potravinářskou výrobu",
+        intro="Od jednodruhového koření a sušených surovin po komplexní kořenicí a technologické směsi. Prozkoumejte náš sortiment nebo vám pomůžeme najít vhodné řešení.",
+        search_label="Hledat v sortimentu", placeholder="Hledat produkt nebo surovinu…", go="Hledat",
+        hero_meta="{n} produktů v {k} kategoriích", hero_help="Poradíme s výběrem",
+        groups_h="Prozkoumejte náš sortiment", show="Zobrazit {n} produktů", products="produktů", in_meat="Mimo jiné",
+        catalog_h="Katalog produktů", note="",
+        filters="Filtry", f_group="Produktová skupina", all="Vše", f_cats="Kategorie", reset="Zrušit filtry",
+        q_label="Hledat v katalogu", q_clear="Vymazat hledání",
+        count="{n} produktů", shown="Zobrazeno {a} z {b}", more="Načíst dalších {n}",
+        empty_h="Nenašli jste hledaný produkt?", empty_p="Rádi vám pomůžeme najít vhodné řešení.",
+        empty_btn="Poptat řešení", empty_reset="Zrušit filtry",
+        help_h="Nevíte, který produkt je pro vás vhodný?",
+        help_p="Naši specialisté vám pomohou s výběrem surovin, kořenicích směsí i s vývojem receptury na míru.",
+        help_btn="Konzultovat s odborníkem", help_or="nebo zavolejte",
+        noscript="Bez JavaScriptu nefunguje vyhledávání a filtry. Celý sortiment najdete na stránkách kategorií:",
+        crumbs=[("Úvod", ""), ("Sortiment", "sortiment.html")], crumbs_label="Drobečková navigace",
+        list_label="Produkty", filters_label="Filtry katalogu",
+    ),
+    "en": dict(
+        h1="Products for food manufacturing",
+        intro="From single spices and dried ingredients to complex seasoning and technological blends. Explore our range or let us help you find the right solution.",
+        search_label="Search our range", placeholder="Search a product or ingredient (Czech names)…", go="Search",
+        hero_meta="{n} products in {k} categories", hero_help="Help with choosing",
+        groups_h="Explore our range", show="Show {n} products", products="products", in_meat="Including",
+        catalog_h="Product catalogue",
+        note="Product names are given in Czech – send us an enquiry and we will reply in English.",
+        filters="Filters", f_group="Product group", all="All", f_cats="Category", reset="Clear filters",
+        q_label="Search the catalogue", q_clear="Clear search",
+        count="{n} products", shown="Showing {a} of {b}", more="Load {n} more",
+        empty_h="Can't find the product you are looking for?", empty_p="We will be happy to help you find the right solution.",
+        empty_btn="Ask for a solution", empty_reset="Clear filters",
+        help_h="Not sure which product is right for you?",
+        help_p="Our specialists will help you choose ingredients and seasoning blends, and develop a custom recipe.",
+        help_btn="Talk to a specialist", help_or="or call",
+        noscript="Search and filters need JavaScript. Browse the full range by category:",
+        crumbs=[("Home", "en/"), ("Products", "en/products.html")], crumbs_label="Breadcrumbs",
+        list_label="Products", filters_label="Catalogue filters",
+    ),
+}
+ADD_LABEL = {"cs": ("Do poptávky", "V poptávce", "Do poptávky: "), "en": ("Add to enquiry", "In enquiry", "Add to enquiry: ")}
+
+
+def kat_add_btn(name, lang, href=None):
+    """Tlačítko „Do poptávky“ (bez JavaScriptu odkaz na poptávkový formulář s předvyplněným výrobkem)."""
+    t, _, aria = ADD_LABEL[lang]
+    inner = f'<span class="kat-add-ic" aria-hidden="true"></span><span class="kat-add-t">{t}</span>'
+    if href:
+        return f'<a class="kat-add" href="{href}" data-n="{esc(name)}" aria-label="{esc(aria + name)}">{inner}</a>'
+    return f'<button type="button" class="kat-add" data-n="{esc(name)}" aria-label="{esc(aria + name)}" aria-pressed="false">{inner}</button>'
+
+
+def kat_order(items):
+    """Pořadí v katalogu: podle skupin (koření → sušené → maso → gastro), v nich podle kategorií, podskupin a abecedy."""
+    cat_ix = {c["id"]: i for i, c in enumerate(CATS)}
+    order = {cat_ix[cid]: n for n, cid in enumerate(c for g in KAT_GROUPS for c in g["cats"])}
+    return sorted(items, key=lambda p: (order[p["g"]], cs_key(p["s"]), cs_key(p["n"])))
+
+
+def kat_names(lang):
+    """Názvy kategorií a podskupin v daném jazyce."""
+    if lang == "cs":
+        return [c["name"] for c in CATS], lambda s: s
+    T = _en()
+    return [en for en, _ in T.CATS_EN], lambda s: T.SUBS_EN.get(s, s)
+
+
+def kat_row(p, lang, cat_names, sub_name):
+    c = cat_names[p["g"]]
+    s = sub_name(p["s"])
+    meta = esc(c) + (f' <span>· {esc(s)}</span>' if s != c else "")
+    return (f'<li class="kat-row"><span class="kat-name">{esc(p["n"])}</span><span class="kat-meta">{meta}</span>'
+            f'{kat_add_btn(p["n"], lang)}</li>')
+
+
+def kat_enquiry_bar(lang):
+    """Lišta nezávazné poptávky (dole na stránce, ukáže se po přidání prvního výrobku)."""
+    t = {"cs": ("Nezávazná poptávka", "Zobrazit vybrané produkty", "Odeslat poptávku", "Vybrané produkty", "Vyprázdnit"),
+         "en": ("Enquiry", "Show selected products", "Send enquiry", "Selected products", "Clear all")}[lang]
+    return (f'<div class="enq" id="enq" role="region" aria-label="{t[0]}" hidden>'
+            f'<div class="enq-list" id="enqList" hidden><p class="enq-list-h">{t[3]}</p><ul></ul>'
+            f'<button type="button" class="enq-clear">{t[4]}</button></div>'
+            f'<div class="enq-in"><button type="button" class="enq-toggle" aria-expanded="false" aria-controls="enqList" aria-label="{t[1]}">'
+            f'<b class="enq-n">0</b><span class="enq-t"></span><span class="enq-chev" aria-hidden="true"></span></button>'
+            f'<a class="btn btn-red enq-send" href="index.html#kontakt">{t[2]}</a></div></div>')
+
+
+def kat_card_img(src, widths):
+    w = widths[-1]
+    srcset = ", ".join(f"img/{src}-{x}.webp {x}w" for x in widths)
+    return (f'<figure class="kat-card-img"><picture><source srcset="{srcset}" sizes="(max-width:560px) 104px, (max-width:1080px) 46vw, 300px" type="image/webp">'
+            f'<img src="img/{src}.jpg" alt="" width="{w}" height="{w * 3 // 4}" loading="lazy" decoding="async"></picture></figure>')
+
+
+def build_overview(items, v, lang="cs"):
+    """Sortiment: úvod s hledáním, čtyři produktové skupiny, katalog s filtry a stránkováním, poradenství.
+    Česky se zapíše do sortiment.html, anglicky vrátí HTML (dokončí ho build_en)."""
+    U = KAT_UI[lang]
+    cat_names, sub_name = kat_names(lang)
+    cat_ix = {c["id"]: i for i, c in enumerate(CATS)}
+    items = kat_order(items)
+    counts = {i: sum(1 for p in items if p["g"] == i) for i in range(len(CATS))}
+    n_all = len(items)
+    gname = lambda g: g[lang][0]
+
+    # --- úvod
+    crumbs = U["crumbs"]
+    crumbs_html = (f'<nav class="crumbs" aria-label="{U["crumbs_label"]}">' + '<span aria-hidden="true">/</span>'.join(
+        (f'<a href="{(u or "index.html") if lang == "cs" else "index.html"}">{esc(n)}</a>' if i < len(crumbs) - 1
+         else f'<span aria-current="page">{esc(n)}</span>') for i, (n, u) in enumerate(crumbs)) + "</nav>")
+    search_ic = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>'
+    hero = f"""<section class="cat-head phero kat-hero" aria-labelledby="cat-title">
+    {PHERO_BG}
+    <div class="wrap">
+      {crumbs_html}
+      <h1 class="h2 cat-title" id="cat-title">{esc(U["h1"])}</h1>
+      <p class="intro">{nbsp(esc(U["intro"]))}</p>
+      <form class="kat-search" id="heroSearch" role="search" action="#katalog">
+        <div class="search">
+          <label class="sr" for="q0">{U["search_label"]}</label>
+          {search_ic}
+          <input id="q0" type="search" name="q" placeholder="{esc(U["placeholder"])}" autocomplete="off" enterkeyhint="search">
+        </div>
+        <button class="btn btn-red" type="submit">{U["go"]}</button>
+      </form>
+      <p class="kat-hero-meta" id="heroMeta">{U["hero_meta"].format(n=n_all, k=len(CATS))} · <a href="#poradenstvi">{U["hero_help"]}</a></p>
+    </div>
+  </section>"""
+
+    # --- čtyři skupiny
+    cards = []
+    for g in KAT_GROUPS:
+        ids = [cat_ix[c] for c in g["cats"]]
+        total = sum(counts[i] for i in ids)
+        if len(ids) > 1:
+            tags = "".join(f'<li><a href="{CATS[i]["file"]}" data-cat="{CATS[i]["id"]}">{esc(cat_names[i])} <small>{counts[i]}</small></a></li>' for i in ids)
+        else:
+            tags = ""
+        cards.append(f"""<li class="kat-card">
+          {kat_card_img(g["img"], g["widths"])}
+          <div class="kat-card-body">
+            <h3><a class="kat-card-link" href="#katalog" data-group="{g["id"]}">{esc(gname(g))}</a></h3>
+            <p>{nbsp(esc(g[lang][1]))}</p>
+            {f'<ul class="kat-card-cats">{tags}</ul>' if tags else f'<p class="kat-card-subs">{U["in_meat"]}: ' + ", ".join(esc(sub_name(x).lower() if lang == "cs" else sub_name(x)) for x in KAT_MASO_SUBS) + "</p>"}
+            <p class="kat-card-foot"><span class="kat-card-go" aria-hidden="true">{U["show"].format(n=total)} <span class="i-next"></span></span></p>
+          </div>
+        </li>""")
+    groups = f"""<section class="kat-groups" aria-labelledby="sk-title">
+    <div class="wrap">
+      <h2 class="kat-h" id="sk-title">{U["groups_h"]}</h2>
+      <ul class="kat-cards">
+        {"".join(cards)}
+      </ul>
+    </div>
+  </section>"""
+
+    # --- filtry
+    gopts = [f'<label class="kat-opt"><input type="radio" name="skupina" value="" checked><span>{U["all"]}</span><small data-cnt="g:">{n_all}</small></label>']
+    copts = []
+    for g in KAT_GROUPS:
+        ids = [cat_ix[c] for c in g["cats"]]
+        gopts.append(f'<label class="kat-opt"><input type="radio" name="skupina" value="{g["id"]}"><span>{esc(gname(g))}</span>'
+                     f'<small data-cnt="g:{g["id"]}">{sum(counts[i] for i in ids)}</small></label>')
+        copts.append(f'<div class="kat-cg" data-g="{g["id"]}"><p class="kat-cg-name" aria-hidden="true">{esc(gname(g))}</p>' + "".join(
+            f'<label class="kat-opt"><input type="checkbox" name="kategorie" value="{i}"><span>{esc(cat_names[i])}</span><small data-cnt="c:{i}">{counts[i]}</small></label>'
+            for i in ids) + "</div>")
+    filters = f"""<aside class="kat-side" aria-label="{U["filters_label"]}">
+          <button class="kat-filter-btn" type="button" aria-expanded="false" aria-controls="katFilters">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
+            {U["filters"]}<span class="kat-badge" hidden></span><span class="kat-filter-chev" aria-hidden="true"></span>
+          </button>
+          <div class="kat-filters" id="katFilters">
+            <fieldset class="kat-fs"><legend>{U["f_group"]}</legend>{"".join(gopts)}</fieldset>
+            <fieldset class="kat-fs"><legend>{U["f_cats"]}</legend>{"".join(copts)}</fieldset>
+            <button class="kat-reset" type="button" hidden>{U["reset"]}</button>
+          </div>
+        </aside>"""
+
+    first = "".join(kat_row(p, lang, cat_names, sub_name) for p in items[:KAT_PAGE])
+    rest = n_all - KAT_PAGE
+    noscript_links = " · ".join(f'<a href="{c["file"]}">{esc(cat_names[i])}</a>' for i, c in enumerate(CATS))
+    catalog = f"""<section class="kat-cat" id="katalog" aria-labelledby="kat-title">
+    <div class="wrap">
+      <div class="kat-head">
+        <h2 class="kat-h" id="kat-title" tabindex="-1">{U["catalog_h"]}</h2>
+        {f'<p class="kat-note">{U["note"]}</p>' if U["note"] else ""}
+      </div>
+      <div class="kat-layout">
+        {filters}
+        <div class="kat-main">
+          <div class="search kat-q">
+            <label class="sr" for="q">{U["q_label"]}</label>
+            {search_ic}
+            <input id="q" type="search" placeholder="{esc(U["placeholder"])}" autocomplete="off" enterkeyhint="search">
+            <button type="button" class="search-clear" id="qClear" aria-label="{U["q_clear"]}" hidden>×</button>
+          </div>
+          <div class="kat-status">
+            <p class="kat-count" id="katCount" aria-live="polite">{U["count"].format(n=n_all)}</p>
+            <div class="kat-active" id="katActive"></div>
+          </div>
+          <ol class="kat-list" id="katList" aria-label="{U["list_label"]}">{first}</ol>
+          <div class="kat-more" id="katMore">
+            <p id="katShown">{U["shown"].format(a=min(KAT_PAGE, n_all), b=n_all)}</p>
+            <button class="btn btn-line" type="button" id="katMoreBtn">{U["more"].format(n=min(KAT_PAGE, rest))}</button>
+          </div>
+          <div class="kat-empty" id="katEmpty" hidden>
+            <p class="kat-empty-h">{U["empty_h"]}</p>
+            <p>{U["empty_p"]}</p>
+            <div class="kat-empty-btns"><a class="btn btn-red" id="katEmptyAsk" href="index.html#kontakt">{U["empty_btn"]}</a>
+            <button class="btn btn-line kat-reset" type="button">{U["empty_reset"]}</button></div>
+          </div>
+          <noscript><p class="kat-noscript">{U["noscript"]} {noscript_links}</p></noscript>
+        </div>
+      </div>
+    </div>
+  </section>"""
+
+    consult = "index.html?konzultace=1#kontakt"
+    help_ = f"""<section class="kat-help" id="poradenstvi" aria-labelledby="help-title">
+    <div class="wrap">
+      <div class="kat-help-in">
+        <span class="kat-help-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 3h5M10.5 3v6L5 18.5A1.7 1.7 0 0 0 6.5 21h11a1.7 1.7 0 0 0 1.5-2.5L13.5 9V3"/><path d="M7.8 15h8.4"/></svg></span>
+        <div>
+          <h2 id="help-title">{U["help_h"]}</h2>
+          <p>{nbsp(esc(U["help_p"]))}</p>
+        </div>
+        <div class="kat-help-act">
+          <a class="btn btn-red" href="{consult}">{U["help_btn"]} <span class="i-next" aria-hidden="true"></span></a>
+          <span>{U["help_or"]} <a href="tel:+420556310205">+420&nbsp;556&nbsp;310&nbsp;205</a></span>
+        </div>
+      </div>
+    </div>
+  </section>"""
+
+    data = {"groups": [{"id": g["id"], "name": gname(g), "cats": [cat_ix[c] for c in g["cats"]]} for g in KAT_GROUPS],
+            "cats": [{"id": c["id"], "name": cat_names[i], "file": c["file"]} for i, c in enumerate(CATS)],
+            "items": [[p["n"], p["g"], sub_name(p["s"])] for p in items], "page": KAT_PAGE}
+    data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+
+    # --- hlava a chrome stránky ze šablony katalogu (stejné písma, ikony, menu a patička)
+    tpl = (ROOT / "tools" / "sortiment.template.html").read_text(encoding="utf-8")
+    hd, ft = site_chrome("sortiment.html", "products.html")
+    title = "Sortiment koření, směsí a sušených potravin | J.K.FOOD"
+    desc = ("Přes 490 výrobků J.K.FOOD: koření, kořenicí směsi, sušená zelenina, směsi pro masný průmysl, "
+            "houby, bujóny, polévky, bramborové výrobky a těstoviny.")
+    graph = [org_ld(), breadcrumbs_ld(crumbs), {
+        "@type": "CollectionPage", "@id": f"{SITE}/sortiment.html#stranka", "url": f"{SITE}/sortiment.html", "name": "Sortiment",
+        "description": desc, "inLanguage": "cs", "isPartOf": {"@id": f"{SITE}/#web"}, "publisher": {"@id": f"{SITE}/#firma"},
+        "mainEntity": {"@type": "ItemList", "numberOfItems": n_all,
+                       "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": p["n"]} for i, p in enumerate(items)]}}]
+    head = head_common(title, desc, "sortiment.html", alternates={"cs": "sortiment.html", "en": "en/products.html"}) + "\n" + ld(
+        {"@context": "https://schema.org", "@graph": graph})
+    top = (tpl[: tpl.index("{{HEADER}}")].replace("{{TITLE}}", esc(title)).replace("{{DESCRIPTION}}", esc(desc))
+           .replace("{{HEAD}}", head).replace("{{V}}", v))
+    legacy = {c["id"]: c["file"] for c in CATS} if lang == "cs" else {}
+    page = f"""{top}{hd}
+
+<main id="obsah" class="kat">
+  {hero}
+
+  {groups}
+
+  {catalog}
+
+  {help_}
+</main>
+
+{kat_enquiry_bar(lang)}
+
+{ft}
+
+<script type="application/json" id="katData">{data_js}</script>
+<script>window.KAT_LEGACY = {json.dumps(legacy)};</script>
+<script src="assets/katalog.js?v={v}" defer></script>
+<script>
+(() => {{
+  const top = document.getElementById('top'), burger = top.querySelector('.burger'), nav = document.getElementById('nav');
+  const setMenu = open => {{
+    nav.classList.toggle('open', open); burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Zavřít menu' : 'Otevřít menu'); document.body.style.overflow = open ? 'hidden' : '';
+  }};
+  burger.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+  matchMedia('(min-width: 1181px)').addEventListener('change', e => {{ if (e.matches) setMenu(false); }});
+  nav.addEventListener('click', e => {{ if (e.target.closest('a')) setMenu(false); }});
+  addEventListener('keydown', e => {{ if (e.key === 'Escape' && nav.classList.contains('open')) {{ setMenu(false); burger.focus(); }} }});
+  const onScroll = () => top.classList.toggle('scrolled', scrollY > 8);
+  addEventListener('scroll', onScroll, {{ passive: true }}); onScroll();
+}})();
+</script>
+</body>
+</html>
+"""
+    assert "{{" not in page, re.findall(r"\{\{\w+\}\}", page)
+    if lang == "cs":
+        (ROOT / "sortiment.html").write_text(page, encoding="utf-8")
+    return page
 
 
 def render_refs():
@@ -673,7 +971,7 @@ def build_en():
             attr, u = m.group(1), m.group(2)
             if attr in ("srcset", "imagesrcset"):
                 return f'{attr}="' + ", ".join("../" + c.strip() for c in u.split(",")) + '"'
-            if re.match(r"(https?:|//|#|mailto:|tel:|data:|/|\.\./|\$\{)", u):
+            if re.match(r"(https?:|//|#|\?|mailto:|tel:|data:|/|\.\./|\$\{)", u):
                 return m.group(0)
             base, _, frag = u.partition("#")
             if base == "index.html" or base.startswith("index.html?"):
@@ -726,21 +1024,9 @@ def build_en():
                        "publisher": {"@id": f"{SITE}/#firma"}}, faq_ld("en")])
     (ROOT / "en" / "index.html").write_text(lang_link(paths(html), ""), encoding="utf-8")
 
-    # --- katalog (jedna stránka se všemi skupinami)
-    html = (ROOT / "sortiment.html").read_text(encoding="utf-8")
-    html = tr(html, T.COMMON + T.CATALOG, "products")
-    html = names(html)
-    html = html.replace('<h1 class="h2 cat-title" id="cat-title">Sortiment</h1>', '<h1 class="h2 cat-title" id="cat-title">Products</h1>')
-    html = re.sub(r'<p class="intro">Přes 490 výrobků.*?</p>',
-                  '<p class="intro">Over 490 products in nine groups. Product names are given in Czech – just send us an enquiry '
-                  'and we will reply in English.</p>', html, flags=re.S)
-    html = re.sub(r'(<nav class="crumbs"[^>]*>)<a href="index.html">Úvod</a>(.*?)<span aria-current="page">Sortiment</span>',
-                  r'\1<a href="index.html">Home</a>\2<span aria-current="page">Products</span>', html)
-    html = re.sub(r"Zobrazit všech (\d+) výrob\w+", r"Show all \1 products", html)
-    html = re.sub(r"(\d+) výrob(?:ek|ky|ků)", lambda m: f"{m.group(1)} product{'s' if m.group(1) != '1' else ''}", html)
-    html = html.replace("Celkem ", "").replace('<p class="cat-count" id="count">', '<p class="cat-count" id="count">Total: ')
-    html = re.sub(r"const legacy = \{.*?\};", "const legacy = {};", html)
-    html = re.sub(r'<a class="chip(?: all)?" href="sortiment.html" aria-current="page">All</a>', '<a class="chip all" href="#obsah" aria-current="page">All</a>', html)
+    # --- katalog: stejná stránka jako sortiment.html, obsah rovnou anglicky (názvy výrobků zůstávají česky)
+    html = build_overview(load_items(), asset_version(), "en")
+    html = names(tr(html, T.COMMON, "products"))
     graph = [org, breadcrumbs_ld([("Home", "en/"), ("Products", "en/products.html")]),
              {"@type": "CollectionPage", "url": f"{SITE}/en/products.html", "name": "Products", "inLanguage": "en",
               "description": "J.K.FOOD product range – spices, seasoning blends, dried vegetables, meat industry blends, stocks, soups and more."}]
@@ -807,7 +1093,7 @@ def build_en():
     for f in ["index.html", "products.html", "team.html"] + list(T.B2B_FILES.values()):
         h = (ROOT / "en" / f).read_text(encoding="utf-8")
         h = re.sub(r"<script>.*?</script>|<style.*?</style>", " ", h, flags=re.S)
-        h = re.sub(r'<ul class="items">.*?</ul>', " ", h, flags=re.S)     # názvy výrobků zůstávají česky
+        h = re.sub(r'<ul class="items">.*?</ul>|<ol class="kat-list".*?</ol>|<script[^>]*>.*?</script>', " ", h, flags=re.S)   # názvy výrobků zůstávají česky
         h = re.sub(r'<script type="application/ld\+json">.*?</script>', " ", h, flags=re.S)
         for t in re.findall(r">([^<>]*[ěščřžůťďňĚŠČŘŽŮŤĎŇ][^<>]*)<|(?:aria-label|placeholder|alt|title)=\"([^\"]*[ěščřžůťďňĚŠČŘŽŮŤĎŇ][^\"]*)\"", h):
             t = (t[0] or t[1]).strip()

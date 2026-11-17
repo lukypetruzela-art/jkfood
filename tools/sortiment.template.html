@@ -81,8 +81,11 @@
   </section>
 </main>
 
+{{ENQ}}
+
 {{FOOTER}}
 
+<script src="assets/katalog.js?v={{V}}" defer></script>
 <script>
 addEventListener('DOMContentLoaded', () => {
   /* ---------- hlavička (menu, stín při scrollu) ---------- */
@@ -105,15 +108,6 @@ addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(() => { top.classList.toggle('scrolled', scrollY > 8); ticking = false; });
   }, { passive: true });
   top.classList.toggle('scrolled', scrollY > 8);
-
-  /* ---------- přehled: skupina ukáže prvních pár výrobků, zbytek po kliknutí ---------- */
-  const groupsEl = document.getElementById('groups');
-  groupsEl.addEventListener('click', e => {
-    const btn = e.target.closest('.grp-more'); if (!btn) return;
-    const sec = btn.parentNode, first = sec.querySelector('li.x a');
-    sec.classList.remove('clamp'); btn.remove();
-    if (first) first.focus({ preventScroll: true });
-  });
 
   /* ---------- hledání ve výpisu (výpis je hotový v HTML, tady se jen skrývá) ---------- */
   const fold = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -158,7 +152,6 @@ addEventListener('DOMContentLoaded', () => {
     countEl.textContent = !q ? totalText : shown ? 'Nalezeno: ' + shown + ' ' + plural(shown) : '';
     emptyEl.hidden = shown > 0;
     qClear.hidden = !query;
-    groupsEl.classList.toggle('q', !!q);          // při hledání se prohledávají a ukazují i sbalené výrobky
   }
   let t;
   qEl.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { query = qEl.value; apply(); }, 60); });
@@ -169,10 +162,6 @@ addEventListener('DOMContentLoaded', () => {
   const cur = document.querySelector('.chip[aria-current="page"]');
   if (cur) cur.scrollIntoView({ block: 'nearest', inline: 'center' });
 
-  // staré odkazy sortiment.html#maso → stránka skupiny
-  const legacy = { {{LEGACY}} };
-  const h = decodeURIComponent(location.hash.slice(1));
-  if (legacy[h]) location.replace(legacy[h]);
 });
 </script>
 </body>
